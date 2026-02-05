@@ -1,49 +1,107 @@
-User-agent: *
+# -------------------------------
+# BlankLabs Robots.txt
+# Protect content from AI scrapers
+# Allow search engines and social crawlers
+# -------------------------------
+
+# --------- Search Engines ---------
+User-agent: Googlebot
 Allow: /
 
-# Block AI Training and Scrapers
+User-agent: Googlebot-Image
+Allow: /
+
+User-agent: Googlebot-Video
+Allow: /
+
+User-agent: Googlebot-News
+Allow: /
+
+User-agent: Googlebot-Discovery
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+# --------- Social Bots ---------
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: Pinterestbot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Quora-Bot
+Allow: /
+
+# --------- AI Scrapers (Blocked) ---------
 User-agent: GPTBot
 Disallow: /
+
 User-agent: ChatGPT-User
 Disallow: /
-User-agent: OAI-SearchBot
-Disallow: /
-User-agent: anthropic-ai
-Disallow: /
-User-agent: Claude-Web
-Disallow: /
+
 User-agent: ClaudeBot
 Disallow: /
-User-agent: CCBot
+
+User-agent: Claude-Web
 Disallow: /
-User-agent: Google-Extended
-Disallow: /
-User-agent: Vertex AI
-Disallow: /
-User-agent: Google-CloudVertexBot
-Disallow: /
-User-agent: Bytespider
-Disallow: /
+
 User-agent: PerplexityBot
 Disallow: /
-User-agent: Perplexity-User
-Disallow: /
-User-agent: Applebot-Extended
-Disallow: /
-User-agent: Meta-ExternalAgent
-Disallow: /
-User-agent: Meta-ExternalFetcher
-Disallow: /
-User-agent: Amazonbot
-Disallow: /
+
 User-agent: cohere-ai
 Disallow: /
+
+User-agent: OAI-SearchBot
+Disallow: /
+
+User-agent: Anthropic-ai
+Disallow: /
+
+User-agent: ChatGPT-User/2.0
+Disallow: /
+
+User-agent: Perplexity-User
+Disallow: /
+
+User-agent: Perplexity-User/1.0
+Disallow: /
+
+# --------- Cloud AI Crawlers ---------
+User-agent: Google-CloudVertexBot
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+# --------- Scrapers (optional) ---------
+User-agent: CCBot
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
 User-agent: Scrapy
 Disallow: /
 
-# Allow Search Engines (Implicit in User-agent: *)
-# Optional: explicitly mention, though * covers them
-User-agent: Googlebot
-Allow: /
-User-agent: Bingbot
+# --------- Other bots ---------
+User-agent: *
 Allow: /
