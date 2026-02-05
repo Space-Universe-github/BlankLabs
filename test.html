@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BlankLabs — Portfolio & Blog</title>
+  <meta name="description" content="BlankLabs — personal projects, photography, experiments, and long-form writing." />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f5f7f9; --glass:rgba(255,255,255,0.92); --card:#ffffff; --muted:#6b7280; --text:#0b1116;
+      --accent:#0b5b8a; --radius:12px; --maxw:1200px; --shadow:0 12px 36px rgba(11,17,22,0.06); --ease:cubic-bezier(.2,.9,.3,1);
+    }
+    [data-theme="dark"]{
+      --bg:#071018; --glass:rgba(18,20,22,0.8); --card:#0f1416; --muted:#9aa3ad; --text:#e6eef3; --accent:#6cf2c2; --shadow:0 14px 42px rgba(0,0,0,0.6);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      background:linear-gradient(180deg,var(--bg), color-mix(in srgb,var(--bg) 96%, white 4%));
+      color:var(--text); display:flex; align-items:flex-start; justify-content:center; padding:28px;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* layout */
+    .container{ width:100%; max-width:var(--maxw); display:grid; grid-template-columns:1fr 360px; gap:20px; align-items:start; }
+    @media (max-width:980px){ .container{ grid-template-columns:1fr } }
+
+    /* loader overlay */
+    .loader{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(0,0,0,0.64), rgba(0,0,0,0.38)); z-index:9999; transition:opacity .22s var(--ease); }
+    .loader.hidden{ opacity:0; pointer-events:none; }
+    .loader-inner{ display:flex; gap:16px; align-items:center; background:var(--card); padding:18px; border-radius:14px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04); }
+    .logo-wrap{ width:84px; height:84px; border-radius:12px; overflow:hidden; transform:translateY(12px) scale(.8); transition:transform 420ms var(--ease); }
+    .logo-wrap.pop{ transform:translateY(-12px) scale(1.06) rotate(-4deg); }
+    .progress{ flex:1; height:12px; background:rgba(0,0,0,0.06); border-radius:999px; overflow:hidden; }
+    .bar{ height:100%; width:0%; background:linear-gradient(90deg,var(--accent), #1b9bd7); transition:width 260ms linear; border-radius:999px; }
+
+    /* hero */
+    .hero{ background:var(--glass); border-radius:calc(var(--radius)+6px); padding:18px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04); min-height:480px; display:flex; flex-direction:column; gap:12px; }
+    .top{ display:flex; justify-content:space-between; gap:12px; align-items:center; }
+    .brand{ display:flex; gap:12px; align-items:center; }
+    .brand-mark{ width:56px;height:56px;border-radius:12px; display:grid; place-items:center; background:transparent; cursor:pointer; overflow:hidden; }
+    .brand-mark img{ width:100%; height:100%; object-fit:cover; display:block; }
+    h1{ margin:0; font-size:clamp(1.15rem,2.6vw,1.8rem) }
+    .lead{ margin:6px 0 0; color:var(--muted); }
+
+    /* controls */
+    .controls{ display:flex; gap:8px; align-items:center }
+    .btn{ padding:8px 12px; border-radius:10px; background:var(--card); border:1px solid rgba(0,0,0,0.05); cursor:pointer; font-weight:700; }
+    .search{ padding:8px 10px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); width:100%; }
+
+    /* tabs */
+    .tabs{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    [role="tab"]{ padding:8px 12px; border-radius:10px; background:transparent; border:1px solid transparent; color:var(--muted); cursor:pointer; font-weight:600; transition:all .18s var(--ease); }
+    [role="tab"][aria-selected="true"]{ background:var(--card); color:var(--text); box-shadow:0 10px 28px rgba(0,0,0,0.06); border-color:rgba(0,0,0,0.04) }
+
+    /* panels */
+    .panels{ margin-top:12px; flex:1; overflow:auto; padding-right:8px; display:grid; grid-template-rows:auto; gap:12px; }
+    .panel{ opacity:0; transform:translateY(6px); transition:opacity .26s var(--ease), transform .26s var(--ease); }
+    .panel.active{ opacity:1; transform:none; }
+
+    /* cards */
+    .card{ background:var(--card); padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.04); box-shadow:0 8px 24px rgba(0,0,0,0.04); }
+    .title{ font-weight:700; margin-bottom:8px; }
+    .small{ color:var(--muted); }
+
+    /* portfolio */
+    .pf-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px; margin-top:10px; }
+    .pf-card{ border-radius:10px; overflow:hidden; display:flex; flex-direction:column; background:var(--card); border:1px solid rgba(0,0,0,0.04); cursor:pointer; transition:transform .18s var(--ease), box-shadow .18s var(--ease); }
+    .pf-card:hover{ transform:translateY(-6px); box-shadow:0 18px 36px rgba(0,0,0,0.08); }
+    .pf-card img{ width:100%; height:160px; object-fit:cover; display:block; user-select:none; -webkit-user-drag:none; }
+
+    .pf-meta{ padding:10px; display:flex; flex-direction:column; gap:6px; }
+    .tags{ display:flex; gap:6px; flex-wrap:wrap; }
+
+    /* right column recent lists */
+    .side { display:flex; flex-direction:column; gap:12px; }
+    .recent-list{ display:flex; flex-direction:column; gap:8px; }
+    .recent-item{ display:flex; gap:10px; align-items:center; padding:8px; background:var(--card); border-radius:8px; border:1px solid rgba(0,0,0,0.04); cursor:pointer; transition:transform .16s var(--ease); }
+    .recent-item:hover{ transform:translateX(6px); }
+    .recent-item img{ width:64px; height:48px; object-fit:cover; border-radius:6px; user-select:none; -webkit-user-drag:none; }
+
+    /* blog posts */
+    .posts{ display:flex; flex-direction:column; gap:16px; margin-top:10px; }
+    .post{ padding:12px; border-radius:10px; background:var(--card); border:1px solid rgba(0,0,0,0.04); transition:transform .16s var(--ease); }
+    .post:hover{ transform:translateY(-6px); box-shadow:0 18px 36px rgba(0,0,0,0.06); }
+    .post h2{ margin:6px 0 2px; }
+    .subtitle{ color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
+
+    .meta-line{ color:var(--muted); font-size:0.9rem; margin-bottom:6px; }
+
+    /* blocks */
+    .block{ margin:10px 0; line-height:1.6; }
+    .block img{ max-width:100%; border-radius:8px; display:block; user-select:none; -webkit-user-drag:none; }
+    pre{ background:#0b1220; color:#e6eef3; padding:12px; border-radius:8px; overflow:auto; font-family:ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .code-lang{ font-size:0.78rem; color:var(--muted); margin-bottom:6px; }
+
+    .columns{ display:grid; gap:12px; grid-template-columns:1fr 1fr; }
+    @media (max-width:700px){ .columns{ grid-template-columns:1fr } }
+
+    details{ background: rgba(0,0,0,0.02); padding:8px; border-radius:8px; }
+    summary{ cursor:pointer; font-weight:700; outline:none; }
+
+    /* modal */
+    .modal{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)); z-index:10010; padding:20px; }
+    .modal-card{ width:min(980px,96%); max-height:90vh; overflow:auto; background:var(--card); border-radius:12px; padding:18px; border:1px solid rgba(0,0,0,0.06); box-shadow:var(--shadow); }
+    .modal-close{ float:right; cursor:pointer; background:transparent; border:0; font-weight:700; }
+
+    /* image viewer */
+    .img-viewer{ max-width:100%; display:block; margin:0 auto; border-radius:8px; }
+
+    /* footer */
+    footer.site-foot{ margin-top:12px; color:var(--muted); font-size:0.9rem; text-align:center; }
+
+    /* small animation helpers */
+    .fade-in{ animation:fadeIn .28s var(--ease) both; }
+    @keyframes fadeIn{ from{ opacity:0; transform:translateY(6px) } to{ opacity:1; transform:none } }
+  </style>
+</head>
+<body>
+  <!-- Loader -->
+  <div id="loader" class="loader" role="status" aria-live="polite">
+    <div class="loader-inner" aria-hidden="false">
+      <div id="logoWrap" class="logo-wrap"><img src="/logo.png" alt="logo"></div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-weight:700">BlankLabs</div>
+          <div id="loaderMsg" class="small">Loading content…</div>
+        </div>
+        <div class="progress" style="margin-top:12px"><div id="bar" class="bar"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <main class="container" id="app" aria-live="polite" style="visibility:hidden;">
+    <!-- left -->
+    <section class="hero" role="main" aria-labelledby="siteTitle">
+      <div class="top">
+        <div class="brand">
+          <div class="brand-mark" id="brandMark" title="BlankLabs"><img src="/logo.png" alt="logo"></div>
+          <div>
+            <div class="small" style="font-weight:700">BlankLabs</div>
+            <h1 id="siteTitle">Personal projects, photography, and writing</h1>
+            <div id="lead" class="lead">Personal projects, photography, experiments, and long-form writing.</div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <input id="quickSearch" class="search" placeholder="Search projects or posts…" aria-label="Search projects or posts">
+          <button id="themeBtn" class="btn" aria-pressed="false">Light</button>
+        </div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Main tabs">
+        <button role="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true">Overview</button>
+        <button role="tab" id="tab-portfolio" aria-controls="panel-portfolio" aria-selected="false">Portfolio</button>
+        <button role="tab" id="tab-blog" aria-controls="panel-blog" aria-selected="false">Blog</button>
+        <button role="tab" id="tab-contact" aria-controls="panel-contact" aria-selected="false">Contact</button>
+      </div>
+
+      <div class="panels">
+        <!-- Overview -->
+        <div id="panel-overview" class="panel active" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
+          <div class="card">
+            <div class="title">About</div>
+            <div id="bioText" class="small">Loading bio…</div>
+          </div>
+
+          <div class="card fade-in" style="margin-top:12px;">
+            <div class="title">Highlights</div>
+            <div class="small" id="overviewHighlights">Recent work and posts appear here.</div>
+          </div>
+        </div>
+
+        <!-- Portfolio -->
+        <div id="panel-portfolio" class="panel" role="tabpanel" aria-labelledby="tab-portfolio" tabindex="0" hidden>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div class="title">Portfolio</div>
+                <div class="small" id="pfIntro">Featured projects and galleries.</div>
+              </div>
+              <div style="width:38%"><input id="pfSearch" class="search" placeholder="Search projects…" aria-label="Search projects"></div>
+            </div>
+
+            <div id="pfFilters" style="margin-top:10px; display:flex; gap:8px; flex-wrap:wrap;"></div>
+            <div id="pfGrid" class="pf-grid" style="margin-top:12px;"></div>
+          </div>
+        </div>
+
+        <!-- Blog -->
+        <div id="panel-blog" class="panel" role="tabpanel" aria-labelledby="tab-blog" tabindex="0" hidden>
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div class="title">Blog</div>
+                <div class="small" id="blogIntro">Long-form posts, essays, and experiments.</div>
+              </div>
+              <div style="width:36%"><input id="blogSearch" class="search" placeholder="Search posts…" aria-label="Search posts"></div>
+            </div>
+
+            <div id="posts" class="posts" style="margin-top:12px;"></div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div id="panel-contact" class="panel" role="tabpanel" aria-labelledby="tab-contact" tabindex="0" hidden>
+          <div class="card">
+            <div class="title">Contact</div>
+            <div class="small">Email: <code>blank@blanklabs.site</code></div>
+            <div class="small" style="margin-top:8px">Twitter: <a href="https://twitter.com/toldblank" target="_blank" rel="noopener noreferrer">@toldblank</a></div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="site-foot">© <span id="year"></span> BlankLabs</footer>
+    </section>
+
+    <!-- right -->
+    <aside class="side" aria-label="Recent">
+      <div class="card">
+        <div class="title">Most recent portfolio</div>
+        <div id="recentPortfolio" class="recent-list"><div class="small">Loading…</div></div>
+      </div>
+
+      <div class="card">
+        <div class="title">Most recent posts</div>
+        <div id="recentPosts" class="recent-list"><div class="small">Loading…</div></div>
+      </div>
+
+      <div class="card">
+        <div class="title">Status</div>
+        <div id="status" class="small">Loading content…</div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Post modal (full view) -->
+  <div id="modal" class="modal" style="display:none;" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true">
+      <button id="modalClose" class="modal-close btn">Close</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Image viewer modal -->
+  <div id="imgModal" class="modal" style="display:none;" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" style="text-align:center;">
+      <button id="imgModalClose" class="modal-close btn">Close</button>
+      <div id="imgModalContent" style="margin-top:12px;"></div>
+      <div id="imgModalActions" style="margin-top:12px; color:var(--muted); font-size:0.95rem;"></div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    // config endpoints
+    const PATHS = { bio: '/bio.json', portfolio: '/portfolio.json', blogs: '/blogs.json', settings: '/settings.json' };
+
+    // elements
+    const loader = document.getElementById('loader'), bar = document.getElementById('bar'), logoWrap = document.getElementById('logoWrap'), loaderMsg = document.getElementById('loaderMsg');
+    const app = document.getElementById('app'), status = document.getElementById('status');
+    const bioText = document.getElementById('bioText'), pfGrid = document.getElementById('pfGrid'), postsEl = document.getElementById('posts');
+    const recentPortfolio = document.getElementById('recentPortfolio'), recentPosts = document.getElementById('recentPosts');
+    const yearEl = document.getElementById('year'); yearEl.textContent = new Date().getFullYear();
+
+    // modal
+    const modal = document.getElementById('modal'), modalContent = document.getElementById('modalContent'), modalClose = document.getElementById('modalClose');
+    const imgModal = document.getElementById('imgModal'), imgModalContent = document.getElementById('imgModalContent'), imgModalClose = document.getElementById('imgModalClose'), imgModalActions = document.getElementById('imgModalActions');
+
+    // theme
+    const themeBtn = document.getElementById('themeBtn');
+    const LS_THEME = 'bl_theme_v4';
+    function applyTheme(name){ if(name==='dark'){ document.documentElement.setAttribute('data-theme','dark'); themeBtn.textContent='Dark'; themeBtn.setAttribute('aria-pressed','true'); } else { document.documentElement.removeAttribute('data-theme'); themeBtn.textContent='Light'; themeBtn.setAttribute('aria-pressed','false'); } localStorage.setItem(LS_THEME, name); }
+    themeBtn.addEventListener('click', ()=> applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+    applyTheme(localStorage.getItem(LS_THEME) || (window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light'));
+
+    // loading helpers
+    function setProgress(p){ bar.style.width = Math.round(p*100)+'%'; }
+    function hideLoader(){ loader.classList.add('hidden'); setTimeout(()=> { loader.style.display='none'; app.style.visibility='visible'; }, 300); }
+
+    // safe fetch with timeout
+    function fetchJSON(url, timeout=1200){ return new Promise((res, rej) => { const t = setTimeout(()=> rej(new Error('timeout')), timeout); fetch(url, {cache:'no-cache'}).then(r=> { clearTimeout(t); if(!r.ok) rej(new Error('network')); return r.json(); }).then(j=> res(j)).catch(e=> { clearTimeout(t); rej(e); }); }); }
+
+    // render helpers
+    function el(tag, props={}, children=[]){ const n = document.createElement(tag); Object.keys(props||{}).forEach(k=> { if(k === 'class') n.className = props[k]; else if(k === 'style') n.style.cssText = props[k]; else n.setAttribute(k, props[k]); }); (Array.isArray(children) ? children : [children]).forEach(c => { if(c==null) return; if(typeof c === 'string' || typeof c === 'number') n.appendChild(document.createTextNode(String(c))); else n.appendChild(c); }); return n; }
+
+    // global: prevent image right-click context menu
+    document.addEventListener('contextmenu', (e) => {
+      const t = e.target;
+      if(t && (t.tagName === 'IMG' || t.closest && t.closest('img'))){
+        e.preventDefault();
+      }
+    });
+
+    // double-click to download image with credit prompt
+    async function handleImageDoubleClick(src, filename='image.png'){
+      const msg = "These images are copyrighted by BlankLabs. If you download, you must credit BlankLabs and link back to https://blanklabs.site. Do you want to download?";
+      if(confirm(msg)){
+        // create hidden link for download
+        try {
+          const a = document.createElement('a');
+          a.href = src;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          alert('Downloaded — remember to credit BlankLabs and link back to https://blanklabs.site');
+        } catch(e){
+          alert('Download failed.');
+        }
+      }
+    }
+
+    // render portfolio simple
+    function renderPortfolio(items){
+      pfGrid.innerHTML = '';
+      if(!items || items.length === 0){ pfGrid.appendChild(el('div', {}, 'No projects yet.')); return; }
+      items.forEach(item => {
+        const card = el('div', { class: 'pf-card' });
+        const imgSrc = (item.images && item.images[0]) || item.image || '/logo.png';
+        const img = el('img', { src: imgSrc, alt: item.title || 'project' });
+        // protect image (no right-click). double-click triggers download confirm.
+        img.addEventListener('dblclick', ()=> handleImageDoubleClick(imgSrc, (item.title || 'project').replace(/\s+/g,'_') + '.png'));
+        img.addEventListener('contextmenu', (e)=> e.preventDefault());
+        card.appendChild(img);
+        const meta = el('div', { class: 'pf-meta' }, [
+          el('div', { style: 'font-weight:700' }, item.title || 'Untitled'),
+          item.description ? el('div', { class: 'small' }, item.description) : null
+        ]);
+        if(item.tags && item.tags.length){
+          const tagsWrap = el('div', { class: 'tags' });
+          item.tags.forEach(t => tagsWrap.appendChild(el('span', { class: 'small' }, t)));
+          meta.appendChild(tagsWrap);
+        }
+        card.appendChild(meta);
+        card.addEventListener('click', ()=> openProjectFull(item));
+        pfGrid.appendChild(card);
+      });
+    }
+
+    // open project full: opens modal with images and description
+    function openProjectFull(item){
+      modalContent.innerHTML = '';
+      modalContent.appendChild(el('h2', {}, item.title || 'Untitled'));
+      if(item.date) modalContent.appendChild(el('div', { class: 'small meta-line' }, item.date));
+      if(item.description) modalContent.appendChild(el('p', { class: 'small' }, item.description));
+      // gallery
+      const imgs = (item.images && item.images.length) ? item.images : (item.image ? [item.image] : ['/logo.png']);
+      imgs.forEach(src => {
+        const im = el('img', { src, alt: item.title || 'image', style: 'max-width:100%; margin-top:12px; border-radius:8px' });
+        im.addEventListener('dblclick', ()=> handleImageDoubleClick(src, (item.title||'img').replace(/\s+/g,'_') + '.png'));
+        im.addEventListener('contextmenu', (e)=> e.preventDefault());
+        modalContent.appendChild(im);
+      });
+      showModal();
+    }
+
+    // render posts (titles + short preview)
+    function renderPosts(posts){
+      postsEl.innerHTML = '';
+      if(!posts || posts.length === 0){ postsEl.appendChild(el('div', {}, 'No posts yet.')); return; }
+      posts.forEach(post => {
+        const p = el('article', { class: 'post' });
+        p.appendChild(el('h2', {}, post.title || 'Untitled'));
+        if(post.subtitle) p.appendChild(el('div', { class: 'subtitle' }, post.subtitle));
+        p.appendChild(el('div', { class: 'meta-line' }, `${post.author || 'BlankLabs'} • ${post.date || ''}`));
+        // preview: find first paragraph or first text block
+        let previewText = '';
+        (post.blocks || []).some(b => {
+          if(b.type === 'text' && b.format === 'paragraph' && b.content){ previewText = b.content.slice(0, 220); return true; }
+          return false;
+        });
+        if(previewText) p.appendChild(el('div', { class: 'small' }, previewText + (previewText.length >= 220 ? '…' : '')));
+        // thumbnail: first image
+        const thumb = (post.blocks || []).find(b => b.type === 'image' && b.src);
+        if(thumb) {
+          const img = el('img', { src: thumb.src, style: 'width:100%; height:160px; object-fit:cover; margin-top:12px; border-radius:8px' });
+          img.addEventListener('dblclick', ()=> handleImageDoubleClick(thumb.src, (post.title || 'post_img').replace(/\s+/g,'_') + '.png'));
+          img.addEventListener('contextmenu', (e)=> e.preventDefault());
+          p.appendChild(img);
+        }
+        p.addEventListener('click', ()=> openPostFull(post));
+        postsEl.appendChild(p);
+      });
+    }
+
+    // open full post in modal (renders blocks)
+    function openPostFull(post){
+      modalContent.innerHTML = '';
+      modalContent.appendChild(el('h2', {}, post.title || 'Untitled'));
+      if(post.subtitle) modalContent.appendChild(el('div', { class: 'subtitle' }, post.subtitle));
+      modalContent.appendChild(el('div', { class: 'small meta-line' }, `${post.author || 'BlankLabs'} • ${post.date || ''}`));
+      // table of contents (headers)
+      const headers = [];
+      (post.blocks || []).forEach((b, i) => { if(b.type === 'text' && b.format === 'header') headers.push({ idx: i, title: b.content }); });
+      if(headers.length){
+        const toc = el('details', {} , el('summary', {}, 'Contents'));
+        headers.forEach(h => {
+          const link = el('div', { style: 'margin-top:8px; cursor:pointer; color:var(--accent);' }, h.title);
+          link.addEventListener('click', () => {
+            const target = modalContent.querySelector(`[data-block-index="${h.idx}"]`);
+            if(target) target.scrollIntoView({ behavior:'smooth', block:'center' });
+          });
+          toc.appendChild(link);
+        });
+        modalContent.appendChild(toc);
+      }
+      // blocks
+      (post.blocks || []).forEach((b, idx) => {
+        const node = renderBlockForModal(b, idx);
+        if(node) modalContent.appendChild(node);
+      });
+      showModal();
+    }
+
+    function renderBlockForModal(b, idx){
+      if(!b || !b.type) return null;
+      const wrapper = el('div', { class: 'block' });
+      wrapper.setAttribute('data-block-index', idx);
+      try {
+        if(b.type === 'text'){
+          if(b.format === 'header') return el('h3', {}, b.content || '');
+          if(b.format === 'list'){ const ul = el('ul'); (b.items || []).forEach(i => ul.appendChild(el('li', {}, i))); return ul; }
+          if(b.format === 'quote') return el('blockquote', {}, b.content || '');
+          return el('p', {}, b.content || '');
+        }
+        if(b.type === 'image'){
+          const img = el('img', { src: b.src || '/logo.png', alt: b.caption || '' });
+          img.addEventListener('dblclick', ()=> handleImageDoubleClick(b.src || '/logo.png', (b.caption || 'image').replace(/\s+/g,'_') + '.png'));
+          img.addEventListener('contextmenu', (e) => e.preventDefault());
+          wrapper.appendChild(img);
+          if(b.caption) wrapper.appendChild(el('div', { class: 'small' }, b.caption));
+          return wrapper;
+        }
+        if(b.type === 'code'){
+          if(b.language) wrapper.appendChild(el('div', { class: 'code-lang' }, b.language));
+          wrapper.appendChild(el('pre', {}, b.content || ''));
+          return wrapper;
+        }
+        if(b.type === 'video'){
+          const v = el('video', { controls: true, style: 'max-width:100%; margin-top:6px;' });
+          const s = el('source', { src: b.src || '' });
+          v.appendChild(s);
+          wrapper.appendChild(v);
+          if(b.caption) wrapper.appendChild(el('div', { class: 'small' }, b.caption));
+          return wrapper;
+        }
+        if(b.type === 'columns'){
+          const cols = el('div', { class: 'columns' });
+          (b.columns || []).forEach(c => {
+            const cwrap = el('div');
+            if(c.type === 'text') cwrap.appendChild(el('p', {}, c.content || ''));
+            else if(c.type === 'image') {
+              const im = el('img', { src: c.src || '/logo.png', alt: c.alt || '' });
+              im.addEventListener('dblclick', ()=> handleImageDoubleClick(c.src || '/logo.png', (c.alt||'image').replace(/\s+/g,'_')+'.png'));
+              im.addEventListener('contextmenu', (e)=> e.preventDefault());
+              cwrap.appendChild(im);
+            }
+            else if(c.type === 'list'){ const ul = el('ul'); (c.items||[]).forEach(it=>ul.appendChild(el('li', {}, it))); cwrap.appendChild(ul); }
+            cols.appendChild(cwrap);
+          });
+          wrapper.appendChild(cols);
+          return wrapper;
+        }
+        if(b.type === 'accordion'){
+          const det = el('details'); det.appendChild(el('summary', {}, b.title || 'Details'));
+          (b.blocks || []).forEach(inner => { const n = renderBlockForModal(inner, 0); if(n) det.appendChild(n); });
+          wrapper.appendChild(det); return wrapper;
+        }
+        if(b.type === 'embed'){
+          const iframe = el('iframe', { src: b.src || '', width: '100%', height: b.height || 360, style: 'border:0;border-radius:8px;overflow:hidden;' });
+          wrapper.appendChild(iframe); return wrapper;
+        }
+      } catch(e){ wrapper.appendChild(el('pre', {}, 'Error rendering block')); }
+      wrapper.appendChild(el('pre', {}, JSON.stringify(b, null, 2))); return wrapper;
+    }
+
+    // show modal
+    function showModal(){ modal.style.display = 'flex'; modal.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; }
+    function hideModal(){ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
+
+    // image viewer modal actions & show
+    function showImageViewer(src){
+      imgModalContent.innerHTML = '';
+      const full = el('img', { src, class: 'img-viewer', alt: 'image' });
+      full.addEventListener('contextmenu', (e)=> e.preventDefault());
+      full.addEventListener('dblclick', ()=> handleImageDoubleClick(src, 'image.png'));
+      imgModalContent.appendChild(full);
+      imgModalActions.innerHTML = 'Double-click to download. These images are copyrighted by BlankLabs — credit required and link back to https://blanklabs.site';
+      imgModal.style.display = 'flex'; imgModal.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden';
+    }
+    function hideImageViewer(){ imgModal.style.display = 'none'; imgModal.setAttribute('aria-hidden','true'); document.body.style.overflow = ''; }
+
+    // recent lists
+    function renderRecentPortfolio(items){
+      recentPortfolio.innerHTML = '';
+      if(!items || items.length === 0) { recentPortfolio.appendChild(el('div', {}, 'No recent items.')); return; }
+      const recent = items.slice(0,4);
+      recent.forEach(it => {
+        const r = el('div', { class: 'recent-item' });
+        const img = el('img', { src: (it.images && it.images[0]) || it.image || '/logo.png', alt: it.title || 'img' });
+        img.addEventListener('contextmenu', (e)=> e.preventDefault());
+        img.addEventListener('dblclick', ()=> handleImageDoubleClick((it.images && it.images[0]) || it.image || '/logo.png', (it.title||'img').replace(/\s+/g,'_')+'.png'));
+        r.appendChild(img);
+        const meta = el('div', {}, [ el('div', { style: 'font-weight:700' }, it.title || 'Untitled'), el('div', { class: 'small' }, (it.description || '').slice(0,80)) ]);
+        r.appendChild(meta);
+        r.addEventListener('click', ()=> openProjectFull(it));
+        recentPortfolio.appendChild(r);
+      });
+    }
+
+    function renderRecentPosts(posts){
+      recentPosts.innerHTML = '';
+      if(!posts || posts.length === 0) { recentPosts.appendChild(el('div', {}, 'No recent posts.')); return; }
+      const recent = posts.slice(0,4);
+      recent.forEach(p => {
+        const r = el('div', { class: 'recent-item' });
+        // thumbnail: first image block
+        const thumbBlock = (p.blocks || []).find(b => b.type === 'image' && b.src);
+        const img = el('img', { src: (thumbBlock && thumbBlock.src) || '/logo.png', alt: p.title || 'img' });
+        img.addEventListener('contextmenu', (e)=> e.preventDefault());
+        img.addEventListener('dblclick', ()=> handleImageDoubleClick((thumbBlock && thumbBlock.src) || '/logo.png', (p.title||'post').replace(/\s+/g,'_')+'.png'));
+        r.appendChild(img);
+        const meta = el('div', {}, [ el('div', { style: 'font-weight:700' }, p.title || 'Untitled'), el('div', { class: 'small' }, (p.subtitle || '').slice(0,80)) ]);
+        r.appendChild(meta);
+        r.addEventListener('click', ()=> openPostFull(p));
+        recentPosts.appendChild(r);
+      });
+    }
+
+    // render all at once (main sequence)
+    async function init(){
+      try{
+        setProgress(0.06); loaderMsg.textContent = 'Loading settings…';
+        let settings = null;
+        try { settings = await fetchJSON(PATHS.settings, 900); } catch(e){ settings = null; }
+        setProgress(0.18); loaderMsg.textContent = 'Loading bio…';
+        let bio = null; try { bio = await fetchJSON(PATHS.bio, 1000); } catch(e){ bio = null; }
+        setProgress(0.4); loaderMsg.textContent = 'Loading portfolio…';
+        let portfolio = []; try { portfolio = await fetchJSON(PATHS.portfolio, 1400); } catch(e){ portfolio = []; }
+        setProgress(0.68); loaderMsg.textContent = 'Loading posts…';
+        let blogs = []; try { blogs = await fetchJSON(PATHS.blogs, 1600); } catch(e){ blogs = []; }
+        setProgress(0.92); loaderMsg.textContent = 'Finishing…';
+
+        // apply settings theme if provided
+        if(settings && settings.theme) applyTheme(settings.theme);
+
+        bioText.textContent = (bio && bio.bio) ? bio.bio : "Hi! I'm BlankLabs. I create small projects, photography, and long-form writing.";
+
+        renderPortfolio(portfolio);
+        renderRecentPortfolio(portfolio);
+        renderPosts(blogs);
+        renderRecentPosts(blogs);
+
+        // overview highlights short preview
+        const h = document.getElementById('overviewHighlights');
+        const recentP = portfolio[0] ? `<strong>${portfolio[0].title}</strong> — ${ (portfolio[0].description||'').slice(0,120) }` : '';
+        const recentB = blogs[0] ? `<br><strong>${blogs[0].title}</strong> — ${ (blogs[0].description||'') }` : '';
+        h.innerHTML = (recentP || recentB) ? (recentP + recentB) : 'No recent work yet.';
+
+        setProgress(1);
+        logoWrap.classList.add('pop');
+        setTimeout(()=> { hideLoader(); status.textContent = 'Ready'; }, 420);
+      } catch(err){
+        console.warn(err); status.textContent = 'Error loading content';
+        hideLoader();
+      }
+    }
+
+    // quick search that filters both posts and projects (with small animated indicator)
+    const quickSearch = document.getElementById('quickSearch');
+    let searchTimer = null;
+    quickSearch.addEventListener('input', (e) => {
+      const q = (e.target.value||'').toLowerCase().trim();
+      // animate bar briefly
+      bar.style.transition = 'width 320ms linear';
+      bar.style.width = '30%';
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        if(!q){ init(); return; }
+        // filter portfolio and posts
+        Promise.all([ (async()=> {
+          let pf = []; try { pf = await fetchJSON(PATHS.portfolio, 900); } catch(e){ pf = []; }
+          return pf.filter(it => ((it.title||'') + ' ' + (it.description||'') + ' ' + (it.tags||[]).join(' ')).toLowerCase().includes(q));
+        })(), (async()=> {
+          let bl = []; try { bl = await fetchJSON(PATHS.blogs, 900); } catch(e){ bl = []; }
+          return bl.filter(p => ((p.title||'') + ' ' + (p.subtitle||'') + ' ' + (p.description||'') + ' ' + JSON.stringify(p.blocks||[])).toLowerCase().includes(q));
+        })() ]).then(([pfRes, blRes]) => {
+          renderPortfolio(pfRes);
+          renderPosts(blRes);
+          // small finish animation
+          setTimeout(()=> { bar.style.width = '100%'; setTimeout(()=> bar.style.width = '0%', 180); }, 200);
+        }).catch(()=> { bar.style.width = '0%'; });
+      }, 320);
+    });
+
+    // panel switching animation and accessibility
+    const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+    const panels = Array.from(document.querySelectorAll('.panel'));
+    function activateTab(tab){
+      tabs.forEach(t => t.setAttribute('aria-selected', t===tab));
+      panels.forEach(p => { if(p.id === tab.getAttribute('aria-controls')){ p.classList.add('active'); p.hidden = false; } else { p.classList.remove('active'); p.hidden = true; } });
+      localStorage.setItem('bl_tab_v4', tab.id);
+    }
+    tabs.forEach(t => t.addEventListener('click', ()=> activateTab(t)));
+    // restore last tab
+    const last = localStorage.getItem('bl_tab_v4');
+    if(last && document.getElementById(last)) activateTab(document.getElementById(last));
+    else activateTab(document.getElementById('tab-overview'));
+
+    // modal events
+    modalClose.addEventListener('click', hideModal);
+    modal.addEventListener('click', (e) => { if(e.target === modal) hideModal(); });
+    imgModalClose.addEventListener('click', hideImageViewer);
+    imgModal.addEventListener('click', (e) => { if(e.target === imgModal) hideImageViewer(); });
+
+    // keyboard close
+    document.addEventListener('keydown', (e) => { if(e.key === 'Escape'){ hideModal(); hideImageViewer(); } });
+
+    // utility: prevent default drag on images (extra)
+    document.addEventListener('dragstart', (e) => { if(e.target && e.target.tagName === 'IMG') e.preventDefault(); });
+
+    // start
+    init();
+  })();
+  </script>
+</body>
+</html>
