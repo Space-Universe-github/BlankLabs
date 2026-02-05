@@ -1,1 +1,22 @@
-
+[
+  {
+    "id": "proj001",
+    "title": "First Project",
+    "description": "Just testing how this portfolio layout works",
+    "images": [
+      "logo.png"
+    ],
+    "tags": ["test", "web"],
+    "date": "2026-02-05"
+  },
+  {
+    "id": "proj002",
+    "title": "Second Project",
+    "description": "Another quick project to see multiple items",
+    "images": [
+      "logo.png"
+    ],
+    "tags": ["experiment", "ui"],
+    "date": "2026-02-05"
+  }
+]
