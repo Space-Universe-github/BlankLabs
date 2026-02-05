@@ -1,0 +1,29 @@
+[
+  {
+    "id": "blog001",
+    "title": "Making a Tiny UI Experiment",
+    "subtitle": "Design choices and notes",
+    "description": "A writeup of a small UI experiment I made.",
+    "author": "BlankLabs",
+    "date": "2026-02-05",
+    "blocks": [
+      { "type": "text", "format": "paragraph", "content": "I built a tiny UI experiment to test animations and theme switches." },
+      { "type": "text", "format": "header", "content": "Goals" },
+      { "type": "text", "format": "list", "items": ["Keep it tiny", "Test dark/light", "Smooth animations"] },
+      { "type": "image", "src": "posts/ui-experiment.png", "caption": "Experiment screenshot" },
+      { "type": "code", "language": "javascript", "content": "document.body.classList.toggle('dark')" },
+      { "type": "columns", "columns": [
+          { "type": "text", "format": "paragraph", "content": "Left column: notes about layout." },
+          { "type": "image", "src": "posts/layout.png" }
+        ]
+      },
+      { "type": "accordion", "title": "Design decisions", "blocks": [
+          { "type": "text", "format": "paragraph", "content": "I chose soft shadows and frosted glass for depth." },
+          { "type": "image", "src": "posts/shadow.png" }
+        ]
+      },
+      { "type": "text", "format": "paragraph", "content": "Wrap up: try it, change colors, iterate." },
+      { "type": "image", "src": "ending_logo.png", "caption": "Ending logo" }
+    ]
+  }
+]
