@@ -1,12 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>BlankLabs — Projects, Photography, Writing</title>
-<meta name="description" content="BlankLabs — projects, photography, experiments, and long-form writing." />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BlankLabs — Projects, Photo Stories, Writing</title>
+<meta name="description" content="BlankLabs — projects, photo stories, experiments, and long-form writing." />
 <link rel="icon" href="/favicon.ico" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -14,15 +13,13 @@
     --muted:#6b7280; --text:#0b1116; --accent:#0b5b8a;
     --radius:12px; --maxw:1200px; --shadow:0 12px 36px rgba(11,17,22,0.06);
     --ease:cubic-bezier(.2,.9,.3,1);
-    --input-bg: rgba(255,255,255,0.96);
-    --placeholder: #9aa3ad;
+    --input-bg: rgba(255,255,255,0.96); --placeholder:#9aa3ad;
   }
   [data-theme="dark"]{
     --bg:#071018; --glass:rgba(18,20,22,0.84); --card:#0e1416;
     --muted:#9aa3ad; --text:#e6eef3; --accent:#6cf2c2;
     --shadow:0 14px 48px rgba(0,0,0,0.65);
-    --input-bg: rgba(255,255,255,0.02);
-    --placeholder: #5f6a72;
+    --input-bg: rgba(255,255,255,0.02); --placeholder:#5f6a72;
   }
 
   *{box-sizing:border-box}
@@ -37,16 +34,16 @@
   .container{ width:100%; max-width:var(--maxw); display:grid; grid-template-columns:1fr 360px; gap:20px; align-items:start; }
   @media (max-width:980px){ .container{ grid-template-columns:1fr } }
 
-  /* loader overlay */
+  /* loader */
   .loader{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(0,0,0,0.64), rgba(0,0,0,0.38)); z-index:9999; transition:opacity .22s var(--ease); }
   .loader.hidden{ opacity:0; pointer-events:none; }
-  .loader-inner{ display:flex; gap:16px; align-items:center; background:var(--card); padding:18px; border-radius:14px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04); }
-  .logo-wrap{ width:84px; height:84px; border-radius:12px; overflow:hidden; transform:translateY(12px) scale(.8); transition:transform 420ms var(--ease); }
+  .loader-inner{ display:flex; gap:16px; align-items:center; background:var(--card); padding:18px; border-radius:14px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04); max-width:760px; width:92%; }
+  .logo-wrap{ width:84px; height:84px; border-radius:12px; overflow:hidden; display:grid; place-items:center; transform:translateY(12px) scale(.8); transition:transform 420ms var(--ease); }
   .logo-wrap.pop{ transform:translateY(-12px) scale(1.06) rotate(-4deg); }
   .progress{ flex:1; height:12px; background:rgba(0,0,0,0.06); border-radius:999px; overflow:hidden; }
   .bar{ height:100%; width:0%; background:linear-gradient(90deg,var(--accent), #1b9bd7); transition:width 260ms linear; border-radius:999px; }
 
-  /* hero / header */
+  /* hero/header */
   .hero{ background:var(--glass); border-radius:calc(var(--radius)+6px); padding:18px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04); min-height:480px; display:flex; flex-direction:column; gap:12px; }
   .top{ display:flex; justify-content:space-between; gap:12px; align-items:center; }
   .brand{ display:flex; gap:12px; align-items:center; }
@@ -55,70 +52,51 @@
   h1{ margin:0; font-size:clamp(1.14rem,2.6vw,1.75rem) }
   .lead{ margin:6px 0 0; color:var(--muted); }
 
-  /* controls: search button + theme */
   .controls{ display:flex; gap:8px; align-items:center }
   .btn{ padding:8px 12px; border-radius:10px; background:var(--card); border:1px solid rgba(0,0,0,0.05); cursor:pointer; font-weight:700; color:var(--text); }
-  .btn.ghost{ background:transparent; border-color:transparent }
-  .btn.loading{ pointer-events:none; opacity:0.85; }
+  .btn.loading{ opacity:0.85; pointer-events:none; }
 
-  /* tabs */
   .tabs{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
   [role="tab"]{ padding:8px 12px; border-radius:10px; background:transparent; border:1px solid transparent; color:var(--muted); cursor:pointer; font-weight:600; transition:all .24s var(--ease); }
   [role="tab"][aria-selected="true"]{ background:var(--card); color:var(--text); box-shadow:0 10px 28px rgba(0,0,0,0.06); border-color:rgba(0,0,0,0.04) }
 
-  /* panels w/ animation */
   .panels{ margin-top:12px; flex:1; overflow:auto; padding-right:8px; display:grid; grid-auto-rows:min-content; gap:12px; }
   .panel{ opacity:0; transform:translateY(8px); transition:opacity .34s var(--ease), transform .34s var(--ease); }
   .panel.active{ opacity:1; transform:none; }
 
-  /* cards */
   .card{ background:var(--card); padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.04); box-shadow:0 8px 24px rgba(0,0,0,0.04); }
   .title{ font-weight:700; margin-bottom:8px; }
-  .small{ color:var(--muted); }
+  .small{ color:var(--muted); font-size:0.95rem; }
 
-  /* inputs styled for dark mode too */
-  input[type="search"], .search {
-    padding:8px 10px; border-radius:10px; border:1px solid rgba(0,0,0,0.06);
-    background: var(--input-bg); color:var(--text); width:100%;
-  }
+  input[type="search"], .search { padding:8px 10px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); background:var(--input-bg); color:var(--text); width:100%; }
   input::placeholder, .search::placeholder { color: var(--placeholder); opacity:1; }
 
-  /* portfolio */
   .pf-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px; margin-top:10px; }
   .pf-card{ border-radius:10px; overflow:hidden; display:flex; flex-direction:column; background:var(--card); border:1px solid rgba(0,0,0,0.04); cursor:pointer; transition:transform .18s var(--ease), box-shadow .18s var(--ease); }
-  .pf-card:hover{ transform:translateY(-6px); box-shadow:0 18px 36px rgba(0,0,0,0.08); }
   .pf-card img{ width:100%; height:160px; object-fit:cover; display:block; user-select:none; -webkit-user-drag:none; }
   .pf-meta{ padding:10px; display:flex; flex-direction:column; gap:6px; }
   .tags{ display:flex; gap:6px; flex-wrap:wrap; }
 
-  /* right column recent lists */
   .side{ display:flex; flex-direction:column; gap:12px; }
   .recent-list{ display:flex; flex-direction:column; gap:8px; }
   .recent-item{ display:flex; gap:10px; align-items:center; padding:8px; background:var(--card); border-radius:8px; border:1px solid rgba(0,0,0,0.04); cursor:pointer; transition:transform .16s var(--ease); }
-  .recent-item:hover{ transform:translateX(6px); }
   .recent-item img{ width:64px; height:48px; object-fit:cover; border-radius:6px; user-select:none; -webkit-user-drag:none; }
 
-  /* posts */
   .posts{ display:flex; flex-direction:column; gap:16px; margin-top:10px; }
   .post{ padding:12px; border-radius:10px; background:var(--card); border:1px solid rgba(0,0,0,0.04); transition:transform .16s var(--ease); }
-  .post:hover{ transform:translateY(-6px); box-shadow:0 18px 36px rgba(0,0,0,0.06); }
   .post h2{ margin:6px 0 2px; }
   .subtitle{ color:var(--muted); margin-bottom:8px; font-size:0.95rem; }
   .meta-line{ color:var(--muted); font-size:0.9rem; margin-bottom:6px; }
 
-  /* blocks */
   .block{ margin:10px 0; line-height:1.6; }
   .block img{ max-width:100%; border-radius:8px; display:block; user-select:none; -webkit-user-drag:none; }
   pre{ background:#0b1220; color:#e6eef3; padding:12px; border-radius:8px; overflow:auto; font-family:ui-monospace, Menlo, monospace; }
-  .code-lang{ font-size:0.78rem; color:var(--muted); margin-bottom:6px; }
-
   .columns{ display:grid; gap:12px; grid-template-columns:1fr 1fr; }
   @media (max-width:700px){ .columns{ grid-template-columns:1fr } }
 
   details{ background: rgba(0,0,0,0.02); padding:8px; border-radius:8px; }
   summary{ cursor:pointer; font-weight:700; outline:none; }
 
-  /* modal */
   .modal{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.5)); z-index:10010; padding:20px; }
   .modal-card{ width:min(980px,96%); max-height:90vh; overflow:auto; background:var(--card); border-radius:12px; padding:18px; border:1px solid rgba(0,0,0,0.06); box-shadow:var(--shadow); }
   .modal-close{ float:right; cursor:pointer; background:transparent; border:0; font-weight:700; }
@@ -127,17 +105,15 @@
 
   footer.site-foot{ margin-top:12px; color:var(--muted); font-size:0.9rem; text-align:center; }
 
-  /* animation helpers */
   .fade-in{ animation:fadeIn .28s var(--ease) both; }
   @keyframes fadeIn{ from{ opacity:0; transform:translateY(6px) } to{ opacity:1; transform:none } }
-
 </style>
 </head>
 <body>
   <!-- Loader (uses logo.png) -->
   <div id="loader" class="loader" role="status" aria-live="polite">
     <div class="loader-inner">
-      <div id="logoWrap" class="logo-wrap"><img src="/logo.png" alt="logo" onerror="this.src='/placeholder.png'"></div>
+      <div id="logoWrap" class="logo-wrap" aria-hidden="true"><img id="loaderLogo" alt="logo"></div>
       <div style="flex:1">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-weight:700">BlankLabs</div>
@@ -152,10 +128,10 @@
     <section class="hero" role="main" aria-labelledby="siteTitle">
       <div class="top">
         <div class="brand">
-          <div class="brand-mark" id="brandMark" title="BlankLabs"><img src="/logo.png" alt="logo" onerror="this.src='/placeholder.png'"></div>
+          <div class="brand-mark" id="brandMark" title="BlankLabs"><img id="brandImg" alt="logo"></div>
           <div>
             <div class="small" style="font-weight:700">BlankLabs</div>
-            <h1 id="siteTitle">Projects, Photo Stories, and Essays</h1>
+            <h1 id="siteTitle">My Website :3</h1>
             <div id="lead" class="lead">Curated projects, photography stories, experiments, and long-form essays.</div>
           </div>
         </div>
@@ -174,26 +150,24 @@
       </div>
 
       <div class="panels">
-        <!-- Overview -->
         <div id="panel-overview" class="panel active" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
           <div class="card">
             <div class="title">About</div>
-            <div id="bioText" class="small">Loading bio…</div>
+            <div id="bioText" class="small"></div>
           </div>
 
           <div class="card fade-in" style="margin-top:12px;">
             <div class="title">Highlights</div>
-            <div class="small" id="overviewHighlights">Recent items show here automatically.</div>
+            <div class="small" id="overviewHighlights"></div>
           </div>
         </div>
 
-        <!-- Portfolio -->
         <div id="panel-portfolio" class="panel" role="tabpanel" aria-labelledby="tab-portfolio" tabindex="0" hidden>
           <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <div>
                 <div class="title">Portfolio</div>
-                <div class="small" id="pfIntro">Selected projects and galleries.</div>
+                <div class="small" id="pfIntro"></div>
               </div>
               <div style="width:38%"><input id="pfSearch" class="search" placeholder="Search projects…" aria-label="Search projects"></div>
             </div>
@@ -203,13 +177,12 @@
           </div>
         </div>
 
-        <!-- Blog / Writing -->
         <div id="panel-blog" class="panel" role="tabpanel" aria-labelledby="tab-blog" tabindex="0" hidden>
           <div class="card">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <div>
                 <div class="title">Writing</div>
-                <div class="small" id="blogIntro">Long-form essays, experiments, and notes. Markdown supported.</div>
+                <div class="small" id="blogIntro"></div>
               </div>
               <div style="width:36%"><input id="blogSearch" class="search" placeholder="Search posts…" aria-label="Search posts"></div>
             </div>
@@ -218,7 +191,6 @@
           </div>
         </div>
 
-        <!-- Contact -->
         <div id="panel-contact" class="panel" role="tabpanel" aria-labelledby="tab-contact" tabindex="0" hidden>
           <div class="card">
             <div class="title">Contact</div>
@@ -231,23 +203,22 @@
       <footer class="site-foot">© <span id="year"></span> BlankLabs</footer>
     </section>
 
-    <!-- right -->
     <aside class="side" aria-label="Recent">
       <div class="card">
         <div class="title">Most recent portfolio</div>
-        <div id="recentPortfolio" class="recent-list"><div class="small">Loading…</div></div>
+        <div id="recentPortfolio" class="recent-list"></div>
       </div>
 
       <div class="card">
         <div class="title">Most recent writing</div>
-        <div id="recentPosts" class="recent-list"><div class="small">Loading…</div></div>
+        <div id="recentPosts" class="recent-list"></div>
       </div>
     </aside>
   </main>
 
   <!-- Search modal -->
   <div id="searchModal" class="modal" style="display:none;" aria-hidden="true">
-    <div class="modal-card">
+    <div class="modal-card" role="dialog" aria-modal="true">
       <button id="searchClose" class="modal-close btn">Close</button>
       <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
         <input id="searchInput" class="search" placeholder="Type search terms..." />
@@ -260,7 +231,7 @@
 
   <!-- Post modal -->
   <div id="postModal" class="modal" style="display:none;" aria-hidden="true">
-    <div class="modal-card">
+    <div class="modal-card" role="dialog" aria-modal="true">
       <button id="postClose" class="modal-close btn">Close</button>
       <div id="postContent"></div>
     </div>
@@ -268,27 +239,376 @@
 
 <script>
 (function(){
-  // paths
-  const PATHS = { bio:'/bio.json', portfolio:'/portfolio.json', blogs:'/blogs.json', settings:'/settings.json' };
+  // Paths for JSON and assets (no premade data included)
+  const PATHS = {
+    bio: '/bio.json',
+    portfolio: '/portfolio.json',
+    blogs: '/blogs.json',
+    settings: '/settings.json',
+    logo: '/logo.png',
+    placeholder: '/placeholder.png'
+  };
 
-  // elements
-  const loader = document.getElementById('loader'), bar = document.getElementById('bar'), logoWrap = document.getElementById('logoWrap'), loaderText = document.getElementById('loaderText');
-  const app = document.getElementById('app'), yearEl = document.getElementById('year');
-  const bioText = document.getElementById('bioText'), pfGrid = document.getElementById('pfGrid'), postsEl = document.getElementById('posts');
-  const recentPortfolio = document.getElementById('recentPortfolio'), recentPosts = document.getElementById('recentPosts');
-  const openSearch = document.getElementById('openSearch'), searchModal = document.getElementById('searchModal'), searchClose = document.getElementById('searchClose'), searchInput = document.getElementById('searchInput'), runSearch = document.getElementById('runSearch'), searchStatus = document.getElementById('searchStatus'), searchResults = document.getElementById('searchResults');
-  const postModal = document.getElementById('postModal'), postContent = document.getElementById('postContent'), postClose = document.getElementById('postClose');
+  // Elements
+  const loader = document.getElementById('loader');
+  const logoWrap = document.getElementById('logoWrap');
+  const loaderLogo = document.getElementById('loaderLogo');
+  const bar = document.getElementById('bar');
+  const loaderText = document.getElementById('loaderText');
+  const app = document.getElementById('app');
+  const yearEl = document.getElementById('year');
+  const bioText = document.getElementById('bioText');
+  const pfGrid = document.getElementById('pfGrid');
+  const postsEl = document.getElementById('posts');
+  const recentPortfolio = document.getElementById('recentPortfolio');
+  const recentPosts = document.getElementById('recentPosts');
+  const openSearch = document.getElementById('openSearch');
+  const searchModal = document.getElementById('searchModal');
+  const searchInput = document.getElementById('searchInput');
+  const runSearch = document.getElementById('runSearch');
+  const searchClose = document.getElementById('searchClose');
+  const searchStatus = document.getElementById('searchStatus');
+  const searchResults = document.getElementById('searchResults');
+  const postModal = document.getElementById('postModal');
+  const postContent = document.getElementById('postContent');
+  const postClose = document.getElementById('postClose');
   const themeBtn = document.getElementById('themeBtn');
+  const brandImg = document.getElementById('brandImg');
 
   yearEl.textContent = new Date().getFullYear();
 
-  // theme
-  const LS_THEME = 'bl_theme_v5';
+  // Utils
+  const escapeHTML = s => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  function createEl(tag, attrs, children){
+    const el = document.createElement(tag);
+    if(attrs) Object.keys(attrs).forEach(k => {
+      if(k === 'class') el.className = attrs[k];
+      else if(k === 'style') el.style.cssText = attrs[k];
+      else if(k === 'text') el.textContent = attrs[k];
+      else el.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(c => { if(c == null) return; if(typeof c === 'string') el.appendChild(document.createTextNode(c)); else el.appendChild(c); });
+    return el;
+  }
+  function setBar(frac){ bar.style.width = Math.round(Math.max(0, Math.min(1, frac))*100) + '%'; }
+
+  // Inert helper for accessibility
+  function setInert(container, inert){
+    if(!container) return;
+    if('inert' in HTMLElement.prototype){
+      container.inert = inert;
+      if(inert) container.setAttribute('aria-hidden','true'); else container.removeAttribute('aria-hidden');
+    } else {
+      const focusables = container.querySelectorAll('a,button,input,select,textarea,[tabindex]');
+      focusables.forEach(el => {
+        if(inert){
+          if(el.hasAttribute('tabindex')) el.dataset._savedTab = el.getAttribute('tabindex');
+          else el.dataset._savedTab = 'none';
+          el.setAttribute('tabindex', '-1');
+        } else {
+          if(el.dataset._savedTab && el.dataset._savedTab !== 'none') el.setAttribute('tabindex', el.dataset._savedTab);
+          else el.removeAttribute('tabindex');
+          delete el.dataset._savedTab;
+        }
+      });
+      if(inert) container.setAttribute('aria-hidden','true'); else container.removeAttribute('aria-hidden');
+    }
+  }
+
+  // Fetch JSON with timeout; return null on failure
+  async function fetchJSON(url, timeout=1400){
+    try {
+      const controller = new AbortController();
+      const id = setTimeout(()=> controller.abort(), timeout);
+      const res = await fetch(url, { signal: controller.signal, cache: 'no-cache' });
+      clearTimeout(id);
+      if(!res.ok) return null;
+      return await res.json();
+    } catch(e){ return null; }
+  }
+
+  // Image helper with safe handlers (fallback to placeholder asset if image fails)
+  function safeImg(src, alt){
+    const img = document.createElement('img');
+    img.src = src || PATHS.placeholder;
+    img.alt = alt || '';
+    img.onerror = () => { if(img.src.indexOf(PATHS.placeholder) === -1) img.src = PATHS.placeholder; };
+    img.addEventListener('contextmenu', e => e.preventDefault());
+    img.addEventListener('dragstart', e => e.preventDefault());
+    img.addEventListener('dblclick', () => {
+      const ok = confirm("These images are copyrighted by BlankLabs. If you download, you must credit BlankLabs and link back to https://blanklabs.site. Download?");
+      if(ok){
+        const a = document.createElement('a'); a.href = img.src; a.download = (alt || 'image').replace(/\s+/g,'_') + '.png';
+        document.body.appendChild(a); a.click(); a.remove();
+        alert('Downloaded — remember to credit BlankLabs and link back to https://blanklabs.site');
+      }
+    });
+    return img;
+  }
+
+  // Minimal inline markdown parsing for paragraphs/inline styles
+  function parseInlineMarkdown(text){
+    if(!text) return document.createTextNode('');
+    let s = escapeHTML(text);
+    s = s.replace(/`([^`]+)`/g, (m,c)=> `<code>${escapeHTML(c)}</code>`);
+    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m,t,u)=> `<a href="${escapeHTML(u)}" target="_blank" rel="noopener noreferrer">${escapeHTML(t)}</a>`);
+    s = s.replace(/\*\*([^*]+)\*\*/g, (m,c)=> `<strong>${escapeHTML(c)}</strong>`);
+    s = s.replace(/\*([^*]+)\*/g, (m,c)=> `<em>${escapeHTML(c)}</em>`);
+    const span = document.createElement('span'); span.innerHTML = s; return span;
+  }
+
+  // Small block markdown parser supporting code fences, headings, lists, paragraphs
+  function parseMarkdown(md){
+    const container = document.createElement('div');
+    if(!md) return container;
+    const lines = String(md).replace(/\r\n/g,'\n').split('\n');
+    let inCode = false, codeBuf = [];
+    let listEl = null;
+    function flushCode(){ if(inCode){ const pre = document.createElement('pre'); pre.textContent = codeBuf.join('\n'); container.appendChild(pre); inCode = false; codeBuf = []; } }
+    function flushList(){ if(listEl){ container.appendChild(listEl); listEl = null; } }
+    for(let line of lines){
+      if(line.startsWith('```')){ if(!inCode){ inCode = true; codeBuf = []; continue; } else { flushCode(); continue; } }
+      if(inCode){ codeBuf.push(line); continue; }
+      const h = line.match(/^(#{1,3})\s+(.*)$/);
+      if(h){ flushList(); const el = document.createElement('h3'); el.textContent = h[2]; container.appendChild(el); continue; }
+      const li = line.match(/^\s*[-*]\s+(.*)$/);
+      if(li){ if(!listEl) listEl = document.createElement('ul'); const liEl = document.createElement('li'); liEl.appendChild(parseInlineMarkdown(li[1])); listEl.appendChild(liEl); continue; } else { flushList(); }
+      if(line.trim() === '') continue;
+      const p = document.createElement('p'); p.appendChild(parseInlineMarkdown(line)); container.appendChild(p);
+    }
+    flushCode(); flushList();
+    return container;
+  }
+
+  // Panels rendering (no premade/sample data used)
+  function renderPortfolio(list){
+    pfGrid.innerHTML = '';
+    if(!Array.isArray(list) || list.length === 0){ pfGrid.appendChild(document.createTextNode('No projects yet.')); return; }
+    list.forEach(item => {
+      const card = createEl('div', { class: 'pf-card' });
+      const img = safeImg((item.images && item.images[0]) || item.image || PATHS.placeholder, item.title || 'project');
+      card.appendChild(img);
+      const meta = createEl('div', { class: 'pf-meta' });
+      meta.appendChild(createEl('div', { style: 'font-weight:700' }, [ item.title || 'Untitled' ]));
+      if(item.description) meta.appendChild(createEl('div', { class: 'small' }, [ item.description ]));
+      if(item.tags && item.tags.length){
+        const wrap = createEl('div', { class: 'tags' });
+        item.tags.forEach(t => wrap.appendChild(createEl('span', { class: 'small' }, [ t ])));
+        meta.appendChild(wrap);
+      }
+      card.appendChild(meta);
+      card.addEventListener('click', () => openProjectModal(item));
+      pfGrid.appendChild(card);
+    });
+  }
+
+  function openProjectModal(item){
+    postContent.innerHTML = '';
+    postContent.appendChild(createEl('h2', {}, [ item.title || 'Untitled' ]));
+    if(item.date) postContent.appendChild(createEl('div', { class: 'small meta-line' }, [ item.date ]));
+    if(item.description) postContent.appendChild(createEl('p', { class: 'small' }, [ item.description ]));
+    const imgs = (item.images && item.images.length) ? item.images : (item.image ? [item.image] : []);
+    imgs.forEach(src => postContent.appendChild(safeImg(src || PATHS.placeholder, item.title || 'image')));
+    showModal(postModal);
+  }
+
+  function renderPosts(list){
+    postsEl.innerHTML = '';
+    if(!Array.isArray(list) || list.length === 0){ postsEl.appendChild(document.createTextNode('No posts yet.')); return; }
+    list.forEach(post => {
+      const art = createEl('article', { class: 'post' });
+      art.appendChild(createEl('h2', {}, [ post.title || 'Untitled' ]));
+      if(post.subtitle) art.appendChild(createEl('div', { class: 'subtitle' }, [ post.subtitle ]));
+      art.appendChild(createEl('div', { class: 'meta-line' }, [ `${post.author || ''}${post.author ? ' • ' : ''}${post.date || ''}` ]));
+      // preview from blocks or content
+      let preview = '';
+      if(Array.isArray(post.blocks)){
+        for(const b of post.blocks){ if(b.type === 'text' && b.format === 'paragraph' && b.content){ preview = b.content; break; } }
+      } else if(typeof post.content === 'string') preview = post.content;
+      if(preview) art.appendChild(createEl('div', { class: 'small' }, [ preview.slice(0,220) + (preview.length > 220 ? '…' : '') ]));
+      // thumbnail if image block
+      const thumb = (Array.isArray(post.blocks) && post.blocks.find(b => b.type === 'image' && b.src)) || null;
+      if(thumb) { const img = safeImg(thumb.src, thumb.caption || post.title); img.style.marginTop = '12px'; img.style.borderRadius = '8px'; art.appendChild(img); }
+      art.addEventListener('click', () => openPostFull(post));
+      postsEl.appendChild(art);
+    });
+  }
+
+  function openPostFull(post){
+    postContent.innerHTML = '';
+    postContent.appendChild(createEl('h2', {}, [ post.title || 'Untitled' ]));
+    if(post.subtitle) postContent.appendChild(createEl('div', { class: 'subtitle' }, [ post.subtitle ]));
+    postContent.appendChild(createEl('div', { class: 'meta-line' }, [ `${post.author || ''}${post.author ? ' • ' : ''}${post.date || ''}` ]));
+
+    if(Array.isArray(post.blocks) && post.blocks.length){
+      for(let i=0;i<post.blocks.length;i++){
+        const node = renderBlock(post.blocks[i]);
+        if(node) { node.setAttribute('data-block-index', i); postContent.appendChild(node); }
+      }
+    } else {
+      const md = (typeof post.content === 'string') ? post.content : '';
+      postContent.appendChild(parseMarkdown(md));
+    }
+    showModal(postModal);
+  }
+
+  function renderBlock(b){
+    if(!b || !b.type) return null;
+    if(b.type === 'text'){
+      if(b.format === 'header') return createEl('h3', {}, [ b.content || '' ]);
+      if(b.format === 'list'){ const ul = createEl('ul'); (b.items||[]).forEach(it=> ul.appendChild(createEl('li', {}, [ it ]))); return ul; }
+      if(b.format === 'quote') return createEl('blockquote', {}, [ b.content || '' ]);
+      return createEl('p', {}, [ parseInlineMarkdown(b.content || '') ]);
+    }
+    if(b.type === 'image'){
+      const img = safeImg(b.src || PATHS.placeholder, b.caption || '');
+      const wrap = createEl('div', {}, [ img ]);
+      if(b.caption) wrap.appendChild(createEl('div', { class: 'small' }, [ b.caption ]));
+      return wrap;
+    }
+    if(b.type === 'code'){ const pre = createEl('pre'); pre.textContent = b.content || ''; return pre; }
+    if(b.type === 'video'){ const video = createEl('video', { controls: true, style:'max-width:100%' }); const s = createEl('source', { src: b.src || '' }); video.appendChild(s); return video; }
+    if(b.type === 'columns'){
+      const cols = createEl('div', { class: 'columns' });
+      (b.columns || []).forEach(c => {
+        const cw = createEl('div');
+        if(c.type === 'text') cw.appendChild(parseInlineMarkdown(c.content || ''));
+        else if(c.type === 'image') cw.appendChild(safeImg(c.src || PATHS.placeholder, c.alt || 'image'));
+        else if(c.type === 'list'){ const ul = createEl('ul'); (c.items||[]).forEach(it=> ul.appendChild(createEl('li', {}, [ it ]))); cw.appendChild(ul); }
+        else cw.appendChild(createEl('div', {}, [ JSON.stringify(c) ]));
+        cols.appendChild(cw);
+      });
+      return cols;
+    }
+    if(b.type === 'accordion'){ const d = createEl('details'); d.appendChild(createEl('summary', {}, [ b.title || 'More' ])); (b.blocks||[]).forEach(inner=>{ const n = renderBlock(inner); if(n) d.appendChild(n); }); return d; }
+    if(b.type === 'embed') return createEl('iframe', { src: b.src || '', width:'100%', height: b.height || 360, style:'border:0;border-radius:8px;overflow:hidden;' });
+    return createEl('pre', {}, [ JSON.stringify(b, null, 2) ]);
+  }
+
+  // Modal helpers (use inert handling)
+  function showModal(modalEl){
+    setInert(modalEl, false);
+    modalEl.style.display = 'flex';
+    modalEl.removeAttribute('aria-hidden');
+    document.body.style.overflow = 'hidden';
+    const focusable = modalEl.querySelector('input,button,[tabindex]:not([tabindex="-1"])');
+    if(focusable) focusable.focus();
+  }
+  function hideModal(modalEl){
+    const active = document.activeElement;
+    if(modalEl.contains(active)) active.blur();
+    modalEl.style.display = 'none';
+    setInert(modalEl, true);
+    modalEl.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    openSearch.focus();
+  }
+
+  // Search flow: fetch & filter (no sample data; if fetch fails use empty arrays)
+  async function doSearch(q, resultsNode, statusNode){
+    if(!q) { statusNode.textContent = 'Enter search terms'; return; }
+    statusNode.textContent = 'Searching…';
+    runSearch.classList.add('loading');
+    const [pf, bl] = await Promise.all([ fetchJSON(PATHS.portfolio, 900), fetchJSON(PATHS.blogs, 900) ]);
+    const pfList = Array.isArray(pf) ? pf : [];
+    const blList = Array.isArray(bl) ? bl : [];
+    const qlow = q.toLowerCase();
+    const pfHits = pfList.filter(it => (((it.title||'') + ' ' + (it.description||'') + ' ' + (it.tags||[]).join(' ')).toLowerCase().includes(qlow)));
+    const blHits = blList.filter(p => (((p.title||'') + ' ' + (p.subtitle||'') + ' ' + (p.description||'') + ' ' + JSON.stringify(p.blocks||[])).toLowerCase().includes(qlow)));
+    resultsNode.innerHTML = '';
+    if(pfHits.length === 0 && blHits.length === 0){ resultsNode.appendChild(document.createTextNode('No results.')); }
+    else {
+      if(pfHits.length){
+        resultsNode.appendChild(createEl('div', { class:'title' }, [ 'Projects' ]));
+        pfHits.slice(0,16).forEach(it => {
+          const row = createEl('div', { style:'padding:8px 0' });
+          const a = createEl('a', { href:'#' }, [ it.title || 'Untitled' ]);
+          a.addEventListener('click', e => { e.preventDefault(); openProjectModal(it); hideModal(searchModal); });
+          row.appendChild(a);
+          if(it.description) row.appendChild(createEl('div', { class:'small' }, [ it.description ]));
+          resultsNode.appendChild(row);
+        });
+      }
+      if(blHits.length){
+        resultsNode.appendChild(createEl('div', { class:'title' }, [ 'Writing' ]));
+        blHits.slice(0,16).forEach(p => {
+          const row = createEl('div', { style:'padding:8px 0' });
+          const a = createEl('a', { href:'#' }, [ p.title || 'Untitled' ]);
+          a.addEventListener('click', e => { e.preventDefault(); openPostFull(p); hideModal(searchModal); });
+          row.appendChild(a);
+          if(p.subtitle) row.appendChild(createEl('div', { class:'small' }, [ p.subtitle ]));
+          resultsNode.appendChild(row);
+        });
+      }
+    }
+    statusNode.textContent = `Found ${pfHits.length + blHits.length} result(s)`;
+    runSearch.classList.remove('loading');
+  }
+
+  // Recent lists rendering (empty states if data missing)
+  function renderRecentPortfolio(items){
+    recentPortfolio.innerHTML = '';
+    if(!Array.isArray(items) || items.length === 0){ recentPortfolio.appendChild(document.createTextNode('No recent items.')); return; }
+    items.slice(0,4).forEach(it => {
+      const img = safeImg((it.images && it.images[0]) || it.image || PATHS.placeholder, it.title || 'img');
+      img.style.width='64px'; img.style.height='48px';
+      const meta = createEl('div', {}, [
+        createEl('div', { style:'font-weight:700' }, [ it.title || 'Untitled' ]),
+        createEl('div', { class:'small' }, [ (it.description||'').slice(0,80) ])
+      ]);
+      const r = createEl('div', { class:'recent-item' }, [ img, meta ]);
+      r.addEventListener('click', () => openProjectModal(it));
+      recentPortfolio.appendChild(r);
+    });
+  }
+
+  function renderRecentPosts(posts){
+    recentPosts.innerHTML = '';
+    if(!Array.isArray(posts) || posts.length === 0){ recentPosts.appendChild(document.createTextNode('No recent posts.')); return; }
+    posts.slice(0,4).forEach(p => {
+      const thumb = (p.blocks || []).find(b => b.type === 'image' && b.src);
+      const img = safeImg((thumb && thumb.src) || PATHS.placeholder, p.title || 'img');
+      img.style.width='64px'; img.style.height='48px';
+      const meta = createEl('div', {}, [
+        createEl('div', { style:'font-weight:700' }, [ p.title || 'Untitled' ]),
+        createEl('div', { class:'small' }, [ (p.subtitle||'').slice(0,80) ])
+      ]);
+      const r = createEl('div', { class:'recent-item' }, [ img, meta ]);
+      r.addEventListener('click', () => openPostFull(p));
+      recentPosts.appendChild(r);
+    });
+  }
+
+  // Tab switching with animation
+  const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+  const panels = Array.from(document.querySelectorAll('.panel'));
+  function activateTab(tab){
+    tabs.forEach(t => t.setAttribute('aria-selected', t===tab ? 'true' : 'false'));
+    panels.forEach(p => {
+      const match = p.id === tab.getAttribute('aria-controls');
+      p.hidden = !match;
+      if(match) p.classList.add('active'); else p.classList.remove('active');
+    });
+    localStorage.setItem('bl_tab', tab.id);
+  }
+  tabs.forEach(t => {
+    t.addEventListener('click', () => activateTab(t));
+    t.addEventListener('keydown', e => {
+      const idx = tabs.indexOf(t);
+      if(e.key === 'ArrowRight'){ e.preventDefault(); tabs[(idx+1)%tabs.length].focus(); }
+      if(e.key === 'ArrowLeft'){ e.preventDefault(); tabs[(idx-1+tabs.length)%tabs.length].focus(); }
+    });
+  });
+  const lastTab = localStorage.getItem('bl_tab');
+  if(lastTab && document.getElementById(lastTab)) activateTab(document.getElementById(lastTab));
+  else activateTab(document.getElementById('tab-overview'));
+
+  // Theme handling (persisted)
+  const LS_THEME = 'bl_theme';
   function applyTheme(name){
-    if(name === 'dark'){ document.documentElement.setAttribute('data-theme','dark'); themeBtn.textContent='Dark'; } 
-    else { document.documentElement.removeAttribute('data-theme'); themeBtn.textContent='Light'; }
+    if(name === 'dark'){ document.documentElement.setAttribute('data-theme','dark'); themeBtn.textContent = 'Dark'; }
+    else { document.documentElement.removeAttribute('data-theme'); themeBtn.textContent = 'Light'; }
     localStorage.setItem(LS_THEME, name);
-    // ensure placeholders adapt (some browsers require style update)
     document.querySelectorAll('input, textarea').forEach(i => i.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text'));
   }
   themeBtn.addEventListener('click', ()=> {
@@ -297,456 +617,7 @@
   });
   applyTheme(localStorage.getItem(LS_THEME) || (window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light'));
 
-  // fetch with timeout
-  function fetchJSON(url, timeout=1400){
-    return new Promise((res, rej) => {
-      const t = setTimeout(()=> rej(new Error('timeout')), timeout);
-      fetch(url, { cache:'no-cache' }).then(r => { clearTimeout(t); if(!r.ok) rej(new Error('network')); return r.json(); }).then(json => res(json)).catch(err => { clearTimeout(t); rej(err); });
-    });
-  }
-
-  // markdown parser (simple, safe-ish)
-  function escapeHTML(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-  // Very small markdown parser:
-  // - code fences ``` -> <pre>
-  // - headings # to <h3>
-  // - blockquote lines starting with >
-  // - lists lines starting with - or *
-  // - inline code `code`
-  // - bold **text** and italic *text*
-  // - links [text](url)
-  function parseMarkdown(md){
-    if(!md) return document.createTextNode('');
-    // normalize line endings
-    const lines = String(md).replace(/\r\n/g,'\n').split('\n');
-
-    // handle code fences first
-    let out = document.createElement('div');
-    let inCode = false, codeLang = '', codeBuffer = [];
-    let listOpen = false, listType = 'ul';
-
-    function flushCode(){
-      if(!inCode) return;
-      const pre = document.createElement('pre');
-      pre.appendChild(document.createTextNode(codeBuffer.join('\n')));
-      out.appendChild(pre);
-      inCode = false; codeLang=''; codeBuffer = [];
-    }
-    function closeList(){
-      if(listOpen){
-        out.appendChild(listOpen);
-        listOpen = false;
-      }
-    }
-
-    for(let i=0;i<lines.length;i++){
-      let line = lines[i];
-      if(line.startsWith('```')){
-        if(!inCode){ inCode = true; codeLang = line.slice(3).trim(); codeBuffer = []; continue; }
-        else { // closing
-          flushCode(); continue;
-        }
-      }
-      if(inCode){ codeBuffer.push(line); continue; }
-
-      // headings
-      const h = line.match(/^(#{1,3})\s+(.*)$/);
-      if(h){
-        closeList();
-        const level = Math.min(3, h[1].length);
-        const el = document.createElement('h3'); el.textContent = h[2];
-        out.appendChild(el); continue;
-      }
-
-      // blockquote
-      if(line.trim().startsWith('>')){
-        closeList();
-        const content = line.replace(/^>\s?/, '');
-        const block = document.createElement('blockquote'); block.textContent = content;
-        out.appendChild(block); continue;
-      }
-
-      // lists
-      const li = line.match(/^\s*[-*]\s+(.*)$/);
-      if(li){
-        if(!listOpen){ listOpen = document.createElement('ul'); }
-        const liEl = document.createElement('li'); liEl.appendChild(parseInlineMarkdown(li[1])); listOpen.appendChild(liEl);
-        continue;
-      } else {
-        if(listOpen){ out.appendChild(listOpen); listOpen = false; }
-      }
-
-      // empty line -> paragraph break
-      if(line.trim() === ''){
-        continue;
-      }
-
-      // normal paragraph - apply inline parsing
-      const p = document.createElement('p'); p.appendChild(parseInlineMarkdown(line));
-      out.appendChild(p);
-    }
-    // flush
-    flushCode();
-    if(listOpen) out.appendChild(listOpen);
-
-    return out;
-  }
-
-  // inline markdown (links, bold, italic, inline code)
-  function parseInlineMarkdown(text){
-    if(!text) return document.createTextNode('');
-    // escape HTML then replace patterns
-    let s = escapeHTML(text);
-
-    // inline code `code`
-    s = s.replace(/`([^`]+)`/g, (m, c) => `<code>${escapeHTML(c)}</code>`);
-
-    // links [text](url)
-    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m,t,u) => `<a href="${escapeHTML(u)}" target="_blank" rel="noopener noreferrer">${escapeHTML(t)}</a>`);
-
-    // bold **text**
-    s = s.replace(/\*\*([^*]+)\*\*/g, (m,t) => `<strong>${escapeHTML(t)}</strong>`);
-
-    // italic *text*
-    s = s.replace(/\*([^*]+)\*/g, (m,t) => `<em>${escapeHTML(t)}</em>`);
-
-    const wrapper = document.createElement('span');
-    wrapper.innerHTML = s;
-    return wrapper;
-  }
-
-  // utility for fallback image
-  function safeImgElement(src, alt){
-    const img = document.createElement('img');
-    img.src = src || '/placeholder.png';
-    img.alt = alt || '';
-    img.onerror = function(){ if(this.src.indexOf('/placeholder.png') === -1) this.src = '/placeholder.png'; };
-    // disable right click
-    img.addEventListener('contextmenu', (e)=> e.preventDefault());
-    // double click downloads after confirmation
-    img.addEventListener('dblclick', ()=> {
-      const ok = confirm("These images are copyrighted by BlankLabs. If you download, you must credit BlankLabs and link back to https://blanklabs.site. Proceed to download?");
-      if(ok){
-        const a = document.createElement('a');
-        a.href = img.src;
-        a.download = (alt || 'image').replace(/\s+/g,'_') + '.png';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        alert('Downloaded — remember to credit BlankLabs and link back to https://blanklabs.site');
-      }
-    });
-    // prevent dragging copy
-    img.addEventListener('dragstart', e => e.preventDefault());
-    return img;
-  }
-
-  // UI: modal show/hide
-  function showModal(modalEl){ modalEl.style.display = 'flex'; modalEl.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
-  function hideModal(modalEl){ modalEl.style.display = 'none'; modalEl.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
-
-  // render portfolio
-  function renderPortfolio(list){
-    pfGrid.innerHTML = '';
-    if(!list || list.length === 0){ pfGrid.appendChild(document.createTextNode('No projects yet.')); return; }
-    list.forEach(item => {
-      const card = document.createElement('div'); card.className = 'pf-card';
-      const src = (item.images && item.images[0]) || item.image || '/placeholder.png';
-      const img = safeImgElement(src, item.title || 'project');
-      card.appendChild(img);
-      const meta = document.createElement('div'); meta.className = 'pf-meta';
-      const t = document.createElement('div'); t.style.fontWeight = '700'; t.textContent = item.title || 'Untitled';
-      meta.appendChild(t);
-      if(item.description) meta.appendChild(Object.assign(document.createElement('div'), { className:'small', textContent: item.description }));
-      if(item.tags && item.tags.length){
-        const tagsWrap = document.createElement('div'); tagsWrap.className = 'tags';
-        item.tags.forEach(tag => tagsWrap.appendChild(Object.assign(document.createElement('span'), { className:'small', textContent: tag })));
-        meta.appendChild(tagsWrap);
-      }
-      card.appendChild(meta);
-      card.addEventListener('click', ()=> openProjectModal(item));
-      pfGrid.appendChild(card);
-    });
-  }
-
-  function openProjectModal(item){
-    const modal = document.getElementById('postModal');
-    postContent.innerHTML = '';
-    postContent.appendChild(Object.assign(document.createElement('h2'), {},));
-    postContent.querySelector('h2').textContent = item.title || 'Untitled';
-    if(item.date) postContent.appendChild(Object.assign(document.createElement('div'), { className:'small meta-line', textContent: item.date }));
-    if(item.description) postContent.appendChild(Object.assign(document.createElement('p'), { className:'small', textContent: item.description }));
-    const pics = (item.images && item.images.length) ? item.images : (item.image ? [item.image] : ['/placeholder.png']);
-    pics.forEach(src => postContent.appendChild(safeImgElement(src, item.title || 'image')));
-    showModal(postModal);
-  }
-
-  // render posts (with markdown)
-  function renderPosts(posts){
-    postsEl.innerHTML = '';
-    if(!posts || posts.length === 0){ postsEl.appendChild(document.createTextNode('No posts yet.')); return; }
-    posts.forEach(post => {
-      const art = document.createElement('article'); art.className = 'post';
-      art.appendChild(Object.assign(document.createElement('h2'), { textContent: post.title || 'Untitled' }));
-      if(post.subtitle) art.appendChild(Object.assign(document.createElement('div'), { className:'subtitle', textContent: post.subtitle }));
-      art.appendChild(Object.assign(document.createElement('div'), { className:'meta-line', textContent: `${post.author || 'BlankLabs'} • ${post.date || ''}` }));
-      // preview: find first text block or first paragraph in markdown (if blocks not used)
-      let preview = '';
-      if(post.blocks && Array.isArray(post.blocks)){
-        for(let b of post.blocks){ if(b.type === 'text' && b.format==='paragraph' && b.content){ preview = b.content.slice(0,220); break; } if(b.type === 'image' && b.caption){ preview = b.caption.slice(0,220); break; } }
-      } else if(post.content){ preview = post.content.slice(0,220); }
-      if(preview) art.appendChild(Object.assign(document.createElement('div'), { className:'small', textContent: preview + (preview.length >= 220 ? '…' : '') }));
-      // thumbnail
-      let thumb = null;
-      if(post.blocks && post.blocks.length) thumb = post.blocks.find(b => b.type === 'image' && b.src);
-      if(thumb){ const timg = safeImgElement(thumb.src, thumb.caption || post.title); timg.style.marginTop = '12px'; timg.style.borderRadius='8px'; art.appendChild(timg); }
-      art.addEventListener('click', ()=> openPostFull(post));
-      postsEl.appendChild(art);
-    });
-  }
-
-  // open full post modal: blocks or markdown
-  function openPostFull(post){
-    postContent.innerHTML = '';
-    postContent.appendChild(Object.assign(document.createElement('h2'), { textContent: post.title || 'Untitled' }));
-    if(post.subtitle) postContent.appendChild(Object.assign(document.createElement('div'), { className:'subtitle', textContent: post.subtitle }));
-    postContent.appendChild(Object.assign(document.createElement('div'), { className:'meta-line', textContent: `${post.author || 'BlankLabs'} • ${post.date || ''}` }));
-
-    // If post.blocks exists, render blocks. Else if post.content treat as markdown.
-    if(post.blocks && Array.isArray(post.blocks) && post.blocks.length){
-      // build table of contents of headers
-      const headers = [];
-      post.blocks.forEach((b, i) => { if(b.type==='text' && b.format==='header') headers.push({ idx:i, text:b.content }); });
-      if(headers.length){
-        const toc = document.createElement('details'); toc.appendChild(Object.assign(document.createElement('summary'), { textContent:'Contents' }));
-        headers.forEach(h => {
-          const el = Object.assign(document.createElement('div'), { className:'small', textContent: h.text, style:'margin-top:6px; cursor:pointer; color:var(--accent);' });
-          el.addEventListener('click', ()=> {
-            const target = postContent.querySelector(`[data-block-index="${h.idx}"]`);
-            if(target) target.scrollIntoView({ behavior:'smooth', block:'center' });
-          });
-          toc.appendChild(el);
-        });
-        postContent.appendChild(toc);
-      }
-
-      post.blocks.forEach((b, idx) => {
-        const node = renderBlock(b);
-        if(node) { node.setAttribute('data-block-index', idx); postContent.appendChild(node); }
-      });
-    } else {
-      // treat post.content as markdown
-      const mdNode = parseMarkdown(post.content || '');
-      postContent.appendChild(mdNode);
-    }
-    showModal(postModal);
-  }
-
-  // render a block structure (image, text, code, video, columns, accordion, embed)
-  function renderBlock(b){
-    if(!b || !b.type) return null;
-    const wrapper = document.createElement('div'); wrapper.className = 'block';
-    if(b.type === 'text'){
-      if(b.format === 'header'){ const h = document.createElement('h3'); h.textContent = b.content || ''; return h; }
-      if(b.format === 'list'){ const ul = document.createElement('ul'); (b.items||[]).forEach(it=> ul.appendChild(Object.assign(document.createElement('li'), { textContent: it }))); return ul; }
-      if(b.format === 'quote'){ const q = document.createElement('blockquote'); q.textContent = b.content || ''; return q; }
-      // paragraph supports markdown inline
-      wrapper.appendChild(parseInlineMarkdown(b.content || ''));
-      return wrapper;
-    }
-    if(b.type === 'image'){
-      const img = safeImgElement(b.src || '/placeholder.png', b.caption || '');
-      wrapper.appendChild(img);
-      if(b.caption) wrapper.appendChild(Object.assign(document.createElement('div'), { className:'small', textContent: b.caption }));
-      return wrapper;
-    }
-    if(b.type === 'code'){
-      if(b.language) wrapper.appendChild(Object.assign(document.createElement('div'), { className:'code-lang', textContent: b.language }));
-      wrapper.appendChild(Object.assign(document.createElement('pre'), {}, ));
-      wrapper.querySelector('pre').textContent = b.content || '';
-      return wrapper;
-    }
-    if(b.type === 'video'){
-      const v = Object.assign(document.createElement('video'), { controls:true, style: 'max-width:100%' });
-      const s = Object.assign(document.createElement('source'), { src: b.src || '' });
-      v.appendChild(s); wrapper.appendChild(v);
-      if(b.caption) wrapper.appendChild(Object.assign(document.createElement('div'), { className:'small', textContent: b.caption }));
-      return wrapper;
-    }
-    if(b.type === 'columns'){
-      const cols = document.createElement('div'); cols.className = 'columns';
-      (b.columns||[]).forEach(c => {
-        const cwrap = document.createElement('div');
-        if(c.type === 'text') cwrap.appendChild(parseInlineMarkdown(c.content || ''));
-        else if(c.type === 'image') cwrap.appendChild(safeImgElement(c.src || '/placeholder.png', c.alt||'image'));
-        else if(c.type === 'list'){ const ul = document.createElement('ul'); (c.items||[]).forEach(it=> ul.appendChild(Object.assign(document.createElement('li'), { textContent: it }))); cwrap.appendChild(ul); }
-        else cwrap.appendChild(Object.assign(document.createElement('div'), { textContent: JSON.stringify(c) }));
-        cols.appendChild(cwrap);
-      });
-      wrapper.appendChild(cols); return wrapper;
-    }
-    if(b.type === 'accordion'){
-      const det = document.createElement('details'); det.appendChild(Object.assign(document.createElement('summary'), { textContent: b.title || 'More' }));
-      (b.blocks||[]).forEach(inner => { const node = renderBlock(inner); if(node) det.appendChild(node); });
-      wrapper.appendChild(det); return wrapper;
-    }
-    if(b.type === 'embed'){
-      const iframe = Object.assign(document.createElement('iframe'), { src: b.src || '', width:'100%', height: b.height || 360, style:'border:0;border-radius:8px; overflow:hidden;' });
-      wrapper.appendChild(iframe); return wrapper;
-    }
-
-    // fallback dump
-    wrapper.appendChild(Object.assign(document.createElement('pre'), {}, JSON.stringify(b, null, 2)));
-    return wrapper;
-  }
-
-  // small parseInlineMarkdown for text blocks (basic inline)
-  function parseInlineMarkdown(text){
-    return parseInlineToNode(text||'');
-  }
-  // reuse inline parser defined earlier but returning nodes
-  function parseInlineToNode(txt){
-    if(!txt) return document.createTextNode('');
-    // escape but allow some replacements
-    let s = escapeHTML(txt);
-    // inline code
-    s = s.replace(/`([^`]+)`/g, (m,c)=> `<code>${escapeHTML(c)}</code>`);
-    // links
-    s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (m,t,u)=> `<a href="${escapeHTML(u)}" target="_blank" rel="noopener noreferrer">${escapeHTML(t)}</a>`);
-    // bold
-    s = s.replace(/\*\*([^*]+)\*\*/g, (m,c)=> `<strong>${escapeHTML(c)}</strong>`);
-    // italic
-    s = s.replace(/\*([^*]+)\*/g, (m,c)=> `<em>${escapeHTML(c)}</em>`);
-    const span = document.createElement('span'); span.innerHTML = s; return span;
-  }
-
-  // small markdown block parser used when a post has markdown in .content
-  function parseMarkdown(md){
-    // very small markdown -> use sensible blocks (code fences, headings, lists, paragraphs)
-    const container = document.createElement('div');
-    const lines = String(md||'').replace(/\r\n/g,'\n').split('\n');
-    let inCode = false, codeBuffer = [];
-    let listBuffer = null;
-    function flushCode(){
-      if(inCode){
-        const pre = document.createElement('pre'); pre.textContent = codeBuffer.join('\n'); container.appendChild(pre);
-        inCode = false; codeBuffer = [];
-      }
-    }
-    function flushList(){
-      if(listBuffer){
-        container.appendChild(listBuffer);
-        listBuffer = null;
-      }
-    }
-    for(let line of lines){
-      if(line.startsWith('```')){
-        if(!inCode){ inCode = true; codeBuffer = []; continue; } else { flushCode(); continue; }
-      }
-      if(inCode){ codeBuffer.push(line); continue; }
-      // headings
-      const h = line.match(/^(#{1,3})\s+(.*)$/);
-      if(h){ flushList(); const el = document.createElement('h3'); el.textContent = h[2]; container.appendChild(el); continue; }
-      // list
-      const li = line.match(/^\s*[-*]\s+(.*)$/);
-      if(li){
-        if(!listBuffer) listBuffer = document.createElement('ul');
-        const liEl = document.createElement('li'); liEl.appendChild(parseInlineToNode(li[1])); listBuffer.appendChild(liEl); continue;
-      } else { flushList(); }
-      if(line.trim() === ''){ continue; }
-      // paragraph
-      const p = document.createElement('p'); p.appendChild(parseInlineToNode(line)); container.appendChild(p);
-    }
-    flushCode(); flushList();
-    return container;
-  }
-
-  // safe fetch sequence with 5s minimum loader
-  async function init(){
-    const start = Date.now();
-    setBar(0.05); loaderText.textContent = 'Loading settings…';
-    let settings = null;
-    try { settings = await fetchJSON(PATHS.settings, 900); } catch(e){ settings = null; }
-    if(settings && settings.theme) applyTheme(settings.theme);
-    setBar(0.18); loaderText.textContent = 'Loading bio…';
-    let bio = null;
-    try { bio = await fetchJSON(PATHS.bio, 1200); } catch(e){ bio = null; }
-    setBar(0.4); loaderText.textContent = 'Loading portfolio…';
-    let portfolio = [];
-    try { portfolio = await fetchJSON(PATHS.portfolio, 1400); } catch(e){ portfolio = []; }
-    setBar(0.68); loaderText.textContent = 'Loading writing…';
-    let blogs = [];
-    try { blogs = await fetchJSON(PATHS.blogs, 1600); } catch(e){ blogs = []; }
-    setBar(0.92); loaderText.textContent = 'Finishing…';
-
-    // apply results
-    bioText.textContent = (bio && bio.bio) ? bio.bio : "Hi! I'm BlankLabs. I make projects, photo stories, and long-form writing.";
-    // rename main header categories to new phrasing already done in HTML
-
-    // portfolio
-    renderPortfolio(portfolio);
-    renderRecentPortfolio(portfolio);
-
-    // posts
-    renderPosts(blogs);
-    renderRecentPosts(blogs);
-
-    // overview highlights
-    const highlightEl = document.getElementById('overviewHighlights');
-    const p0 = portfolio[0];
-    const b0 = blogs[0];
-    highlightEl.innerHTML = (p0 ? `<strong>${escapeHTML(p0.title || '')}</strong> — ${escapeHTML((p0.description||'').slice(0,120))}` : '') +
-                            (b0 ? (p0 ? '<br>' : '') + `<strong>${escapeHTML(b0.title || '')}</strong> — ${escapeHTML((b0.description||'').slice(0,120))}` : '');
-    setBar(1);
-    // ensure minimum 5s loader
-    const elapsed = Date.now() - start;
-    const minMs = 5000;
-    const wait = Math.max(0, minMs - elapsed);
-    logoWrap.classList.add('pop');
-    setTimeout(()=> {
-      loader.classList.add('hidden');
-      setTimeout(()=> { loader.style.display='none'; app.style.visibility='visible'; }, 320);
-    }, wait + 240);
-  }
-
-  function setBar(v){ bar.style.width = Math.round(v*100) + '%'; }
-
-  // render recent lists
-  function renderRecentPortfolio(items){
-    recentPortfolio.innerHTML = '';
-    if(!items || items.length === 0){ recentPortfolio.appendChild(document.createTextNode('No recent items.')); return; }
-    items.slice(0,4).forEach(it => {
-      const r = document.createElement('div'); r.className = 'recent-item';
-      const img = safeImgElement((it.images && it.images[0]) || it.image || '/placeholder.png', it.title || 'img');
-      img.style.width='64px'; img.style.height='48px';
-      const meta = document.createElement('div');
-      meta.appendChild(Object.assign(document.createElement('div'), { style:'font-weight:700', textContent: it.title || 'Untitled' }));
-      meta.appendChild(Object.assign(document.createElement('div'), { className:'small', textContent: (it.description||'').slice(0,80) }));
-      r.appendChild(img); r.appendChild(meta);
-      r.addEventListener('click', ()=> openProjectModal(it));
-      recentPortfolio.appendChild(r);
-    });
-  }
-
-  function renderRecentPosts(posts){
-    recentPosts.innerHTML = '';
-    if(!posts || posts.length === 0){ recentPosts.appendChild(document.createTextNode('No recent posts.')); return; }
-    posts.slice(0,4).forEach(p => {
-      const r = document.createElement('div'); r.className = 'recent-item';
-      const thumb = (p.blocks || []).find(b => b.type === 'image' && b.src);
-      const img = safeImgElement((thumb && thumb.src) || '/placeholder.png', p.title || 'img');
-      img.style.width='64px'; img.style.height='48px';
-      const meta = document.createElement('div');
-      meta.appendChild(Object.assign(document.createElement('div'), { style:'font-weight:700', textContent: p.title || 'Untitled' }));
-      meta.appendChild(Object.assign(document.createElement('div'), { className:'small', textContent: (p.subtitle||'').slice(0,80) }));
-      r.appendChild(img); r.appendChild(meta);
-      r.addEventListener('click', ()=> openPostFull(p));
-      recentPosts.appendChild(r);
-    });
-  }
-
-  // search modal behavior
+  // Search modal wiring
   openSearch.addEventListener('click', ()=> {
     searchInput.value = '';
     searchResults.innerHTML = '';
@@ -755,65 +626,109 @@
     searchInput.focus();
   });
   searchClose.addEventListener('click', ()=> hideModal(searchModal));
-  runSearch.addEventListener('click', async ()=> {
-    const q = (searchInput.value || '').toLowerCase().trim();
-    if(!q) { searchStatus.textContent = 'Type a search term'; return; }
-    runSearch.classList.add('loading'); searchStatus.textContent = 'Searching…';
-    // simulate small fetch time
-    try {
-      // fetch latest data then filter
-      const [pf, bl] = await Promise.allSettled([ fetchJSON(PATHS.portfolio, 900).catch(()=>[]), fetchJSON(PATHS.blogs,900).catch(()=>[]) ]);
-      const pfList = pf.status === 'fulfilled' ? pf.value : [];
-      const blList = bl.status === 'fulfilled' ? bl.value : [];
-      // filter
-      const pfHits = (pfList || []).filter(it => (((it.title||'') + ' ' + (it.description||'') + ' ' + (it.tags||[]).join(' ')).toLowerCase().includes(q)));
-      const blHits = (blList || []).filter(p => (((p.title||'') + ' ' + (p.subtitle||'') + ' ' + (p.description||'') + ' ' + JSON.stringify(p.blocks||[])).toLowerCase().includes(q)));
-      // render results
-      searchResults.innerHTML = '';
-      if(pfHits.length === 0 && blHits.length === 0){
-        searchResults.appendChild(document.createTextNode('No results.'));
-      } else {
-        if(pfHits.length){
-          const h = Object.assign(document.createElement('div'), { className:'title', textContent: 'Projects' }); searchResults.appendChild(h);
-          pfHits.slice(0,8).forEach(it => {
-            const row = document.createElement('div'); row.style.padding='8px 0';
-            const a = Object.assign(document.createElement('a'), { href:'#', textContent: it.title || 'Untitled' });
-            a.addEventListener('click', (e)=>{ e.preventDefault(); openProjectModal(it); hideModal(searchModal); });
-            row.appendChild(a);
-            if(it.description) row.appendChild(Object.assign(document.createElement('div'), { className:'small', textContent: it.description }));
-            searchResults.appendChild(row);
-          });
-        }
-        if(blHits.length){
-          const h2 = Object.assign(document.createElement('div'), { className:'title', textContent: 'Writing' }); searchResults.appendChild(h2);
-          blHits.slice(0,8).forEach(p => {
-            const row = document.createElement('div'); row.style.padding='8px 0';
-            const a = Object.assign(document.createElement('a'), { href:'#', textContent: p.title || 'Untitled' });
-            a.addEventListener('click', (e)=>{ e.preventDefault(); openPostFull(p); hideModal(searchModal); });
-            row.appendChild(a);
-            if(p.subtitle) row.appendChild(Object.assign(document.createElement('div'), { className:'small', textContent: p.subtitle }));
-            searchResults.appendChild(row);
-          });
-        }
-      }
-    } catch(e){
-      searchResults.innerHTML = ''; searchResults.appendChild(document.createTextNode('Search failed'));
-    } finally {
-      runSearch.classList.remove('loading'); searchStatus.textContent = 'Done';
-    }
-  });
+  runSearch.addEventListener('click', ()=> doSearch((searchInput.value || '').trim(), searchResults, searchStatus));
+  searchInput.addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); runSearch.click(); } });
 
-  // modal close handlers
+  // Post modal close
   postClose.addEventListener('click', ()=> hideModal(postModal));
   postModal.addEventListener('click', (e)=> { if(e.target === postModal) hideModal(postModal); });
-  document.getElementById('postClose').addEventListener('click', ()=> hideModal(postModal));
-  document.getElementById('searchClose').addEventListener('click', ()=> hideModal(searchModal));
+  searchModal.addEventListener('click', (e)=> { if(e.target === searchModal) hideModal(searchModal); });
 
-  // keyboard esc closes
+  // Escape to close modals
   document.addEventListener('keydown', (e)=> { if(e.key === 'Escape'){ hideModal(postModal); hideModal(searchModal); } });
 
-  // start loader + init
+  // PF and blog local search boxes: use fetched data; if fetch fails empty UI will show
+  const pfSearch = document.getElementById('pfSearch');
+  pfSearch.addEventListener('input', async (e) => {
+    const q = (e.target.value || '').toLowerCase().trim();
+    const pf = await fetchJSON(PATHS.portfolio, 900) || [];
+    if(!q) { renderPortfolio(pf); renderRecentPortfolio(pf); return; }
+    renderPortfolio(pf.filter(it => (((it.title||'') + ' ' + (it.description||'') + ' ' + (it.tags||[]).join(' ')).toLowerCase().includes(q))));
+  });
+  const blogSearch = document.getElementById('blogSearch');
+  blogSearch.addEventListener('input', async e => {
+    const q = (e.target.value || '').toLowerCase().trim();
+    const bl = await fetchJSON(PATHS.blogs, 900) || [];
+    if(!q) { renderPosts(bl); renderRecentPosts(bl); return; }
+    renderPosts(bl.filter(p => (((p.title||'') + ' ' + (p.subtitle||'') + ' ' + (p.description||'') + ' ' + JSON.stringify(p.blocks||[])).toLowerCase().includes(q))));
+  });
+
+  // show/hide modal + inert handling
+  function showModal(modalEl){
+    setInert(modalEl, false);
+    modalEl.style.display = 'flex';
+    modalEl.removeAttribute('aria-hidden');
+    document.body.style.overflow = 'hidden';
+    const focusable = modalEl.querySelector('input,button,[tabindex]:not([tabindex="-1"])');
+    if(focusable) focusable.focus();
+  }
+  function hideModal(modalEl){
+    const active = document.activeElement;
+    if(modalEl.contains(active)) active.blur();
+    modalEl.style.display = 'none';
+    setInert(modalEl, true);
+    modalEl.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    openSearch.focus();
+  }
+
+  // Initial load: fetch JSONs only, no premade data inserted
+  async function init(){
+    const start = Date.now();
+    setBar(0.05); loaderText.textContent = 'Loading settings…';
+    const settings = await fetchJSON(PATHS.settings, 900);
+    if(settings && settings.theme) applyTheme(settings.theme);
+
+    setBar(0.18); loaderText.textContent = 'Loading bio…';
+    const bio = await fetchJSON(PATHS.bio, 1200);
+    setBar(0.4); loaderText.textContent = 'Loading portfolio…';
+    const portfolio = await fetchJSON(PATHS.portfolio, 1400);
+    setBar(0.68); loaderText.textContent = 'Loading writing…';
+    const blogs = await fetchJSON(PATHS.blogs, 1600);
+
+    bioText.textContent = bio && bio.bio ? bio.bio : '';
+    renderPortfolio(Array.isArray(portfolio) ? portfolio : []);
+    renderRecentPortfolio(Array.isArray(portfolio) ? portfolio : []);
+    renderPosts(Array.isArray(blogs) ? blogs : []);
+    renderRecentPosts(Array.isArray(blogs) ? blogs : []);
+
+    // overview highlights: show first portfolio or post titles if present
+    const ov = document.getElementById('overviewHighlights');
+    const p0 = Array.isArray(portfolio) && portfolio[0] ? portfolio[0] : null;
+    const b0 = Array.isArray(blogs) && blogs[0] ? blogs[0] : null;
+    ov.innerHTML = '';
+    if(p0) ov.innerHTML += `<strong>${escapeHTML(p0.title || '')}</strong> — ${escapeHTML((p0.description||'').slice(0,120))}`;
+    if(b0) ov.innerHTML += (p0 ? '<br>' : '') + `<strong>${escapeHTML(b0.title || '')}</strong> — ${escapeHTML(((b0.description||b0.content)||'').slice(0,120))}`;
+
+    // load logo for loader and header
+    const logoImg = new Image();
+    logoImg.src = PATHS.logo;
+    logoImg.onload = () => {
+      if(!logoWrap.querySelector('img')) logoWrap.appendChild(logoImg);
+      brandImg.src = PATHS.logo;
+      brandImg.onerror = () => { brandImg.src = PATHS.placeholder; };
+      logoWrap.classList.add('pop');
+    };
+    logoImg.onerror = () => {
+      brandImg.src = PATHS.placeholder;
+      const ph = new Image(); ph.src = PATHS.placeholder; if(!logoWrap.querySelector('img')) logoWrap.appendChild(ph);
+    };
+
+    setBar(1);
+    // enforce 5s min loader so users notice it
+    const elapsed = Date.now() - start;
+    const minMs = 5000;
+    const wait = Math.max(0, minMs - elapsed);
+    setTimeout(()=> {
+      loader.classList.add('hidden');
+      setTimeout(()=> { loader.style.display='none'; app.style.visibility='visible'; }, 300);
+    }, wait);
+  }
+
+  // start
   init();
+
+})();
 })();
 </script>
 </body>
