@@ -331,24 +331,28 @@ loaderLogo.src = PATHS.logo;
   }
 
   // Image helper with safe handlers (fallback to placeholder asset if image fails)
-  function safeImg(src, alt){
-    const img = document.createElement('img');
-    img.src = src || PATHS.placeholder;
-    img.alt = alt || '';
-    img.onerror = () => { if(img.src.indexOf(PATHS.placeholder) === -1) img.src = PATHS.placeholder; };
-    img.addEventListener('contextmenu', e => e.preventDefault());
-    img.addEventListener('dragstart', e => e.preventDefault());
-    img.addEventListener('dblclick', () => {
-      const ok = confirm("These images are copyrighted by BlankLabs. If you download, you must credit BlankLabs and link back to https://blanklabs.site. Download?");
-      if(ok){
-        const a = document.createElement('a'); a.href = img.src; a.download = (alt || 'image').replace(/\s+/g,'_') + '.png';
-        document.body.appendChild(a); a.click(); a.remove();
-        alert('Downloaded — remember to credit BlankLabs and link back to https://blanklabs.site');
-      }
-    });
-    return img;
-  }
-
+function safeImg(src, alt){
+  const img = document.createElement('img');
+  img.src = src || PATHS.placeholder;
+  img.alt = alt || '';
+  // force image to fit container
+  img.style.maxWidth = '100%';
+  img.style.height = 'auto';
+  img.style.display = 'block';
+  
+  img.onerror = () => { if(img.src.indexOf(PATHS.placeholder) === -1) img.src = PATHS.placeholder; };
+  img.addEventListener('contextmenu', e => e.preventDefault());
+  img.addEventListener('dragstart', e => e.preventDefault());
+  img.addEventListener('dblclick', () => {
+    const ok = confirm("These images are copyrighted by BlankLabs. If you download, you must credit BlankLabs and link back to https://blanklabs.site. Download?");
+    if(ok){
+      const a = document.createElement('a'); a.href = img.src; a.download = (alt || 'image').replace(/\s+/g,'_') + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      alert('Downloaded — remember to credit BlankLabs and link back to https://blanklabs.site');
+    }
+  });
+  return img;
+}
   // Minimal inline markdown parsing for paragraphs/inline styles
   function parseInlineMarkdown(text){
     if(!text) return document.createTextNode('');
