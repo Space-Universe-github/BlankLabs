@@ -700,20 +700,39 @@
     if(p0) ov.innerHTML += `<strong>${escapeHTML(p0.title || '')}</strong> — ${escapeHTML((p0.description||'').slice(0,120))}`;
     if(b0) ov.innerHTML += (p0 ? '<br>' : '') + `<strong>${escapeHTML(b0.title || '')}</strong> — ${escapeHTML(((b0.description||b0.content)||'').slice(0,120))}`;
 
-// load logo for loader and header
-const loaderImg = document.getElementById('loaderLogo');
+document.addEventListener('DOMContentLoaded', () => {
+  // Elements
+  const loaderImg = document.getElementById('loaderLogo');
+  const brandImg = document.getElementById('brandImg');
+  const logoWrap = document.getElementById('logoWrap');
 
-loaderImg.src = PATHS.logo;
+  // Hide loader image until fully loaded
+  loaderImg.style.opacity = '0';
 
-loaderImg.onload = () => {
-  brandImg.src = PATHS.logo;
-  logoWrap.classList.add('pop');
-};
+  // Preload logo in memory
+  const tempImg = new Image();
+  tempImg.src = PATHS.logo;
 
-loaderImg.onerror = () => {
-  loaderImg.src = PATHS.placeholder;
-  brandImg.src = PATHS.placeholder;
-};
+  tempImg.onload = () => {
+    // Set both loader and header logos at the same time
+    loaderImg.src = tempImg.src;
+    brandImg.src = tempImg.src;
+
+    // Fade in loader logo
+    loaderImg.style.transition = 'opacity 0.3s ease';
+    loaderImg.style.opacity = '1';
+
+    // Animate pop effect
+    logoWrap.classList.add('pop');
+  };
+
+  tempImg.onerror = () => {
+    // Fallback if logo fails
+    loaderImg.src = PATHS.placeholder;
+    brandImg.src = PATHS.placeholder;
+    loaderImg.style.opacity = '1';
+  };
+});
 
     setBar(1);
     // enforce 5s min loader so users notice it
