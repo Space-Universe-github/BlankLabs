@@ -251,8 +251,6 @@
 
   // Elements
   const loader = document.getElementById('loader');
-  const logoWrap = document.getElementById('logoWrap');
-  const loaderLogo = document.getElementById('loaderLogo');
   const bar = document.getElementById('bar');
   const loaderText = document.getElementById('loaderText');
   const app = document.getElementById('app');
@@ -274,7 +272,8 @@
   const postClose = document.getElementById('postClose');
   const themeBtn = document.getElementById('themeBtn');
   const brandImg = document.getElementById('brandImg');
-
+  brandImg.src = PATHS.logo; // restore logo
+  
   yearEl.textContent = new Date().getFullYear();
 
   // Utils
