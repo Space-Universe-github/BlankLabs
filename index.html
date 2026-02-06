@@ -720,7 +720,7 @@ function safeImg(src, alt){
     setBar(1);
     // enforce 5s min loader so users notice it
     const elapsed = Date.now() - start;
-    const minMs = 5000;
+    const minMs = 500;
     const wait = Math.max(0, minMs - elapsed);
     setTimeout(()=> {
       loader.classList.add('hidden');
