@@ -700,19 +700,20 @@
     if(p0) ov.innerHTML += `<strong>${escapeHTML(p0.title || '')}</strong> — ${escapeHTML((p0.description||'').slice(0,120))}`;
     if(b0) ov.innerHTML += (p0 ? '<br>' : '') + `<strong>${escapeHTML(b0.title || '')}</strong> — ${escapeHTML(((b0.description||b0.content)||'').slice(0,120))}`;
 
-    // load logo for loader and header
-    const logoImg = new Image();
-    logoImg.src = PATHS.logo;
-    logoImg.onload = () => {
-      if(!logoWrap.querySelector('img')) logoWrap.appendChild(logoImg);
-      brandImg.src = PATHS.logo;
-      brandImg.onerror = () => { brandImg.src = PATHS.placeholder; };
-      logoWrap.classList.add('pop');
-    };
-    logoImg.onerror = () => {
-      brandImg.src = PATHS.placeholder;
-      const ph = new Image(); ph.src = PATHS.placeholder; if(!logoWrap.querySelector('img')) logoWrap.appendChild(ph);
-    };
+// load logo for loader and header
+const loaderImg = document.getElementById('loaderLogo');
+
+loaderImg.src = PATHS.logo;
+
+loaderImg.onload = () => {
+  brandImg.src = PATHS.logo;
+  logoWrap.classList.add('pop');
+};
+
+loaderImg.onerror = () => {
+  loaderImg.src = PATHS.placeholder;
+  brandImg.src = PATHS.placeholder;
+};
 
     setBar(1);
     // enforce 5s min loader so users notice it
