@@ -38,8 +38,8 @@
   .loader{ position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg, rgba(0,0,0,0.64), rgba(0,0,0,0.38)); z-index:9999; transition:opacity .22s var(--ease); }
   .loader.hidden{ opacity:0; pointer-events:none; }
   .loader-inner{ display:flex; gap:16px; align-items:center; background:var(--card); padding:18px; border-radius:14px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04); max-width:760px; width:92%; }
-  .logo-wrap{ width:84px; height:84px; border-radius:12px; overflow:hidden; display:grid; place-items:center; transform:translateY(12px) scale(.8); transition:transform 420ms var(--ease); }
-  .logo-wrap.pop{ transform:translateY(-12px) scale(1.06) rotate(-4deg); }
+  .logo-wrap{ display:none;}
+  .logo-wrap.pop{ display:none;}
   .progress{ flex:1; height:12px; background:rgba(0,0,0,0.06); border-radius:999px; overflow:hidden; }
   .bar{ height:100%; width:0%; background:linear-gradient(90deg,var(--accent), #1b9bd7); transition:width 260ms linear; border-radius:999px; }
 
@@ -113,7 +113,7 @@
   <!-- Loader (uses logo.png) -->
   <div id="loader" class="loader" role="status" aria-live="polite">
     <div class="loader-inner">
-      <div id="logoWrap" class="logo-wrap" aria-hidden="true"><img id="loaderLogo" alt="logo"></div>
+      <!-- removed -->
       <div style="flex:1">
         <div style="display:flex;justify-content:space-between;align-items:center">
           <div style="font-weight:700">BlankLabs</div>
@@ -274,9 +274,6 @@
   const postClose = document.getElementById('postClose');
   const themeBtn = document.getElementById('themeBtn');
   const brandImg = document.getElementById('brandImg');
-
-// make loader use logo.png
-loaderLogo.src = PATHS.logo;
 
   yearEl.textContent = new Date().getFullYear();
 
