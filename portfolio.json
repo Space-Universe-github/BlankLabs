@@ -1,22 +1,10 @@
 [
   {
     "id": "proj001",
-    "title": "First Project",
-    "description": "Just testing how this portfolio layout works",
-    "images": [
-      "logo.png"
-    ],
-    "tags": ["test", "web"],
-    "date": "2026-02-05"
-  },
-  {
-    "id": "proj002",
-    "title": "Second Project",
-    "description": "Another quick project to see multiple items",
-    "images": [
-      "logo.png"
-    ],
-    "tags": ["experiment", "ui"],
-    "date": "2026-02-05"
+    "title": "Rain Through Glass",
+    "description": "A night photograph captured from inside a car, focusing on raindrops on the window and soft neon reflections outside. The image plays with depth, blur, and light to create a quiet, reflective mood.",
+    "images": ["rainy k.jpg"],
+    "tags": ["photography", "night", "urban", "mood"],
+    "date": "2026-02-06"
   }
 ]
