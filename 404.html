@@ -13,6 +13,12 @@
       --muted:#6b7280; --text:#0b1116; --accent:#0b5b8a;
       --radius:12px; --maxw:980px; --shadow:0 12px 36px rgba(11,17,22,0.06);
     }
+    [data-theme="dark"]{
+      --bg:#071018; --glass:rgba(18,20,22,0.84); --card:#0e1416;
+      --muted:#9aa3ad; --text:#e6eef3; --accent:#6cf2c2;
+      --shadow:0 18px 48px rgba(0,0,0,0.65);
+    }
+
     html,body{height:100%; margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial; background:linear-gradient(180deg,var(--bg), #fff); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;}
     .wrap{min-height:100vh; display:grid; place-items:center; padding:28px;}
     .card{ width:100%; max-width:var(--maxw); background:var(--glass); border-radius:14px; padding:28px; box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04); }
@@ -61,16 +67,20 @@
       <div class="actions">
         <a class="btn" href="/" title="Back to home">← Back to BlankLabs</a>
         <a class="btn" href="mailto:blank@blanklabs.site" title="Email">Contact</a>
+        <a class="btn" href="/legal-scraping-policy" title="Scraping policy" target="_blank" rel="noopener noreferrer">Scraping policy</a>
       </div>
 
       <div class="muted">Thanks for checking the site — I’ll get the rest working soon.</div>
 
-      <footer>© <span id="yr"></span> BlankLabs</footer>
+      <footer>© <span id="yr404"></span> BlankLabs</footer>
     </div>
   </div>
 
   <script>
-    document.getElementById('yr').textContent = new Date().getFullYear();
+    document.getElementById('yr404').textContent = new Date().getFullYear();
+    if(window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches){
+      document.documentElement.setAttribute('data-theme','dark');
+    }
   </script>
 </body>
 </html>
