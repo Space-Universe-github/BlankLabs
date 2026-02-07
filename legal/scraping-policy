@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BlankLabs — Scraping & Automated Access Policy</title>
+<meta name="description" content="BlankLabs policy governing automated access, scraping, indexing, and AI training usage." />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#f5f7f9;
+    --card:#ffffff;
+    --text:#0b1116;
+    --muted:#6b7280;
+    --accent:#0b5b8a;
+    --radius:14px;
+    --shadow:0 14px 42px rgba(11,17,22,0.08);
+  }
+
+  [data-theme="dark"]{
+    --bg:#071018;
+    --card:#0e1416;
+    --text:#e6eef3;
+    --muted:#9aa3ad;
+    --accent:#6cf2c2;
+    --shadow:0 18px 54px rgba(0,0,0,0.7);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    background:linear-gradient(180deg,var(--bg), color-mix(in srgb,var(--bg) 95%, white 5%));
+    color:var(--text);
+    padding:28px;
+  }
+
+  main{
+    max-width:860px;
+    margin:0 auto;
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:26px;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(0,0,0,0.04);
+  }
+
+  h1{
+    margin:0 0 6px;
+    font-size:clamp(1.4rem,2.6vw,1.9rem);
+  }
+
+  .lead{
+    color:var(--muted);
+    margin-bottom:18px;
+    line-height:1.6;
+  }
+
+  h2{
+    margin-top:22px;
+    font-size:1.15rem;
+  }
+
+  p{
+    line-height:1.65;
+    margin:10px 0;
+  }
+
+  ul{
+    padding-left:18px;
+    margin:10px 0;
+  }
+
+  li{
+    margin:6px 0;
+  }
+
+  code{
+    background:rgba(0,0,0,0.05);
+    padding:2px 6px;
+    border-radius:6px;
+    font-size:0.95em;
+  }
+
+  footer{
+    margin-top:26px;
+    padding-top:14px;
+    border-top:1px solid rgba(0,0,0,0.06);
+    color:var(--muted);
+    font-size:0.9rem;
+  }
+
+  .notice{
+    background:rgba(11,91,138,0.08);
+    border-left:4px solid var(--accent);
+    padding:12px 14px;
+    border-radius:10px;
+    margin:14px 0;
+  }
+</style>
+</head>
+
+<body>
+<main>
+
+<h1>Scraping & Automated Access Policy</h1>
+<p class="lead">
+This policy governs how automated systems may access, read, index, copy, or process content published on BlankLabs.
+</p>
+
+<div class="notice">
+<strong>TL;DR:</strong> Humans are welcome. Search engines are allowed. AI training, bulk scraping, and silent data harvesting are not.
+</div>
+
+<h2>1. Ownership of Content</h2>
+<p>
+All content on BlankLabs, including writing, images, project descriptions, metadata, and site structure, is protected by copyright and other applicable intellectual property laws.
+</p>
+
+<p>
+This includes, but is not limited to:
+</p>
+<ul>
+  <li>Articles and long-form writing</li>
+  <li>Photography and visual assets</li>
+  <li>Project documentation and descriptions</li>
+  <li>Original layouts, sequencing, and presentation</li>
+</ul>
+
+<h2>2. Allowed Automated Access</h2>
+<p>
+The following automated access is permitted:
+</p>
+<ul>
+  <li>Major search engines indexing pages for discovery</li>
+  <li>Social media crawlers generating link previews</li>
+  <li>Accessibility tools operating on behalf of a human user</li>
+</ul>
+
+<p>
+All permitted bots must respect <code>robots.txt</code> directives and standard crawl rate limits.
+</p>
+
+<h2>3. Explicitly Prohibited Uses</h2>
+<p>
+The following activities are strictly prohibited without prior written permission:
+</p>
+<ul>
+  <li>Scraping content for AI or machine learning training</li>
+  <li>Bulk downloading or mirroring of pages or assets</li>
+  <li>Dataset creation, embedding generation, or semantic indexing</li>
+  <li>Use of content in commercial, analytical, or surveillance systems</li>
+  <li>Bypassing technical measures intended to limit automation</li>
+</ul>
+
+<p>
+Lack of a paywall does not imply consent.
+</p>
+
+<h2>4. AI Systems & Model Training</h2>
+<p>
+BlankLabs content may <strong>not</strong> be used to train, fine-tune, evaluate, or augment AI models, including large language models, image models, or multimodal systems.
+</p>
+
+<p>
+This prohibition applies whether data is collected directly, indirectly, via third-party datasets, or through automated agents that ignore exclusion signals.
+</p>
+
+<h2>5. Enforcement & Consequences</h2>
+<p>
+If unauthorized scraping or automated access is detected, BlankLabs may take one or more of the following actions:
+</p>
+<ul>
+  <li>Immediate blocking of IP addresses, ASNs, or infrastructure</li>
+  <li>Formal abuse or takedown reports to hosting providers</li>
+  <li>Requests for deletion of collected data</li>
+  <li>Permanent placement on an internal bot blacklist</li>
+</ul>
+
+<p>
+Repeated or willful violations may result in further legal or technical action.
+</p>
+
+<h2>6. Removal Requests & Permission</h2>
+<p>
+If your organization believes it has collected BlankLabs content in error, or wishes to request permission for automated access, you must contact us before continuing.
+</p>
+
+<p>
+Email: <code>blank@blanklabs.site</code>
+</p>
+
+<p>
+Requests must include:
+</p>
+<ul>
+  <li>The name of your organization or service</li>
+  <li>User agent(s) used</li>
+  <li>Purpose of access</li>
+  <li>Whether any data has already been collected</li>
+</ul>
+
+<h2>7. Relationship to robots.txt</h2>
+<p>
+This policy works alongside <code>robots.txt</code>. Ignoring exclusion directives does not override the restrictions defined here.
+</p>
+
+<p>
+Automated access after publication of this policy constitutes notice.
+</p>
+
+<footer>
+© <span id="year"></span> BlankLabs. All rights reserved.
+</footer>
+
+</main>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+  if(window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches){
+    document.documentElement.setAttribute('data-theme','dark');
+  }
+</script>
+</body>
+</html>
