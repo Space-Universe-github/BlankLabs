@@ -1,10 +1,35 @@
-# -------------------------------
-# BlankLabs Robots.txt
-# Protect content from AI scrapers
-# Allow search engines and social crawlers
-# -------------------------------
+# ============================================================
+# BlankLabs robots.txt
+# CONTENT ACCESS & SCRAPING POLICY
+#
+# This file explicitly defines which automated agents are
+# permitted or forbidden from accessing BlankLabs content.
+#
+# Any automated access not explicitly allowed below is
+# considered unauthorized.
+#
+# If we discover that your service, bot, model, or scraper
+# has accessed, indexed, copied, trained on, or otherwise
+# ingested our content in violation of this policy:
+#
+# - We will take corrective action
+# - We may block your infrastructure at the network level
+# - We may issue formal takedown or abuse reports
+#
+# If you wish to:
+# - Request removal of existing data
+# - Obtain permission to crawl
+# - Be added to an explicit bot blacklist
+#
+# You MUST reach out FIRST via our official contact channels.
+# Silent scraping is not consent.
+# ============================================================
 
-# --------- Search Engines ---------
+
+# -------------------------------
+# ALLOWED: SEARCH ENGINES
+# Purpose: indexing for discovery
+# -------------------------------
 User-agent: Googlebot
 Allow: /
 
@@ -35,7 +60,11 @@ Allow: /
 User-agent: Yandex
 Allow: /
 
-# --------- Social Bots ---------
+
+# -------------------------------
+# ALLOWED: SOCIAL PREVIEW BOTS
+# Purpose: link previews only
+# -------------------------------
 User-agent: facebookexternalhit
 Allow: /
 
@@ -51,11 +80,19 @@ Allow: /
 User-agent: Quora-Bot
 Allow: /
 
-# --------- AI Scrapers (Blocked) ---------
+
+# -------------------------------
+# FORBIDDEN: AI / LLM SCRAPERS
+# Purpose: training, analysis, ingestion
+# Access is explicitly denied.
+# -------------------------------
 User-agent: GPTBot
 Disallow: /
 
 User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: OAI-SearchBot
 Disallow: /
 
 User-agent: ClaudeBot
@@ -64,19 +101,10 @@ Disallow: /
 User-agent: Claude-Web
 Disallow: /
 
-User-agent: PerplexityBot
-Disallow: /
-
-User-agent: cohere-ai
-Disallow: /
-
-User-agent: OAI-SearchBot
-Disallow: /
-
 User-agent: Anthropic-ai
 Disallow: /
 
-User-agent: ChatGPT-User/2.0
+User-agent: PerplexityBot
 Disallow: /
 
 User-agent: Perplexity-User
@@ -85,14 +113,26 @@ Disallow: /
 User-agent: Perplexity-User/1.0
 Disallow: /
 
-# --------- Cloud AI Crawlers ---------
+User-agent: cohere-ai
+Disallow: /
+
+User-agent: ChatGPT-User/2.0
+Disallow: /
+
+
+# -------------------------------
+# FORBIDDEN: CLOUD & DATA HARVESTERS
+# -------------------------------
 User-agent: Google-CloudVertexBot
 Disallow: /
 
 User-agent: Amazonbot
 Disallow: /
 
-# --------- Scrapers (optional) ---------
+
+# -------------------------------
+# FORBIDDEN: GENERIC SCRAPERS
+# -------------------------------
 User-agent: CCBot
 Disallow: /
 
@@ -102,6 +142,11 @@ Disallow: /
 User-agent: Scrapy
 Disallow: /
 
-# --------- Other bots ---------
+
+# -------------------------------
+# DEFAULT POLICY
+# Any bot not explicitly listed above
+# is permitted standard access only.
+# -------------------------------
 User-agent: *
 Allow: /
