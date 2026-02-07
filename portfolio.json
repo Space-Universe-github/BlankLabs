@@ -8,3 +8,13 @@
     "date": "2026-02-06"
   }
 ]
+[
+  {
+    "id": "proj002",
+    "title": "Mexico Day",
+    "description": "This is the famous blowhole in Mexico. I went with my family and had a lot of fun! :D It was loud, windy, and honestly kind of wild seeing the water shoot up between the rocks. One of those moments you just stop and stare.",
+    "images": ["pictures/mountains.jpg"],
+    "tags": ["photography", "travel", "family", "nature", "ocean"],
+    "date": "2026-02-06"
+  }
+]
