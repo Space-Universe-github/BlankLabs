@@ -2,16 +2,14 @@
   {
     "id": "proj001",
     "title": "Rain Through Glass",
-    "description": "A night photograph captured from inside a car, focusing on raindrops on the window and soft neon reflections outside. The image plays with depth, blur, and light to create a quiet, reflective mood.",
+    "description": "Shot from inside a car on a rainy night. The focus is on the raindrops on the window, with the lights outside going soft and blurry. It feels quiet and kind of stuck in the moment, like waiting with nowhere to rush to.",
     "images": ["pictures/RainyK.jpg"],
     "tags": ["photography", "night", "urban", "mood"],
     "date": "2026-02-06"
-  }
-]
-[
+  },
   {
     "id": "proj002",
-    "title": "Mexico Day",
+    "title": "Blowhole Day",
     "description": "This is the famous blowhole in Mexico. I went with my family and had a lot of fun! :D It was loud, windy, and honestly kind of wild seeing the water shoot up between the rocks. One of those moments you just stop and stare.",
     "images": ["pictures/mountains.jpg"],
     "tags": ["photography", "travel", "family", "nature", "ocean"],
