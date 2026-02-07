@@ -25,6 +25,7 @@
 # Silent scraping is not consent.
 # ============================================================
 
+# Scraping/Legal Policy reference: https://blanklabs.site/legal-scraping
 
 # -------------------------------
 # ALLOWED: SEARCH ENGINES
