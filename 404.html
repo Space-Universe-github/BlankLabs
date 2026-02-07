@@ -9,30 +9,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#f5f7f9; --glass:rgba(255,255,255,0.92); --card:#fff;
-    --muted:#6b7280; --text:#0b1116; --accent:#0b5b8a;
-    --radius:12px; --maxw:980px; --shadow:0 12px 36px rgba(11,17,22,0.06);
-    --ease:cubic-bezier(.2,.9,.3,1);
-  }
-  [data-theme="dark"]{
     --bg:#071018; --glass:rgba(18,20,22,0.84); --card:#0e1416;
     --muted:#9aa3ad; --text:#e6eef3; --accent:#6cf2c2;
-    --shadow:0 14px 48px rgba(0,0,0,0.65);
+    --radius:16px; --maxw:980px; --shadow:0 14px 48px rgba(0,0,0,0.65);
+    --ease:cubic-bezier(.2,.9,.3,1);
   }
 
   *{box-sizing:border-box}
-  html,body{height:100%}
+  html,body{height:100%; margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial; overflow:hidden;}
   body{
-    margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
-    background:linear-gradient(180deg,var(--bg), color-mix(in srgb,var(--bg) 96%, white 4%));
-    color:var(--text); display:flex; align-items:center; justify-content:center; padding:28px;
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    background:#071018;
+    color:var(--text);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:28px;
   }
 
-  .wrap{ width:100%; max-width:var(--maxw); }
+  /* Particle canvas fills entire background */
+  #particles-bg{
+    position:fixed;
+    top:0; left:0; width:100%; height:100%;
+    z-index:0;
+  }
+
+  .wrap{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:var(--maxw);
+  }
+
   .card{
-    background:var(--glass); border-radius:calc(var(--radius)+2px); padding:28px;
-    box-shadow:var(--shadow); border:1px solid rgba(0,0,0,0.04);
+    background:var(--glass);
+    border-radius:var(--radius);
+    padding:28px;
+    box-shadow:var(--shadow);
+    border:1px solid rgba(255,255,255,0.05);
+    backdrop-filter:blur(12px);
+    animation:fadeIn 0.6s var(--ease);
+  }
+
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
   }
 
   .brand-row{ display:flex; gap:14px; align-items:center; margin-bottom:12px; }
@@ -45,7 +65,7 @@
   .lead{ margin:12px 0 0; color:var(--muted); line-height:1.5; }
   .details{ margin-top:14px; color:var(--muted); line-height:1.5; max-width:72ch; }
   .actions{ display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
-  .btn{ padding:10px 14px; border-radius:10px; background:var(--card); border:1px solid rgba(0,0,0,0.06); cursor:pointer; font-weight:700; color:var(--text); text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+  .btn{ padding:10px 14px; border-radius:10px; background:var(--card); border:1px solid rgba(255,255,255,0.05); cursor:pointer; font-weight:700; color:var(--text); text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
 
   footer{ text-align:center; margin-top:18px; color:var(--muted); font-size:0.9rem; }
 
@@ -56,46 +76,88 @@
 </style>
 </head>
 <body>
-  <div class="wrap" role="main" aria-labelledby="title">
-    <div class="card" id="card404">
-      <div class="brand-row">
-        <div class="brand-mark" aria-hidden="true">
-          <img src="/logo.png" alt="BlankLabs logo" onerror="this.src='/placeholder.png'">
-        </div>
-        <div>
-          <div class="muted-small" style="font-weight:700">BlankLabs</div>
-          <h1 id="title">Page not found</h1>
-        </div>
+<canvas id="particles-bg"></canvas>
+
+<div class="wrap" role="main" aria-labelledby="title">
+  <div class="card" id="card404">
+    <div class="brand-row">
+      <div class="brand-mark" aria-hidden="true">
+        <img src="/logo.png" alt="BlankLabs logo" onerror="this.src='/placeholder.png'">
       </div>
-
-      <div class="big">404</div>
-
-      <p class="lead">Looks like you wandered into the wrong place. No biggie — you can head back home or keep exploring below.</p>
-
-      <div class="details">
-        <p>This website is mostly finished, but I haven’t finished checking everything yet. Right now most content — posts, projects, and photo stories — shows up on the main page instead of separate pages. If a link brought you here, it’s probably because I haven’t turned that link into its own page yet. Sorry about the confusion.</p>
-
-        <p>If you’re curious: the main page has the full site, and I’m still tidying up a few bits. Thanks for stopping by and for the patience while I clean things up.</p>
-
-        <p style="margin-top:10px">If you need help or want to say something about a missing page, hit contact and I’ll try to fix it.</p>
+      <div>
+        <div class="muted-small" style="font-weight:700">BlankLabs</div>
+        <h1 id="title">Page not found</h1>
       </div>
-
-      <div class="actions">
-        <a class="btn" href="/" title="Back to home">← Back to BlankLabs</a>
-        <a class="btn" href="mailto:blank@blanklabs.site" title="Email">Contact</a>
-      </div>
-
-      <div class="muted-small" style="margin-top:12px">Thanks for checking the site — I’ll get the rest working soon.</div>
-
-      <footer>© <span id="yr404"></span> BlankLabs</footer>
     </div>
+
+    <div class="big">404</div>
+
+    <p class="lead">Looks like you wandered into the wrong place. No biggie — you can head back home or keep exploring below.</p>
+
+    <div class="details">
+      <p>This website is mostly finished, but I haven’t finished checking everything yet. Right now most content — posts, projects, and photo stories — shows up on the main page instead of separate pages. If a link brought you here, it’s probably because I haven’t turned that link into its own page yet. Sorry about the confusion.</p>
+
+      <p>If you’re curious: the main page has the full site, and I’m still tidying up a few bits. Thanks for stopping by and for the patience while I clean things up.</p>
+
+      <p style="margin-top:10px">If you need help or want to say something about a missing page, hit contact and I’ll try to fix it.</p>
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="/" title="Back to home">← Back to BlankLabs</a>
+      <a class="btn" href="mailto:blank@blanklabs.site" title="Email">Contact</a>
+    </div>
+
+    <div class="muted-small" style="margin-top:12px">Thanks for checking the site — I’ll get the rest working soon.</div>
+
+    <footer>© <span id="yr404"></span> BlankLabs</footer>
   </div>
+</div>
 
 <script>
+  // Year + dark mode
   document.getElementById('yr404').textContent = new Date().getFullYear();
   if(window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches){
     document.documentElement.setAttribute('data-theme','dark');
   }
+
+  // Particles background
+  const canvas = document.getElementById('particles-bg');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
+  window.addEventListener('resize',resize);
+  resize();
+
+  const particles = [];
+  const particleCount = 80;
+  for(let i=0;i<particleCount;i++){
+    particles.push({
+      x:Math.random()*w,
+      y:Math.random()*h,
+      r:Math.random()*2+1,
+      alpha:Math.random()*0.5+0.3,
+      dx:(Math.random()-0.5)*0.3,
+      dy:(Math.random()-0.5)*0.3,
+      blink:Math.random()*0.05+0.01
+    });
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(let p of particles){
+      p.alpha += p.blink;
+      if(p.alpha > 1 || p.alpha < 0.3) p.blink *= -1;
+      p.x += p.dx; p.y += p.dy;
+      if(p.x> w) p.x=0; if(p.x<0) p.x=w;
+      if(p.y> h) p.y=0; if(p.y<0) p.y=h;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(108,242,194,${p.alpha})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
 </script>
 </body>
 </html>
