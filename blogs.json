@@ -28,11 +28,6 @@
         "content": "BlankLabs is basically the result of that mindset. It’s a place for experiments, half formed ideas, small wins, mistakes, and things I find interesting. Some posts might be technical, some more reflective, and some just me rambling about whatever I’m working on."
       },
       {
-        "type": "image",
-        "src": "logo.png",
-        "caption": "Starting simple"
-      },
-      {
         "type": "text",
         "format": "paragraph",
         "content": "I’m also using this site as motivation to actually finish things. When projects only live on my computer, it’s easy to abandon them. Putting them here makes them feel more real."
