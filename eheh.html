@@ -1,0 +1,624 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Welcome to BLANK LABS</title>
+<meta name="description" content="BLANK LABS cinematic goo pop-out — typed intro, advanced metaballs & displacement, non-3D but super cinematic." />
+<style>
+  :root{
+    --bg:#040404;
+    --ink:#ffffff;
+    --muted:#bdbdbd;
+    --loader-bg:#030303;
+    --maxw:1300px;
+    --goo-blur:18px;
+    --goo-contrast:18;
+    --bloom-intensity:0.28;
+    --border-height:56px;
+  }
+  @media (prefers-reduced-motion: reduce){
+    :root{
+      --goo-blur:8px;
+      --goo-contrast:7;
+      --bloom-intensity:0.12;
+    }
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+    background: radial-gradient(1000px 500px at 8% 8%, rgba(255,255,255,0.02), transparent 6%), linear-gradient(180deg,var(--bg), #070707);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+    overflow-y:overlay;
+  }
+
+  /* ---------- LOADER (opaque) ---------- */
+  .loader {
+    position:fixed; inset:0; z-index:99999;
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px;
+    background: var(--loader-bg); text-align:center; padding:28px; pointer-events:auto;
+  }
+  .loader .welcome { font-weight:900; font-size:36px; letter-spacing:0.06em; text-transform:uppercase; }
+  .loader .lead { font-weight:700; font-size:16px; text-transform:none; color:var(--muted); }
+  .bar { width:min(760px,92%); height:12px; background:rgba(255,255,255,0.02); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,0.03); }
+  .bar > i{ display:block; height:100%; width:0%; background: linear-gradient(90deg, rgba(255,255,255,0.18), rgba(255,255,255,0.04)); transition: width 260ms cubic-bezier(.2,.9,.2,1); }
+  .loader .muted { color:var(--muted); font-size:13px; margin-top:8px; max-width:760px; }
+
+  /* ---------- Canvas layers ---------- */
+  #glwrap{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+  canvas{ display:block; position:absolute; inset:0; width:100%; height:100%; }
+
+  /* goo canvas is visible element and we will apply blur/contrast to it */
+  .goo-wrapper { position:fixed; inset:0; z-index:6; pointer-events:none; display:block; filter: blur(var(--goo-blur)) contrast(var(--goo-contrast)); mix-blend-mode:screen; will-change:filter, transform; }
+
+  /* SVG displacement filter will be applied to the goo-wrapper */
+  .goo-wrapper.filtered { filter: url(#turbulence) blur(var(--goo-blur)) contrast(var(--goo-contrast)); }
+
+  /* bloom canvas for softer highlights */
+  .bloom { position:fixed; inset:0; z-index:7; pointer-events:none; mix-blend-mode:screen; opacity:var(--bloom-intensity); }
+
+  /* film grain overlay */
+  .grain { position:fixed; inset:0; z-index:20; pointer-events:none; opacity:0.06; mix-blend-mode:overlay; }
+
+  /* vignette */
+  .vignette { position:fixed; inset:0; z-index:19; pointer-events:none; mix-blend-mode:multiply; background: radial-gradient(1200px 800px at 50% 40%, rgba(0,0,0,0) 30%, rgba(0,0,0,0.7) 86%); }
+
+  /* ---------- Borders behaviour ---------- */
+  .border-top, .border-bottom {
+    position:fixed; left:0; right:0; height:var(--border-height);
+    background:linear-gradient(180deg, rgba(0,0,0,0.96), rgba(0,0,0,0.8));
+    z-index:99998; opacity:0; transform:translateY(-8px); transition: opacity 520ms cubic-bezier(.2,.9,.2,1), transform 520ms;
+    pointer-events:none;
+  }
+  .border-bottom { bottom:0; transform:translateY(8px); }
+  body.borders-visible .border-top, body.borders-visible .border-bottom { opacity:1; transform:translateY(0); }
+  body.borders-hidden .border-top { opacity:0; transform:translateY(-28px); }
+  body.borders-hidden .border-bottom { opacity:0; transform:translateY(28px); }
+
+  /* ---------- Intro (typed headline) ---------- */
+  .intro { position:relative; z-index:10; max-width:var(--maxw); margin:0 auto; padding:140px 20px 220px; text-align:center; pointer-events:auto; }
+  .headline { font-weight:900; font-size:clamp(48px, 14vw, 160px); line-height:0.86; text-transform:uppercase; margin:0; -webkit-text-stroke:0.6px rgba(255,255,255,0.04); display:inline-block; }
+  .subtitle { margin-top:12px; color:var(--muted); font-size:15px; }
+  .empty-msg { margin-top:36px; color:var(--muted); font-size:18px; display:none; }
+
+  /* ---------- controls ---------- */
+  .ui { position:fixed; right:18px; bottom:18px; z-index:99999; pointer-events:auto; }
+  .btn { background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.03); color:var(--ink); padding:10px 14px; border-radius:10px; font-weight:800; cursor:pointer; }
+
+  /* reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    .goo-wrapper { filter: blur(8px) contrast(7); }
+    .bloom { opacity:0.12; }
+    canvas{ display:none; }
+    .bar > i { transition:none; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Opaque loader: does not show the main show -->
+  <div class="loader" id="loader" role="status" aria-live="polite">
+    <div class="welcome">Welcome to...</div>
+    <div class="lead">A short moment, preparing the show</div>
+    <div class="bar" aria-hidden="true"><i id="loader-fill"></i></div>
+    <div class="muted" id="loader-note">The main show will appear after this. Sit back — theatrical entrance incoming.</div>
+  </div>
+
+  <!-- borders -->
+  <div class="border-top" aria-hidden="true"></div>
+  <div class="border-bottom" aria-hidden="true"></div>
+
+  <!-- canvas layers and wrappers -->
+  <div id="glwrap" aria-hidden="true">
+    <!-- bloom canvas (soft highlights) -->
+    <canvas id="bloomCanvas" class="bloom"></canvas>
+
+    <!-- goo wrapper: we'll draw circles into gooCanvas and use blur+contrast to merge -->
+    <div class="goo-wrapper filtered" id="gooWrapper">
+      <canvas id="gooCanvas"></canvas>
+    </div>
+
+    <!-- particle trail canvas (sharp particles before blur) -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- subtle light rays canvas -->
+    <canvas id="raysCanvas"></canvas>
+
+    <!-- film grain overlay (SVG or canvas) -->
+    <canvas id="grainCanvas" class="grain"></canvas>
+
+  </div>
+
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- SVG filters: displacement + turbulence for wobble -->
+  <svg style="position:absolute; width:0; height:0;">
+    <filter id="turbulence" x="-40%" y="-40%" width="180%" height="180%">
+      <feTurbulence id="turb" baseFrequency="0.012" numOctaves="3" seed="12" stitchTiles="stitch" result="turb"/>
+      <feDisplacementMap in="SourceGraphic" in2="turb" scale="16" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+
+    <!-- optional color matrix for thresholding (if needed) -->
+    <filter id="threshold">
+      <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 255 -80" />
+    </filter>
+  </svg>
+
+  <!-- page intro -->
+  <main class="intro" id="intro" aria-hidden="true">
+    <h1 class="headline" id="headline"></h1>
+    <p class="subtitle">Welcome to BLANK LABS</p>
+    <div class="empty-msg" id="emptyMsg">there's nothing here yet or i haven't finished</div>
+  </main>
+
+  <!-- controls -->
+  <div class="ui">
+    <button id="pauseBtn" class="btn" aria-pressed="false">Pause FX (p)</button>
+  </div>
+
+<script>
+/* ===========================
+   BLANK LABS — Non-3D Goo Theater
+   - Opaque loader: "Welcome to..." only
+   - Typed BLANK LABS reveal, then super-advanced goo pop-out
+   - Goo built with many particles + blur/contrast pipeline + SVG displacement
+   - Bloom, film grain, light rays layered for cinematic feel
+   - If #static-json not found or empty, scroll to show empty message
+   - Pause with "p"
+   =========================== */
+
+(async function(){
+  const PREF_REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // UI nodes
+  const loader = document.getElementById('loader');
+  const loaderFill = document.getElementById('loader-fill');
+  const intro = document.getElementById('intro');
+  const headlineEl = document.getElementById('headline');
+  const emptyMsg = document.getElementById('emptyMsg');
+  const pauseBtn = document.getElementById('pauseBtn');
+  const gooWrapper = document.getElementById('gooWrapper');
+
+  // canvas references
+  const gooCanvas = document.getElementById('gooCanvas');
+  const particleCanvas = document.getElementById('particleCanvas');
+  const bloomCanvas = document.getElementById('bloomCanvas');
+  const raysCanvas = document.getElementById('raysCanvas');
+  const grainCanvas = document.getElementById('grainCanvas');
+
+  // set canvas sizes
+  function resizeAll(){
+    const w = innerWidth, h = innerHeight;
+    [gooCanvas, particleCanvas, bloomCanvas, raysCanvas, grainCanvas].forEach(c => {
+      c.width = w * devicePixelRatio;
+      c.height = h * devicePixelRatio;
+      c.style.width = w + 'px';
+      c.style.height = h + 'px';
+      const ctx = c.getContext('2d');
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    });
+  }
+  addEventListener('resize', resizeAll, {passive:true});
+  resizeAll();
+
+  // border control
+  const body = document.body;
+  function showBorders(){ body.classList.add('borders-visible'); body.classList.remove('borders-hidden'); }
+  function hideBorders(){ body.classList.remove('borders-visible'); body.classList.add('borders-hidden'); }
+  let scrollTimer = null;
+  window.addEventListener('scroll', () => {
+    hideBorders();
+    if(scrollTimer) clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(()=> showBorders(), 700);
+  }, {passive:true});
+
+  // Pause control
+  let paused = false;
+  function setPaused(v){
+    paused = !!v;
+    pauseBtn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+    pauseBtn.textContent = paused ? 'Resume FX (p)' : 'Pause FX (p)';
+    particleState.paused = paused;
+    // small visual pause: freeze displacement by stopping turbulence animation
+    if(paused) { turbPaused = true; } else { turbPaused = false; }
+  }
+  pauseBtn.addEventListener('click', ()=> setPaused(!paused));
+  window.addEventListener('keydown', (e)=> { if(e.key === 'p' || e.key === 'P') setPaused(!paused); });
+
+  // simulated loader pipeline (opaque)
+  async function runLoader(){
+    const stages = [
+      {name:'Preparing theater', t:240},
+      {name:'Warming goo engines', t:420},
+      {name:'Baking bloom & grain', t:320},
+      {name:'Setting particle matrix', t:260},
+      {name:'Finalizing entrance', t:180}
+    ];
+    let acc = 0;
+    const total = stages.reduce((s,s2)=>s+s2.t, 0);
+    for(const s of stages){
+      document.getElementById('loader').querySelector('.lead').textContent = s.name;
+      const end = performance.now() + (PREF_REDUCE ? Math.max(60, s.t*0.25) : s.t + Math.random()*180);
+      while(performance.now() < end){
+        acc += Math.random()*3 + 0.8;
+        const pct = Math.min(99, Math.round(acc/total*100));
+        loaderFill.style.width = pct + '%';
+        await sleep(30);
+      }
+      await sleep(PREF_REDUCE ? 20 : 60);
+    }
+    loaderFill.style.width = '100%';
+    await sleep(PREF_REDUCE ? 40 : 220);
+  }
+
+  function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+  // TEXT sampling: render headline to offscreen canvas and sample coordinates for particle emission
+  function makeTextMask(text, fontSize=200, padding=40){
+    const off = document.createElement('canvas');
+    const ctx = off.getContext('2d');
+    ctx.font = `900 ${fontSize}px Inter, system-ui, sans-serif`;
+    const w = Math.ceil(ctx.measureText(text).width + padding*2);
+    const h = Math.ceil(fontSize + padding*2);
+    off.width = w; off.height = h;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0,0,w,h);
+    ctx.fillStyle = '#fff';
+    ctx.font = `900 ${fontSize}px Inter, system-ui, sans-serif`;
+    ctx.textBaseline = 'top';
+    ctx.fillText(text, padding, padding/2);
+    // sample points inside glyph
+    const img = ctx.getImageData(0,0,w,h).data;
+    const coords = [];
+    const step = Math.max(2, Math.floor(fontSize / 22));
+    for(let y=0;y<h;y+=step){
+      for(let x=0;x<w;x+=step){
+        const idx = (y*w + x)*4 + 3; // alpha
+        if(img[idx] > 160) coords.push([x - w/2, y - h/2]); // centered coords
+      }
+    }
+    return {canvas: off, coords, w, h};
+  }
+
+  // particles + goo meta
+  const particleState = {
+    particles: [],
+    max: PREF_REDUCE ? 1200 : 3200,
+    paused: false
+  };
+
+  function rand(min, max){ return Math.random()*(max-min) + min; }
+
+  // spawn explosion from headline center using sampled mask for target behavior
+  function spawnFromText(mask, originX, originY){
+    const ctxP = particleCanvas.getContext('2d');
+    const w = innerWidth, h = innerHeight;
+    const count = Math.min(particleState.max, mask.coords.length * (PREF_REDUCE ? 1 : 3));
+    for(let i=0;i<count;i++){
+      const idx = Math.floor(Math.random() * mask.coords.length);
+      const [dx, dy] = mask.coords[idx];
+      // map mask coords to viewport space relative to headline center
+      const tx = originX + dx * (innerWidth / mask.w) * 1.0;
+      const ty = originY + dy * (innerHeight / mask.h) * 1.0;
+      // initial burst from letter center outward with randomized velocity
+      const angle = Math.atan2(ty - originY, tx - originX) + rand(-0.7, 0.7);
+      const speed = rand(2.6, 12.6);
+      particleState.particles.push({
+        x: originX + rand(-6,6),
+        y: originY + rand(-6,6),
+        vx: Math.cos(angle)*speed,
+        vy: Math.sin(angle)*speed,
+        targetX: tx, targetY: ty,
+        life: 1400 + Math.random()*1400,
+        age: 0,
+        size: rand(0.9, 4.2),
+        color: `rgba(255,255,255,${0.4 + Math.random()*0.6})`,
+        phase: 0 // 0 = bursting, 1 = drifting/merging
+      });
+      if(particleState.particles.length > particleState.max) particleState.particles.shift();
+    }
+  }
+
+  // particle update loop: heavy but optimized; merges with gooCanvas rendering
+  let lastTime = performance.now();
+  function particleStep(now){
+    const dt = Math.min(40, now - lastTime);
+    lastTime = now;
+    if(particleState.paused || PREF_REDUCE) { requestAnimationFrame(particleStep); return; }
+
+    const gctx = gooCanvas.getContext('2d');
+    const pctx = particleCanvas.getContext('2d');
+    // clear canvases
+    pctx.clearRect(0,0,innerWidth, innerHeight);
+    gctx.clearRect(0,0,innerWidth, innerHeight);
+
+    // physics
+    const particles = particleState.particles;
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.age += dt;
+      if(p.age > p.life){
+        // gradually shrink and remove
+        particles.splice(i,1);
+        continue;
+      }
+      // stage behavior: first burst outward (phase 0), then slow & attract to target (phase 1)
+      if(p.age > p.life * 0.3) p.phase = 1;
+
+      if(p.phase === 0){
+        // mild drag
+        p.vx *= 0.986;
+        p.vy *= 0.986;
+        // slight random jitter for organic feel
+        p.vx += (Math.random()-0.5)*0.06;
+        p.vy += (Math.random()-0.5)*0.06;
+      } else {
+        // attract to target with spring force + noise; creates goo gathering effect before merging
+        const ax = (p.targetX - p.x);
+        const ay = (p.targetY - p.y);
+        p.vx += ax * 0.0015;
+        p.vy += ay * 0.0015;
+        // slow
+        p.vx *= 0.92;
+        p.vy *= 0.92;
+        // add small swirl field using Perlin-ish noise approximation
+        p.vx += Math.sin((p.x + now*0.003) * 0.01) * 0.02;
+        p.vy += Math.cos((p.y + now*0.002) * 0.01) * 0.02;
+      }
+
+      p.x += p.vx * (dt/16);
+      p.y += p.vy * (dt/16);
+
+      // draw raw particle to particle canvas (for crisp highlights/trails)
+      pctx.beginPath();
+      pctx.fillStyle = p.color;
+      pctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+      pctx.fill();
+
+      // draw onto goo canvas as solid circles (these will be blurred and contrasted)
+      gctx.beginPath();
+      gctx.fillStyle = 'white';
+      gctx.arc(p.x, p.y, Math.max(2, p.size*1.3), 0, Math.PI*2);
+      gctx.fill();
+    }
+
+    // after drawing raw circles on goo canvas, we leave blur + contrast to CSS/SVG pipeline
+    // Enhance bloom: sample brighter particles on bloomCanvas
+    const bctx = bloomCanvas.getContext('2d');
+    bctx.clearRect(0,0,innerWidth, innerHeight);
+    bctx.globalCompositeOperation = 'lighter';
+    bctx.filter = `blur(${Math.max(12, (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--goo-blur')) || 18)/2)}px)`;
+    // draw particle canvas onto bloom canvas with strong globalAlpha to create glow
+    bctx.globalAlpha = 0.24;
+    bctx.drawImage(particleCanvas, 0, 0);
+    bctx.globalAlpha = 1;
+    bctx.filter = 'none';
+
+    // soft rays: light streaks based on center
+    const rctx = raysCanvas.getContext('2d');
+    rctx.clearRect(0,0,innerWidth,innerHeight);
+    const gradient = rctx.createRadialGradient(innerWidth*0.3, innerHeight*0.25, 20, innerWidth*0.3, innerHeight*0.25, Math.max(innerWidth, innerHeight));
+    gradient.addColorStop(0, 'rgba(255,255,255,0.06)');
+    gradient.addColorStop(1, 'rgba(255,255,255,0.0)');
+    rctx.fillStyle = gradient;
+    rctx.fillRect(0,0,innerWidth,innerHeight);
+
+    requestAnimationFrame(particleStep);
+  }
+
+  // animate turbulence (SVG) for wobble
+  let turb = document.getElementById('turb');
+  let turbPaused = false;
+  let turbBase = 0.012;
+  function animateTurb(now){
+    if(turb && !turbPaused){
+      const freq = turbBase + Math.sin(now/1400) * 0.006;
+      turb.setAttribute('baseFrequency', Math.abs(freq).toFixed(4));
+    }
+    requestAnimationFrame(animateTurb);
+  }
+  requestAnimationFrame(animateTurb);
+
+  // MAXED OUT POP: typed intro -> letter burst -> goo formation
+  async function runShow(){
+    // type BLANK LABS without revealing during loader (loader already said "Welcome to...")
+    const text = 'BLANK LABS';
+    headlineEl.textContent = '';
+    intro.style.opacity = 0;
+    await sleep(80);
+    intro.style.transition = 'opacity 520ms ease, transform 900ms cubic-bezier(.2,.9,.2,1)';
+    intro.style.opacity = 1;
+    for(let i=0;i<text.length;i++){
+      headlineEl.textContent += text[i];
+      const delay = text[i] === ' ' ? 160 : 110;
+      await sleep(delay);
+    }
+    // tiny camera pop
+    if(!PREF_REDUCE){
+      intro.style.transform = 'scale(1.02)';
+      await sleep(160);
+      intro.style.transform = 'scale(1)';
+    }
+
+    // sample text mask
+    const rect = headlineEl.getBoundingClientRect();
+    const mask = makeTextMask(text, Math.round(parseFloat(getComputedStyle(headlineEl).fontSize)), 40);
+    // compute headline center in viewport
+    const originX = rect.left + rect.width/2;
+    const originY = rect.top + rect.height/2;
+
+    // start advanced burst: spawn particles sampling mask points -> create goo
+    spawnFromText(mask, originX, originY);
+
+    // run particle animation loop
+    requestAnimationFrame(particleStep);
+
+    // apply small timed sequences: after first burst, spawn secondary waves for "goo pop-out"
+    if(!PREF_REDUCE){
+      await sleep(320);
+      spawnFromText(mask, originX, originY);
+      await sleep(220);
+      spawnFromText(mask, originX, originY);
+    }
+
+    // after goo has formed, add large slow outward pulse (metaballs expanding)
+    if(!PREF_REDUCE){
+      await sleep(800);
+      // long subtle second wave
+      spawnFromText(mask, originX, originY);
+    }
+
+    // check for static-json and show empty message if it's missing or empty
+    checkStaticJSON();
+  }
+
+  // create mask sampling function used earlier
+  function makeTextMask(text, fontSize=200, padding=40){
+    const off = document.createElement('canvas');
+    const ctx = off.getContext('2d');
+    ctx.font = `900 ${fontSize}px Inter, system-ui, sans-serif`;
+    const w = Math.ceil(ctx.measureText(text).width + padding*2);
+    const h = Math.ceil(fontSize + padding*2);
+    off.width = w; off.height = h;
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0,0,w,h);
+    ctx.fillStyle = '#fff';
+    ctx.font = `900 ${fontSize}px Inter, system-ui, sans-serif`;
+    ctx.textBaseline = 'top';
+    ctx.fillText(text, padding, padding/2);
+    // sample points inside glyph (coarser sampling for perf)
+    const img = ctx.getImageData(0,0,w,h).data;
+    const coords = [];
+    const step = Math.max(2, Math.floor(fontSize / 20));
+    for(let y=0;y<h;y+=step){
+      for(let x=0;x<w;x+=step){
+        const idx = (y*w + x)*4 + 3;
+        if(img[idx] > 160) coords.push([x - w/2, y - h/2]);
+      }
+    }
+    return {canvas: off, coords, w, h};
+  }
+
+  // spawn wrapper uses mask sampling function defined above
+  function spawnFromText(mask, originX, originY){
+    spawnFromMask(mask, originX, originY);
+  }
+  function spawnFromMask(mask, originX, originY){
+    // simple wrapper to avoid forward ref screws
+    const ctx = gooCanvas.getContext('2d');
+    const count = Math.min(particleState.max, mask.coords.length * (PREF_REDUCE ? 1 : 3));
+    for(let i=0;i<count;i++){
+      const idx = Math.floor(Math.random() * mask.coords.length);
+      const [mx, my] = mask.coords[idx];
+      const tx = originX + mx * (innerWidth / mask.w) * 1.0;
+      const ty = originY + my * (innerHeight / mask.h) * 1.0;
+      const angle = Math.atan2(ty - originX, tx - originX) + rand(-1.2, 1.2);
+      const speed = rand(2.8, 14.6);
+      particleState.particles.push({
+        x: originX + rand(-8,8),
+        y: originY + rand(-8,8),
+        vx: Math.cos(angle)*speed + (Math.random()-0.5)*2,
+        vy: Math.sin(angle)*speed + (Math.random()-0.5)*2,
+        targetX: tx, targetY: ty,
+        life: 1000 + Math.random()*1800,
+        age: 0,
+        size: rand(0.9, 4.6),
+        color: `rgba(255,255,255,${0.45 + Math.random()*0.55})`,
+        phase: 0
+      });
+      if(particleState.particles.length > particleState.max) particleState.particles.shift();
+    }
+  }
+
+  // check static JSON and scroll to empty message if necessary
+  function checkStaticJSON(){
+    const el = document.getElementById('static-json');
+    let ok = false;
+    if(el){
+      try {
+        const raw = el.textContent.trim();
+        const parsed = raw ? JSON.parse(raw) : null;
+        if(parsed && ((parsed.posts && parsed.posts.length) || (parsed.files && parsed.files.length))){
+          ok = true;
+        }
+      } catch(e){ ok = false; }
+    }
+    if(!ok){
+      emptyMsg.style.display = 'block';
+      // scroll to message for theatrical effect
+      setTimeout(()=> {
+        emptyMsg.scrollIntoView({behavior:'smooth', block:'center'});
+      }, 900);
+    } else {
+      emptyMsg.style.display = 'none';
+    }
+  }
+
+  // small film grain generator for subtle texture
+  function paintGrain(){
+    const gc = grainCanvas.getContext('2d');
+    const w = innerWidth, h = innerHeight;
+    const img = gc.createImageData(w, h);
+    for(let i=0;i<img.data.length;i+=4){
+      const v = (Math.random()*255)|0;
+      img.data[i] = v; img.data[i+1]=v; img.data[i+2]=v; img.data[i+3] = Math.random() > 0.997 ? 40 : 8;
+    }
+    gc.putImageData(img, 0, 0);
+  }
+  // refresh grain periodically for subtle movement
+  setInterval(()=> { if(!PREF_REDUCE) paintGrain(); }, PREF_REDUCE ? 2400 : 120);
+
+  // bloom & rays initial paint
+  function paintStaticFX(){
+    const b = bloomCanvas.getContext('2d');
+    b.clearRect(0,0,innerWidth, innerHeight);
+    // gentle radial highlights
+    const grad = b.createRadialGradient(innerWidth*0.25, innerHeight*0.2, 0, innerWidth*0.25, innerHeight*0.2, Math.max(innerWidth, innerHeight));
+    grad.addColorStop(0, 'rgba(255,255,255,0.08)');
+    grad.addColorStop(1, 'rgba(255,255,255,0.0)');
+    b.fillStyle = grad; b.fillRect(0,0,innerWidth,innerHeight);
+  }
+  paintStaticFX();
+
+  // resize & initial load
+  resizeAll();
+  await runLoader();
+
+  // remove loader (opaque) and reveal intro
+  try{ loader.remove(); } catch(e){ loader.style.display='none'; }
+  intro.removeAttribute('aria-hidden');
+  showBorders();
+
+  // run typed intro and show goo pop-out
+  runShow();
+
+  // final: keep a looping turbulence animation for displacement (handled above via SVG turb element)
+  // ensure border reappear if no scroll
+  if(window.scrollY === 0) showBorders();
+
+  // ensure refresh sizes periodically if user resizes
+  window.addEventListener('resize', ()=> { resizeAll(); paintStaticFX(); }, {passive:true});
+
+  // small helper functions already used
+  function rand(a,b){ return Math.random()*(b-a)+a; }
+  window.blanklabs = { pause: ()=> setPaused(true), resume: ()=> setPaused(false), burst: ()=> { const mask = makeTextMask(headlineEl.textContent, parseFloat(getComputedStyle(headlineEl).fontSize)); spawnFromText(mask, innerWidth/2, innerHeight/2); } };
+
+})();
+</script>
+
+<!-- Optional static JSON block (if absent, the page will show the "there's nothing here yet" message).
+<script id="static-json" type="application/json">
+{ "posts": [], "files": [] }
+</script>
+-->
+
+</body>
+</html>
