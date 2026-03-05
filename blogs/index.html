@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BlankLabs — blog</title>
+  <meta name="description" content="Monochrome, accessible blog viewer for BlankLabs. Detects blog id in URL and renders the post." />
+
+  <style>
+    /*
+      Monochrome cool UI
+      - high contrast, readable, minimal
+      - respects prefers-reduced-motion
+    */
+
+    :root{
+      --bg:#0b0b0c;
+      --card:#0f0f10;
+      --muted:#9aa0a6;
+      --accent:#ffffff;
+      --glass: rgba(255,255,255,0.02);
+      --max-width:900px;
+      --radius:14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+      --ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* Reset-ish */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100%;
+      font-family:var(--ui);
+      background:
+        radial-gradient(1600px 400px at 10% 10%, rgba(255,255,255,0.02), transparent 8%),
+        linear-gradient(180deg, #060606 0%, var(--bg) 100%);
+      color:var(--accent);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.6;
+      padding:48px 20px;
+    }
+
+    main{
+      max-width:var(--max-width);
+      margin:0 auto;
+    }
+
+    /* Skip link for screen readers */
+    .skip{
+      position:absolute;
+      left:12px;
+      top:12px;
+      background:#fff;
+      color:#000;
+      padding:6px 10px;
+      border-radius:8px;
+      text-decoration:none;
+      transform:translateY(-200%);
+      transition:transform 160ms ease;
+      z-index:999;
+    }
+    .skip:focus{transform:translateY(0)}
+
+    header.site-head{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:28px;
+    }
+
+    .logo{
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.03);
+      flex:0 0 56px;
+    }
+    .logo img{max-width:86%; max-height:86%; display:block; filter:grayscale(1) contrast(1.05) brightness(1.1)}
+
+    .site-title{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .site-title h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:0.2px;
+      font-weight:600;
+    }
+    .site-title p{margin:0;color:var(--muted);font-size:13px}
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01));
+      border-radius:var(--radius);
+      padding:28px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      border:1px solid rgba(255,255,255,0.03);
+      overflow-wrap:break-word;
+    }
+
+    article header{
+      margin-bottom:18px;
+    }
+    article h2{
+      margin:0 0 6px 0;
+      font-size:24px;
+      line-height:1.1;
+      letter-spacing:-0.2px;
+    }
+    article .meta{
+      color:var(--muted);
+      font-size:13px;
+      display:flex;
+      gap:14px;
+      align-items:center;
+    }
+
+    .content{
+      margin-top:10px;
+      font-size:17px;
+      color: #e9ecef;
+    }
+
+    .content p{margin:0 0 16px 0; font-size:17px}
+    .content h3{margin:20px 0 10px 0; font-size:18px}
+    .content ul{padding-left:20px; margin:0 0 16px 0}
+    .content li{margin:6px 0}
+    .content pre{
+      background: rgba(0,0,0,0.3);
+      padding:14px;
+      border-radius:10px;
+      overflow:auto;
+      font-family:var(--mono);
+      font-size:13px;
+      color:var(--accent);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .code-row{
+      display:flex;
+      gap:8px;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .btn-copy{
+      background:transparent;
+      color:var(--muted);
+      border:1px solid rgba(255,255,255,0.03);
+      padding:6px 8px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btn-copy:focus{outline:2px solid rgba(255,255,255,0.08)}
+
+    .figure{
+      margin:18px 0;
+      border-radius:10px;
+      overflow:hidden;
+      background:var(--glass);
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .figure img{display:block; width:100%; height:auto; filter:grayscale(1) contrast(1.05)}
+    .caption{padding:10px;color:var(--muted); font-size:13px}
+
+    .columns{
+      display:grid;
+      gap:12px;
+      grid-template-columns:1fr 1fr;
+      align-items:start;
+      margin:16px 0;
+    }
+    @media (max-width:720px){ .columns{grid-template-columns:1fr} }
+
+    /* accordion */
+    .accordion-item{
+      margin:10px 0;
+      border-radius:10px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.03);
+      background: rgba(255,255,255,0.01);
+    }
+    .accordion-btn{
+      width:100%;
+      text-align:left;
+      background:transparent;
+      border:0;
+      padding:12px 16px;
+      font-size:15px;
+      color:var(--accent);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+    }
+    .accordion-panel{
+      padding:12px 16px 18px 16px;
+      border-top:1px solid rgba(255,255,255,0.02);
+      display:none;
+    }
+    .accordion-btn[aria-expanded="true"] + .accordion-panel{display:block}
+
+    /* list of posts fallback */
+    .post-list{display:flex;flex-direction:column;gap:10px}
+    .post-link{
+      padding:12px 14px;
+      border-radius:10px;
+      background:transparent;
+      color:var(--accent);
+      text-decoration:none;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    footer{
+      margin-top:22px;
+      color:var(--muted);
+      font-size:13px;
+      text-align:center;
+    }
+
+    /* reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      *{transition:none!important}
+    }
+
+  </style>
+</head>
+<body>
+  <a href="#content" class="skip">Skip to content</a>
+
+  <main>
+    <header class="site-head" aria-hidden="false">
+      <div class="logo" aria-hidden="true">
+        <img src="logo.png" alt="BlankLabs logo" />
+      </div>
+      <div class="site-title">
+        <h1>BlankLabs</h1>
+        <p>monochrome blog reader</p>
+      </div>
+    </header>
+
+    <div id="app" class="card" role="main" aria-live="polite">
+      <!-- content is injected here -->
+      <div id="loading" class="loading">
+        Loading...
+      </div>
+    </div>
+
+    <footer>
+      Built with care. Accessible reading, reduced-motion friendly.
+    </footer>
+  </main>
+
+  <script>
+    /* Utility: get requested id from path or ?id= */
+    function getRequestedId(){
+      // Try pathname last segment if it matches blogNNN
+      const path = window.location.pathname.replace(/\/+$/,'');
+      const last = path.split('/').pop();
+      if (/^blog\\d+$/i.test(last)) return last.toLowerCase();
+
+      // Try search param id
+      const qp = new URLSearchParams(location.search).get('id');
+      if (qp && /^blog\\d+$/i.test(qp)) return qp.toLowerCase();
+
+      // Also support hash like #blog003
+      const hash = (location.hash || '').replace('#','');
+      if (hash && /^blog\\d+$/i.test(hash)) return hash.toLowerCase();
+
+      return null;
+    }
+
+    const app = document.getElementById('app');
+
+    function setTitle(t){
+      document.title = t ? t + ' — BlankLabs' : 'BlankLabs — blog';
+    }
+
+    async function loadAndRender(){
+      const id = getRequestedId();
+
+      // fetch blogs.json
+      let blogs;
+      try{
+        const res = await fetch('/blogs.json', {cache:'no-store'});
+        if (!res.ok) throw new Error('Failed to fetch blogs.json: ' + res.status);
+        blogs = await res.json();
+      }catch(err){
+        renderError('Could not load blog data. Check that /blogs.json exists and is valid JSON.\\n' + err.message);
+        console.error(err);
+        return;
+      }
+
+      if (!Array.isArray(blogs)){
+        renderError('blogs.json did not return an array.');
+        return;
+      }
+
+      if (!id){
+        renderIndex(blogs);
+        return;
+      }
+
+      const post = blogs.find(b => (b.id || '').toLowerCase() === id.toLowerCase());
+      if (!post){
+        renderNotFound(id, blogs);
+        return;
+      }
+
+      renderPost(post, blogs);
+    }
+
+    function renderError(msg){
+      app.innerHTML = '';
+      const el = document.createElement('div');
+      el.className = 'card';
+      el.innerHTML = '<h2>Error</h2><pre style="color:var(--muted)">' + escapeHtml(msg) + '</pre>';
+      app.appendChild(el);
+      setTitle('Error');
+    }
+
+    function renderIndex(blogs){
+      app.innerHTML = '';
+      const wrap = document.createElement('div');
+
+      const heading = document.createElement('h2');
+      heading.textContent = 'Choose a post';
+      wrap.appendChild(heading);
+
+      const list = document.createElement('div');
+      list.className = 'post-list';
+      blogs.forEach(b => {
+        const a = document.createElement('a');
+        a.className = 'post-link';
+        a.href = ensureLinkFor(b.id);
+        a.textContent = (b.title || b.id || 'Untitled') + (b.subtitle ? ' — ' + b.subtitle : '');
+        list.appendChild(a);
+      });
+
+      const help = document.createElement('p');
+      help.style.color = 'var(--muted)';
+      help.style.marginTop = '12px';
+      help.textContent = 'Tip: you can open a post directly via URL, for example /blog003 or ?id=blog003';
+
+      app.appendChild(wrap);
+      app.appendChild(list);
+      app.appendChild(help);
+      setTitle('All posts');
+    }
+
+    function ensureLinkFor(id){
+      // Keep same page path but append id as last segment
+      // If current path already contains a blog id, replace it
+      let base = window.location.pathname.replace(/\\/?blog\\d+$/i,'').replace(/\\/$/,'');
+      return base + '/' + id;
+    }
+
+    function renderNotFound(id, blogs){
+      app.innerHTML = '';
+      const h = document.createElement('h2');
+      h.textContent = 'Post not found: ' + id;
+      app.appendChild(h);
+
+      const p = document.createElement('p');
+      p.style.color = 'var(--muted)';
+      p.textContent = 'Available posts:';
+      app.appendChild(p);
+
+      const list = document.createElement('div');
+      list.className = 'post-list';
+      blogs.forEach(b => {
+        const a = document.createElement('a');
+        a.className = 'post-link';
+        a.href = ensureLinkFor(b.id);
+        a.textContent = (b.title || b.id);
+        list.appendChild(a);
+      });
+      app.appendChild(list);
+      setTitle('Not found');
+    }
+
+    function renderPost(post, allPosts){
+      app.innerHTML = '';
+
+      // ARTICLE wrapper
+      const article = document.createElement('article');
+      article.setAttribute('role','article');
+      article.setAttribute('aria-labelledby','post-title');
+      article.tabIndex = -1;
+
+      // header
+      const header = document.createElement('header');
+      const h = document.createElement('h2');
+      h.id = 'post-title';
+      h.textContent = post.title || 'Untitled';
+      header.appendChild(h);
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      const author = document.createElement('span');
+      author.textContent = post.author || 'BlankLabs';
+      const date = document.createElement('time');
+      if (post.date) date.setAttribute('datetime', post.date);
+      date.textContent = post.date || '';
+      meta.appendChild(author);
+      if (post.date) meta.appendChild(date);
+      header.appendChild(meta);
+      article.appendChild(header);
+
+      const container = document.createElement('div');
+      container.className = 'content';
+      // Render blocks
+      const blocks = Array.isArray(post.blocks) ? post.blocks : [{
+        type:'text',
+        format:'paragraph',
+        content: (post.content || post.description || '')
+      }];
+
+      blocks.forEach((blk, idx) => {
+        try{
+          const node = renderBlock(blk, idx);
+          if (node) container.appendChild(node);
+        }catch(e){
+          console.error('Error rendering block', blk, e);
+        }
+      });
+
+      article.appendChild(container);
+
+      // small nav for other posts
+      if (Array.isArray(allPosts) && allPosts.length > 1){
+        const nav = document.createElement('nav');
+        nav.style.marginTop = '18px';
+        nav.setAttribute('aria-label','Other posts');
+        const list = document.createElement('div');
+        list.style.display = 'flex';
+        list.style.gap = '8px';
+        list.style.flexWrap = 'wrap';
+        allPosts.forEach(p => {
+          if (p.id === post.id) return;
+          const a = document.createElement('a');
+          a.className = 'post-link';
+          a.href = ensureLinkFor(p.id);
+          a.textContent = p.title || p.id;
+          list.appendChild(a);
+        });
+        nav.appendChild(list);
+        article.appendChild(nav);
+      }
+
+      // attach
+      app.appendChild(article);
+
+      // accessibility: move focus to article
+      setTimeout(()=> {
+        article.focus();
+      }, 50);
+
+      // set document title
+      setTitle(post.title || post.id || 'BlankLabs');
+
+      // announce for screen readers
+      app.setAttribute('aria-live','polite');
+    }
+
+    function renderBlock(blk, idx){
+      if (!blk || typeof blk !== 'object') return null;
+      const t = (blk.type || 'text').toLowerCase();
+
+      if (t === 'text'){
+        const fmt = (blk.format || 'paragraph').toLowerCase();
+        if (fmt === 'header'){
+          const h3 = document.createElement('h3');
+          h3.textContent = blk.content || '';
+          return h3;
+        }
+        if (fmt === 'list'){
+          const ul = document.createElement('ul');
+          (blk.items || []).forEach(li => {
+            const liEl = document.createElement('li');
+            liEl.textContent = li;
+            ul.appendChild(liEl);
+          });
+          return ul;
+        }
+        // default paragraph
+        const p = document.createElement('p');
+        p.textContent = blk.content || '';
+        return p;
+      }
+
+      if (t === 'image'){
+        const figure = document.createElement('figure');
+        figure.className = 'figure';
+        const img = document.createElement('img');
+        img.src = blk.src || 'logo.png';
+        // alt: prefer caption, fallback to title or empty string
+        img.alt = blk.caption || blk.alt || (blk.title || '');
+        img.loading = 'lazy';
+        figure.appendChild(img);
+        if (blk.caption){
+          const cap = document.createElement('figcaption');
+          cap.className = 'caption';
+          cap.textContent = blk.caption;
+          figure.appendChild(cap);
+        }
+        return figure;
+      }
+
+      if (t === 'code'){
+        const container = document.createElement('div');
+        container.className = 'code-row';
+        const pre = document.createElement('pre');
+        const code = document.createElement('code');
+        code.textContent = blk.content || '';
+        code.setAttribute('data-lang', blk.language || '');
+        pre.appendChild(code);
+
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'btn-copy';
+        copyBtn.type = 'button';
+        copyBtn.innerText = 'Copy';
+        copyBtn.addEventListener('click', async () => {
+          try{
+            await navigator.clipboard.writeText(blk.content || '');
+            copyBtn.innerText = 'Copied';
+            setTimeout(()=> copyBtn.innerText = 'Copy', 1500);
+          }catch(e){
+            copyBtn.innerText = 'Unavailable';
+            setTimeout(()=> copyBtn.innerText = 'Copy', 1500);
+          }
+        });
+
+        container.appendChild(pre);
+        container.appendChild(copyBtn);
+        return container;
+      }
+
+      if (t === 'video'){
+        const figure = document.createElement('figure');
+        figure.className = 'figure';
+        const vid = document.createElement('video');
+        vid.controls = true;
+        vid.src = blk.src || '';
+        vid.setAttribute('aria-label', blk.caption || 'video');
+        vid.style.width = '100%';
+        figure.appendChild(vid);
+        if (blk.caption){
+          const cap = document.createElement('figcaption');
+          cap.className = 'caption';
+          cap.textContent = blk.caption;
+          figure.appendChild(cap);
+        }
+        return figure;
+      }
+
+      if (t === 'columns'){
+        const wrap = document.createElement('div');
+        wrap.className = 'columns';
+        (blk.columns || []).forEach(col => {
+          // for each column, render the block inside a small inner card
+          const inner = document.createElement('div');
+          // reuse renderBlock for the inner single item; fallback to paragraph
+          const node = renderBlock(col) || (function(){ const p = document.createElement('p'); p.textContent = col.content || ''; return p })();
+          inner.appendChild(node);
+          wrap.appendChild(inner);
+        });
+        return wrap;
+      }
+
+      if (t === 'accordion'){
+        const item = document.createElement('div');
+        item.className = 'accordion-item';
+        const btn = document.createElement('button');
+        btn.className = 'accordion-btn';
+        btn.type = 'button';
+        btn.setAttribute('aria-expanded','false');
+        btn.textContent = blk.title || 'More';
+        const chev = document.createElement('span');
+        chev.setAttribute('aria-hidden','true');
+        chev.textContent = '+';
+        btn.appendChild(chev);
+        const panel = document.createElement('div');
+        panel.className = 'accordion-panel';
+        panel.setAttribute('role','region');
+        // render child blocks inside panel
+        (blk.blocks || []).forEach(b => {
+          const node = renderBlock(b);
+          if (node) panel.appendChild(node);
+        });
+
+        btn.addEventListener('click', () => {
+          const exp = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', String(!exp));
+          chev.textContent = exp ? '+' : '-';
+        });
+
+        item.appendChild(btn);
+        item.appendChild(panel);
+        return item;
+      }
+
+      // fallback: try to show raw JSON
+      const pre = document.createElement('pre');
+      pre.textContent = JSON.stringify(blk, null, 2);
+      return pre;
+    }
+
+    function escapeHtml(str){
+      return String(str).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+    }
+
+    // Kick off
+    loadAndRender();
+  </script>
+</body>
+</html>
