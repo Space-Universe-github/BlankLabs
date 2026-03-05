@@ -1,1036 +1,354 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>BlankLabs — Monochrome Reader (Polished)</title>
-<meta name="description" content="Monochrome reader — open posts with ?id=blog003" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hidden Reader</title>
+
 <style>
-  /* Visuals: calm monochrome, readable, modern micro-interactions (respects reduced motion) */
-  :root{
-    --bg: #070708;
-    --panel: #0f1011;
-    --muted: #9aa0a6;
-    --text: #eaeff2;
-    --accent: #fff;
-    --glass: rgba(255,255,255,0.02);
-    --max-width:1100px;
-    --radius:14px;
-    --base-font:17px;
-    --line:1.6;
-    --measure:72ch;
-    --ui-font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
-    --mono: ui-monospace,SFMono-Regular,Menlo,Monaco,"Roboto Mono","Courier New",monospace;
-    --ruler-opacity:0;
-    --highlight: rgba(255,255,255,0.07);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family:var(--ui-font);
-    background:
-      radial-gradient(900px 240px at 8% 8%, rgba(255,255,255,0.015), transparent 6%),
-      linear-gradient(180deg,#030304 0%,var(--bg) 100%);
-    color:var(--text);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    font-size:var(--base-font);
-    line-height:var(--line);
-    padding:32px 20px;
-  }
 
-  main{max-width:var(--max-width);margin:0 auto}
-  header.site{
-    display:flex;align-items:center;gap:14px;margin-bottom:18px;
-  }
-  .logo{
-    width:56px;height:56px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03)
-  }
-  .logo img{max-width:92%;height:auto;display:block}
-  h1{margin:0;font-size:20px}
-  .lead{margin:0;color:var(--muted);font-size:13px}
+body{
+background:#050505;
+color:#f2f2f2;
+font-family:system-ui;
+line-height:1.7;
+margin:0;
+padding:40px;
+}
 
-  .viewer{
-    background:linear-gradient(180deg, rgba(255,255,255,0.014), rgba(255,255,255,0.01));
-    border-radius:var(--radius); padding:20px; border:1px solid rgba(255,255,255,0.03);
-    box-shadow: 0 20px 80px rgba(0,0,0,0.6);
-    position:relative; overflow:hidden;
-  }
+main{
+max-width:800px;
+margin:auto;
+}
 
-  /* article */
-  article header{margin-bottom:14px}
-  article h2{margin:0 0 6px 0;font-size:26px;line-height:1.05}
-  .meta{color:var(--muted);font-size:13px;display:flex;gap:12px;align-items:center}
-  .content{margin-top:10px;font-size:17px;color:var(--text);max-width:var(--measure)}
-  .content p{margin:0 0 16px}
-  .content h3{margin:18px 0 10px}
-  .content ul{padding-left:20px;margin:0 0 16px}
-  .figure{margin:16px 0;border-radius:10px;overflow:hidden;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
-  .figure img{display:block;width:100%;height:auto}
-  .caption{padding:10px;color:var(--muted);font-size:13px}
+h1{
+font-size:32px;
+margin-bottom:5px;
+}
 
-  pre{background:rgba(0,0,0,0.35);padding:12px;border-radius:10px;overflow:auto;font-family:var(--mono);font-size:13px}
-  .code-row{display:flex;gap:8px;align-items:center}
+.meta{
+opacity:.6;
+margin-bottom:30px;
+}
 
-  /* bottom-right control hub (always visible) */
-  .control-hub {
-    position:fixed; right:18px; bottom:18px; z-index:9999; display:flex; flex-direction:column; gap:10px; align-items:flex-end;
-  }
-  .hub-button {
-    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border:1px solid rgba(255,255,255,0.04); color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer;
-    box-shadow: 0 12px 36px rgba(0,0,0,0.55); font-weight:600;
-  }
-  .hub-panel{
-    width:380px; max-width:calc(100vw - 40px); background:var(--panel); border-radius:12px; padding:12px; color:var(--text);
-    border:1px solid rgba(255,255,255,0.03); box-shadow: 0 20px 80px rgba(0,0,0,0.7);
-  }
-  .hub-row{display:flex;gap:8px;align-items:center;margin:8px 0}
-  .hub-row label{min-width:110px;color:var(--muted);font-size:13px}
-  .hub-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+img{
+max-width:100%;
+border-radius:8px;
+margin:20px 0;
+}
 
-  /* reading ruler */
-  .ruler{position:fixed; left:50%; transform:translateX(-50%); width:calc(100% - 120px); pointer-events:none; border-radius:12px; z-index:500; opacity:0; transition:opacity 160ms ease; background:linear-gradient(transparent, rgba(255,255,255,0.06), transparent)}
-  .ruler.visible{opacity:1}
+p{
+margin:16px 0;
+}
 
-  /* TTS bottom bar (single) */
-  .tts-bar{
-    position:fixed; left:0; right:0; bottom:0; z-index:9998; display:flex; justify-content:center; padding:12px;
-    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6)); backdrop-filter: blur(6px); pointer-events:auto;
-  }
-  .tts-inner{
-    width:100%; max-width:1100px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:10px;
-    padding:10px; display:flex; gap:10px; align-items:center; border:1px solid rgba(255,255,255,0.03);
-  }
-  .btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:10px;color:var(--text);cursor:pointer}
-  .btn.small{padding:6px 8px;font-size:13px}
-  .muted{color:var(--muted);font-size:13px}
-  .slider{appearance:none;height:8px;border-radius:6px;background:rgba(255,255,255,0.06);outline:none}
-  .segment{display:inline}
-  .segment.highlight{background:var(--highlight);border-radius:6px;padding:2px 6px}
+.segment.highlight{
+background:#ffffff22;
+border-radius:4px;
+padding:2px 4px;
+}
 
-  .hidden{display:none}
-  .help-modal{
-    position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:10000;background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);
-    width:92%; max-width:820px; box-shadow:0 20px 80px rgba(0,0,0,0.7); max-height:80vh; overflow:auto;
-  }
+#menuButton{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#111;
+border:1px solid #333;
+padding:12px 16px;
+border-radius:10px;
+cursor:pointer;
+}
 
-  @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
-  @media (max-width:640px){
-    .hub-panel{width:92vw}
-    .tts-inner{flex-direction:column;gap:12px;align-items:stretch}
-  }
+#menu{
+position:fixed;
+bottom:70px;
+right:20px;
+width:280px;
+background:#0e0e0e;
+border:1px solid #333;
+border-radius:12px;
+padding:15px;
+display:none;
+}
+
+#ttsBar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:#0a0a0a;
+border-top:1px solid #333;
+padding:10px;
+display:none;
+}
+
+#ruler{
+position:fixed;
+left:0;
+right:0;
+height:40px;
+background:rgba(255,255,255,.08);
+pointer-events:none;
+display:none;
+}
+
+button{
+background:#111;
+color:white;
+border:1px solid #333;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+}
+
+input[type=range]{
+width:200px;
+}
+
+#help{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:#0f0f0f;
+border:1px solid #333;
+padding:25px;
+max-width:600px;
+display:none;
+border-radius:12px;
+}
+
 </style>
 </head>
+
 <body>
-<main>
-  <header class="site">
-    <div class="logo" aria-hidden="true"><img id="siteLogo" src="logo.png" alt="BlankLabs logo"></div>
-    <div>
-      <h1>BlankLabs</h1>
-      <div class="lead">this part of the site is ment to found by yourself and if your seeing it cool!</div>
-    </div>
-  </header>
 
-  <section class="viewer" id="viewer">
-    <div id="app" role="main" aria-live="polite" tabindex="-1">
-      <p class="muted">Loading posts... (try ?id=blog003)</p>
-    </div>
-  </section>
-
-  <footer style="margin-top:18px;color:var(--muted);font-size:13px;text-align:center">Built with care. Accessible reading, reduced-motion friendly.</footer>
+<main id="app">
+Loading blog...
 </main>
 
-<!-- Control hub bottom-right -->
-<div class="control-hub" aria-hidden="false">
-  <div id="hubPanel" class="hub-panel hidden" role="dialog" aria-modal="false" aria-label="Reader hub">
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <strong>Reader Hub</strong>
-      <div class="muted" style="font-size:13px">settings</div>
-    </div>
+<div id="ruler"></div>
 
-    <div class="hub-row">
-      <label>Text size</label>
-      <div style="display:flex;gap:6px;align-items:center">
-        <button id="decreaseText" class="btn small">-</button>
-        <div id="textSizeLabel" class="muted">Default</div>
-        <button id="increaseText" class="btn small">+</button>
-      </div>
-    </div>
+<div id="menuButton">☰</div>
 
-    <div class="hub-row">
-      <label>Spacing</label>
-      <select id="lineSpacing" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
-        <option value="1.4">Comfort</option>
-        <option value="1.6" selected>Default</option>
-        <option value="1.9">Loose</option>
-      </select>
-    </div>
+<div id="menu">
 
-    <div class="hub-row">
-      <label>Font</label>
-      <select id="fontSelect" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
-        <option value="system">System</option>
-        <option value="serif">Serif</option>
-        <option value="mono">Monospace</option>
-        <option value="dyslexic">Dyslexic-friendly</option>
-      </select>
-    </div>
+<b>Reader Tools</b>
+<br><br>
 
-    <div class="hub-row">
-      <label>High contrast</label>
-      <input id="highContrast" type="checkbox" />
-    </div>
+<button id="playTTS">Read</button>
+<button id="stopTTS">Stop</button>
 
-    <div class="hub-row">
-      <label>Reading ruler</label>
-      <input id="rulerToggle" type="checkbox" />
-    </div>
+<br><br>
 
-    <div class="hub-row">
-      <label>Reduced motion</label>
-      <input id="reducedMotion" type="checkbox" />
-    </div>
+<label>Speed</label>
+<br>
+<input type="range" id="speed" min="0.6" max="1.8" step="0.1" value="1">
 
-    <div class="hub-actions">
-      <button id="openHelp" class="btn">Help</button>
-      <button id="exportMD" class="btn">Export MD</button>
-      <button id="copyLink" class="btn">Copy link</button>
-      <button id="closeHub" class="btn">Close</button>
-    </div>
+<br><br>
 
-    <div style="margin-top:10px;color:var(--muted);font-size:13px">
-      <strong>Keyboard</strong>
-      <div style="padding-left:8px;margin-top:6px">
-        <div><code>m</code> toggle hub</div>
-        <div><code>t</code> play/pause TTS</div>
-        <div><code>+</code>/<code>-</code> text size</div>
-        <div><code>[</code>/<code>]</code> prev/next post</div>
-      </div>
-    </div>
-  </div>
+<button id="toggleRuler">Reading Ruler</button>
 
-  <button id="hubToggle" class="hub-button" aria-expanded="false" aria-controls="hubPanel" title="Open reader hub (m)">☰ Reader</button>
+<br><br>
+
+<button id="helpBtn">Help</button>
+
 </div>
 
-<!-- TTS bottom bar (single) -->
-<div id="ttsBar" class="tts-bar hidden" aria-hidden="true">
-  <div class="tts-inner" role="region" aria-label="Text to speech controls">
-    <button id="playPause" class="btn">🔊 Play</button>
-    <button id="stopTTS" class="btn small">■ Stop</button>
+<div id="ttsBar">
 
-    <div style="display:flex;align-items:center;gap:8px;margin-left:10px;">
-      <div class="muted">Progress</div>
-      <input id="segmentRange" type="range" min="0" max="0" value="0" class="slider" style="width:260px">
-      <div id="segInfo" class="muted" style="min-width:110px;text-align:right">0 / 0</div>
-    </div>
+<button id="pauseTTS">Pause</button>
 
-    <div style="flex:1"></div>
+<input id="progress" type="range" min="0" max="0" value="0">
 
-    <div style="display:flex;gap:8px;align-items:center">
-      <div class="muted">Voice</div>
-      <select id="voiceSelect" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)"></select>
+<span id="progressText"></span>
 
-      <div class="muted">Speed</div>
-      <input id="rateRange" type="range" min="0.6" max="1.8" step="0.05" value="1" class="slider" style="width:120px">
-
-      <div class="muted">Vol</div>
-      <input id="volRange" type="range" min="0" max="1" step="0.05" value="1" class="slider" style="width:100px">
-    </div>
-  </div>
 </div>
 
-<!-- reading ruler -->
-<div id="ruler" class="ruler" aria-hidden="true"></div>
+<div id="help">
 
-<!-- help modal -->
-<div id="helpModal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
-  <h2 id="helpTitle">Quick help</h2>
-  <div style="max-height:60vh;overflow:auto">
-    <p><strong>Open a post:</strong> Use <code>?id=blog003</code> (replace with any blog id). Example: <code>/</code> (index), <code>/?id=blog003</code>.</p>
-    <p><strong>TTS:</strong> Press <code>t</code> or the Play button. Bottom bar is the single TTS control. Highlight follows what is being read. Use the slider to jump. Settings and progress persist.</p>
-    <p><strong>Reading ruler:</strong> Turn on in the hub. It shows a soft band in the viewport to help focus; a one-time tutorial will appear the first time you enable it.</p>
-    <p><strong>Images:</strong> Images are used as your JSON points them to. If an image 404s it will quietly fall back to an inline placeholder logo, avoiding broken icons.</p>
-    <p><strong>Extras:</strong> Export markdown, copy permalink, printable view via browser print. Keyboard shortcuts are listed in the hub.</p>
-  </div>
-  <div style="text-align:right;margin-top:12px"><button id="closeHelp" class="btn">Close</button></div>
+<h2>Reader Help</h2>
+
+<p>
+This page is a hidden reader mode.
+If you found it on your own, nice.
+</p>
+
+<p>
+Use ?id=blog003 in the URL to load a blog.
+</p>
+
+<p>
+Press Read to activate text to speech.
+The progress bar lets you jump through the article.
+</p>
+
+<p>
+Reading ruler highlights one line to make reading easier.
+</p>
+
+<button onclick="document.getElementById('help').style.display='none'">Close</button>
+
 </div>
 
 <script>
-/*
-  Big defensive script: robust UI, fixed errors, one TTS bar, ruler working, fallback images, only ?id routing.
-  I kept it long and explicit so it's easy to follow and safe to run in many environments.
-*/
-
-(() => {
-  const BLOG_PATH = '/blogs.json';
-
-  // DOM lookups (safe)
-  const app = document.getElementById('app');
-  const siteLogo = document.getElementById('siteLogo');
-
-  // Hub
-  const hubToggle = document.getElementById('hubToggle');
-  const hubPanel = document.getElementById('hubPanel');
-  const increaseText = document.getElementById('increaseText');
-  const decreaseText = document.getElementById('decreaseText');
-  const textSizeLabel = document.getElementById('textSizeLabel');
-  const lineSpacing = document.getElementById('lineSpacing');
-  const fontSelect = document.getElementById('fontSelect');
-  const highContrast = document.getElementById('highContrast');
-  const rulerToggle = document.getElementById('rulerToggle');
-  const reducedMotion = document.getElementById('reducedMotion');
-  const closeHub = document.getElementById('closeHub');
-  const openHelp = document.getElementById('openHelp');
-  const helpModal = document.getElementById('helpModal');
-  const closeHelp = document.getElementById('closeHelp');
-  const exportMD = document.getElementById('exportMD');
-  const copyLink = document.getElementById('copyLink');
-
-  // TTS bar
-  const ttsBar = document.getElementById('ttsBar');
-  const playPause = document.getElementById('playPause');
-  const stopTTS = document.getElementById('stopTTS');
-  const segmentRange = document.getElementById('segmentRange');
-  const segInfo = document.getElementById('segInfo');
-  const voiceSelect = document.getElementById('voiceSelect');
-  const rateRange = document.getElementById('rateRange');
-  const volRange = document.getElementById('volRange');
-
-  const ruler = document.getElementById('ruler');
-
-  // State
-  let blogs = [];
-  let currentIndex = -1;
-  let segments = []; // {el, text}
-  let voiceMap = {};
-  let ttsState = { index: 0, rate: 1.0, vol: 1.0, voiceURI: null, playing: false };
-
-  const PREFS_KEY = 'blanklabs-prefs-v2';
-  const TTS_KEY = 'blanklabs-tts-v2';
-  let prefs = { textScale: 1, lineSpacing: 1.6, font: 'system', highContrast: false, ruler: false, reducedMotion: false };
-
-  // safe localStorage helpers
-  function safeLoad(key, fallback) {
-    try {
-      const raw = localStorage.getItem(key);
-      if (!raw) return fallback;
-      return JSON.parse(raw);
-    } catch (e) { return fallback; }
-  }
-  function safeSave(key, value) {
-    try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { /* ignore */ }
-  }
-
-  // load saved prefs and tts state if present
-  Object.assign(prefs, safeLoad(PREFS_KEY, {}));
-  Object.assign(ttsState, safeLoad(TTS_KEY, {}));
-
-  function savePrefs(){ safeSave(PREFS_KEY, prefs); }
-  function saveTTS(){ safeSave(TTS_KEY, ttsState); }
-
-  // apply prefs to the page
-  function applyPrefs() {
-    document.documentElement.style.setProperty('--base-font', (17 * prefs.textScale) + 'px');
-    document.documentElement.style.setProperty('--line', prefs.lineSpacing);
-    textSizeLabel.textContent = prefs.textScale === 1 ? 'Default' : Math.round(prefs.textScale * 100) + '%';
-    if (lineSpacing) lineSpacing.value = String(prefs.lineSpacing);
-    if (fontSelect) fontSelect.value = prefs.font || 'system';
-    if (highContrast) highContrast.checked = !!prefs.highContrast;
-    if (rulerToggle) rulerToggle.checked = !!prefs.ruler;
-    if (reducedMotion) reducedMotion.checked = !!prefs.reducedMotion;
-
-    if (prefs.font === 'system') document.body.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial';
-    else if (prefs.font === 'serif') document.body.style.fontFamily = 'Georgia, "Times New Roman", serif';
-    else if (prefs.font === 'mono') document.body.style.fontFamily = 'ui-monospace, Menlo, Monaco, "Roboto Mono", monospace';
-    else if (prefs.font === 'dyslexic') document.body.style.fontFamily = '"OpenDyslexic", "Lexend", "Trebuchet MS", "Segoe UI", Arial, sans-serif';
-
-    if (prefs.highContrast) {
-      document.documentElement.style.setProperty('--text', '#ffffff');
-      document.documentElement.style.setProperty('--muted', '#cfcfcf');
-    } else {
-      document.documentElement.style.setProperty('--text', '#eaeff2');
-      document.documentElement.style.setProperty('--muted', '#9aa0a6');
-    }
-
-    if (prefs.ruler) showRuler(true); else showRuler(false);
-
-    if (prefs.reducedMotion) document.documentElement.style.transition = 'none';
-    else document.documentElement.style.removeProperty('transition');
-
-    savePrefs();
-  }
-
-  applyPrefs();
-
-  // fallback inline SVG as data URL for logo placeholder so browser never shows a 404 broken image icon visually
-  const INLINE_LOGO = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
-    `<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240'>
-       <rect width='100%' height='100%' fill='#0f1011'/>
-       <g fill='#dfe6ea' font-family='Arial, sans-serif' font-weight='700' font-size='38'>
-         <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'>BL</text>
-       </g>
-     </svg>`
-  );
-
-  // ensure site logo has a fallback if logo.png missing
-  if (siteLogo && siteLogo.tagName === 'IMG') {
-    (siteLogo).addEventListener('error', function () {
-      try { siteLogo.src = INLINE_LOGO; } catch (e) {}
-    });
-    // if src empty or 404 already, set fallback after short delay
-    setTimeout(()=> { if (!siteLogo.src || siteLogo.naturalWidth === 0) siteLogo.src = INLINE_LOGO; }, 500);
-  }
-
-  // ---------------------------------------------
-  // Fetch blogs.json safely
-  // ---------------------------------------------
-  async function loadBlogs() {
-    try {
-      const res = await fetch(BLOG_PATH, { cache: 'no-store' });
-      if (!res.ok) throw new Error('fetch failed ' + res.status);
-      const json = await res.json();
-      if (!Array.isArray(json)) throw new Error('blogs.json must be an array');
-      blogs = json;
-    } catch (err) {
-      console.error('Load blogs error:', err);
-      if (app) app.innerHTML = '<h2>Error</h2><p class="muted">Could not load posts. Make sure /blogs.json is reachable (check browser console).</p>';
-    }
-  }
-
-  // ---------------------------------------------
-  // Routing: only ?id=blogXXX
-  // ---------------------------------------------
-  function getRequestedId() {
-    try {
-      const qp = new URLSearchParams(location.search).get('id');
-      if (qp && /^blog\d+$/i.test(qp)) return qp.toLowerCase();
-      return null;
-    } catch (e) { return null; }
-  }
-
-  // ---------------------------------------------
-  // Image element helper: use provided src as-is, fallback to INLINE_LOGO if load fails
-  // ---------------------------------------------
-  function makeImageElement(src, caption) {
-    const fig = document.createElement('figure');
-    fig.className = 'figure';
-    const img = document.createElement('img');
-    let s = String(src || '').trim();
-    if (!s) s = INLINE_LOGO;
-    img.src = s;
-    img.alt = caption || '';
-    img.loading = 'lazy';
-    img.addEventListener('error', () => { if (img && img.src !== INLINE_LOGO) img.src = INLINE_LOGO; });
-    fig.appendChild(img);
-    if (caption) {
-      const cap = document.createElement('figcaption');
-      cap.className = 'caption';
-      cap.textContent = caption;
-      fig.appendChild(cap);
-    }
-    return fig;
-  }
-
-  // ---------------------------------------------
-  // Render helpers for blocks
-  // ---------------------------------------------
-  function renderBlock(block) {
-    if (!block || typeof block !== 'object') return null;
-    const t = (block.type || 'text').toLowerCase();
-
-    if (t === 'text') {
-      const fmt = (block.format || 'paragraph').toLowerCase();
-      if (fmt === 'header') {
-        const h3 = document.createElement('h3');
-        h3.textContent = block.content || '';
-        return h3;
-      }
-      if (fmt === 'list') {
-        const ul = document.createElement('ul');
-        (block.items || []).forEach(it => {
-          const li = document.createElement('li');
-          li.textContent = it;
-          ul.appendChild(li);
-        });
-        return ul;
-      }
-      const p = document.createElement('p');
-      p.textContent = block.content || '';
-      return p;
-    }
-
-    if (t === 'image') return makeImageElement(block.src || INLINE_LOGO, block.caption || '');
-
-    if (t === 'code') {
-      const wrap = document.createElement('div');
-      wrap.className = 'code-row';
-      const pre = document.createElement('pre');
-      const code = document.createElement('code');
-      code.textContent = block.content || '';
-      pre.appendChild(code);
-      const btn = document.createElement('button');
-      btn.className = 'btn small';
-      btn.textContent = 'Copy';
-      btn.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText(block.content || '');
-          btn.textContent = 'Copied';
-          setTimeout(() => btn.textContent = 'Copy', 900);
-        } catch (e) {
-          btn.textContent = 'Err';
-          setTimeout(() => btn.textContent = 'Copy', 900);
-        }
-      });
-      wrap.appendChild(pre);
-      wrap.appendChild(btn);
-      return wrap;
-    }
-
-    if (t === 'video') {
-      const fig = document.createElement('figure');
-      fig.className = 'figure';
-      const v = document.createElement('video');
-      v.controls = true;
-      v.src = block.src || '';
-      v.style.width = '100%';
-      fig.appendChild(v);
-      if (block.caption) {
-        const cap = document.createElement('figcaption');
-        cap.className = 'caption';
-        cap.textContent = block.caption;
-        fig.appendChild(cap);
-      }
-      return fig;
-    }
-
-    if (t === 'columns') {
-      const wrap = document.createElement('div');
-      wrap.className = 'columns';
-      (block.columns || []).forEach(col => {
-        const colWrap = document.createElement('div');
-        const node = renderBlock(col) || (function () { const p = document.createElement('p'); p.textContent = col.content || ''; return p; })();
-        colWrap.appendChild(node);
-        wrap.appendChild(colWrap);
-      });
-      return wrap;
-    }
-
-    if (t === 'accordion') {
-      const item = document.createElement('div');
-      item.className = 'accordion-item';
-      const btn = document.createElement('button');
-      btn.className = 'accordion-btn';
-      btn.type = 'button';
-      btn.setAttribute('aria-expanded', 'false');
-      btn.textContent = block.title || 'More';
-      const che = document.createElement('span');
-      che.textContent = '+';
-      btn.appendChild(che);
-      const panel = document.createElement('div');
-      panel.className = 'accordion-panel';
-      (block.blocks || []).forEach(b => {
-        const n = renderBlock(b);
-        if (n) panel.appendChild(n);
-      });
-      btn.addEventListener('click', () => {
-        const exp = btn.getAttribute('aria-expanded') === 'true';
-        btn.setAttribute('aria-expanded', String(!exp));
-        che.textContent = exp ? '+' : '-';
-      });
-      item.appendChild(btn);
-      item.appendChild(panel);
-      return item;
-    }
-
-    const pre = document.createElement('pre');
-    pre.textContent = JSON.stringify(block, null, 2);
-    return pre;
-  }
-
-  // ---------------------------------------------
-  // TTS: split article into segments and highlight during playback
-  // ---------------------------------------------
-  function buildSegments(articleEl) {
-    segments = [];
-    if (!articleEl) return;
-    const content = articleEl.querySelector('.content');
-    if (!content) return;
-    // Select nodes to split
-    const nodes = content.querySelectorAll('p, h3, li, pre, blockquote');
-    nodes.forEach(node => {
-      const tag = (node.tagName || '').toLowerCase();
-      const raw = (node.innerText || node.textContent || '').trim();
-      if (!raw) return;
-      if (tag === 'pre') {
-        node.innerHTML = '';
-        const span = document.createElement('span');
-        span.className = 'segment';
-        span.textContent = raw + ' ';
-        node.appendChild(span);
-        segments.push({ el: span, text: raw });
-        return;
-      }
-      // split into sentence-like segments, keep length sane
-      const parts = raw.split(/(?<=\.|\?|!|\n)\s+/g).map(s => s.trim()).filter(Boolean);
-      const out = [];
-      parts.forEach(p => {
-        if (p.length <= 220) out.push(p);
-        else {
-          let remain = p;
-          while (remain.length > 220) {
-            let idx = remain.lastIndexOf(',', 200);
-            if (idx < 0) idx = remain.lastIndexOf(' ', 200);
-            if (idx < 0) idx = 200;
-            out.push(remain.slice(0, idx).trim());
-            remain = remain.slice(idx).trim();
-          }
-          if (remain) out.push(remain);
-        }
-      });
-      node.innerHTML = '';
-      out.forEach(piece => {
-        const span = document.createElement('span');
-        span.className = 'segment';
-        span.textContent = piece + ' ';
-        node.appendChild(span);
-        segments.push({ el: span, text: piece });
-      });
-    });
-  }
-
-  // voice population
-  function populateVoices() {
-    if (!('speechSynthesis' in window)) return;
-    const list = speechSynthesis.getVoices() || [];
-    // clear
-    if (voiceSelect) voiceSelect.innerHTML = '';
-    list.forEach(v => {
-      if (!voiceSelect) return;
-      const opt = document.createElement('option');
-      opt.value = v.voiceURI || v.name;
-      opt.textContent = `${v.name}${v.lang ? ' • ' + v.lang : ''}`;
-      voiceSelect.appendChild(opt);
-      voiceMap[v.voiceURI || v.name] = v;
-    });
-    // restore
-    if (ttsState.voiceURI && voiceSelect && voiceSelect.querySelector(`option[value="${ttsState.voiceURI}"]`)) {
-      voiceSelect.value = ttsState.voiceURI;
-    }
-  }
-  if ('speechSynthesis' in window) {
-    populateVoices();
-    if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
-  }
-
-  // speak a single segment (promise)
-  function speakOne(text) {
-    return new Promise(resolve => {
-      if (!('speechSynthesis' in window)) return resolve();
-      try {
-        const u = new SpeechSynthesisUtterance(String(text));
-        u.rate = ttsState.rate || 1.0;
-        u.volume = ttsState.vol || 1.0;
-        if (ttsState.voiceURI && voiceMap[ttsState.voiceURI]) u.voice = voiceMap[ttsState.voiceURI];
-        u.onend = () => resolve();
-        u.onerror = () => resolve(); // resolve even on error so queue continues gracefully
-        speechSynthesis.speak(u);
-      } catch (e) {
-        console.warn('speakOne error', e);
-        resolve();
-      }
-    });
-  }
-
-  // playback loop
-  let playingLoop = false;
-  async function startTTS(fromIndex) {
-    if (!('speechSynthesis' in window)) { alert('TTS not supported in this browser'); return; }
-    if (!segments || segments.length === 0) return;
-    if (typeof fromIndex === 'number') ttsState.index = fromIndex;
-    ttsState.playing = true;
-    saveTTS();
-    showTTS(true);
-    updatePlayUI();
-
-    if (playingLoop) return;
-    playingLoop = true;
-    while (ttsState.playing && ttsState.index < segments.length) {
-      const seg = segments[ttsState.index];
-      if (!seg) break;
-      highlightSegment(ttsState.index);
-      // smooth scroll into view if possible
-      try { seg.el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
-      await speakOne(seg.text);
-      if (!ttsState.playing) break;
-      ttsState.index++;
-      saveTTS();
-      refreshTTSUI();
-    }
-    if (ttsState.index >= segments.length) {
-      ttsState.playing = false;
-      ttsState.index = Math.max(0, segments.length - 1);
-      saveTTS();
-      updatePlayUI();
-    }
-    playingLoop = false;
-  }
-
-  function pauseTTS() {
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
-    ttsState.playing = false;
-    saveTTS();
-    updatePlayUI();
-  }
-  function stopTTSPlayback() {
-    if ('speechSynthesis' in window) speechSynthesis.cancel();
-    ttsState.playing = false;
-    ttsState.index = 0;
-    saveTTS();
-    highlightSegment(0);
-    updatePlayUI();
-    refreshTTSUI();
-  }
-
-  function highlightSegment(idx) {
-    segments.forEach((s, i) => {
-      if (!s || !s.el) return;
-      if (i === idx) s.el.classList.add('highlight'); else s.el.classList.remove('highlight');
-    });
-    // update bottom UI
-    if (segmentRange) {
-      segmentRange.max = Math.max(0, segments.length - 1);
-      segmentRange.value = Math.min(idx, Math.max(0, segments.length - 1));
-    }
-    if (segInfo) segInfo.textContent = segments.length ? (idx + 1) + ' / ' + segments.length : '0 / 0';
-  }
-
-  function updatePlayUI() {
-    if (!playPause) return;
-    playPause.textContent = ttsState.playing ? '⏸ Pause' : '🔊 Play';
-  }
-
-  function showTTS(show) {
-    if (!ttsBar) return;
-    if (show) {
-      ttsBar.classList.remove('hidden');
-      ttsBar.setAttribute('aria-hidden', 'false');
-    } else {
-      ttsBar.classList.add('hidden');
-      ttsBar.setAttribute('aria-hidden', 'true');
-    }
-  }
-
-  function refreshTTSUI() {
-    if (!segmentRange || !segInfo) return;
-    segmentRange.max = Math.max(0, segments.length - 1);
-    segmentRange.value = Math.min(ttsState.index, Math.max(0, segments.length - 1));
-    segInfo.textContent = segments.length ? (ttsState.index + 1) + ' / ' + segments.length : '0 / 0';
-    if (rateRange) rateRange.value = ttsState.rate || 1.0;
-    if (volRange) volRange.value = ttsState.vol || 1.0;
-    if (voiceSelect && ttsState.voiceURI && voiceSelect.querySelector(`option[value="${ttsState.voiceURI}"]`)) voiceSelect.value = ttsState.voiceURI;
-  }
-
-  // TTS control event wiring
-  if (playPause) playPause.addEventListener('click', () => {
-    if (ttsState.playing) pauseTTS(); else startTTS(ttsState.index);
-  });
-  if (stopTTS) stopTTS.addEventListener('click', () => stopTTSPlayback());
-  if (segmentRange) segmentRange.addEventListener('input', (e) => {
-    ttsState.index = Number(e.target.value);
-    saveTTS();
-    highlightSegment(ttsState.index);
-  });
-  if (voiceSelect) voiceSelect.addEventListener('change', (e) => { ttsState.voiceURI = e.target.value; saveTTS(); });
-  if (rateRange) rateRange.addEventListener('input', (e) => { ttsState.rate = Number(e.target.value); saveTTS(); });
-  if (volRange) volRange.addEventListener('input', (e) => { ttsState.vol = Number(e.target.value); saveTTS(); });
-
-  // ---------------------------------------------
-  // Scroll progress and ruler — guarded to avoid null errors
-  // ---------------------------------------------
-  function updateScrollProgress() {
-    try {
-      const article = app ? app.querySelector('article') : null;
-      if (!article) {
-        // nothing to update
-        if (ruler) ruler.classList.remove('visible');
-        return;
-      }
-      // calculate percent scrolled within article
-      const rect = article.getBoundingClientRect();
-      const top = rect.top + window.scrollY;
-      const total = article.scrollHeight || 1;
-      const scrolled = Math.max(0, window.scrollY - top + window.innerHeight * 0.2);
-      const pct = Math.round((scrolled / Math.max(1, total)) * 100);
-      // a minimal progress indicator is the TTS segInfo and the segment highlight; we keep this for compatibility
-      // handle ruler
-      if (prefs.ruler && ruler) {
-        const centerY = window.scrollY + (window.innerHeight / 2);
-        const h = Math.min(360, window.innerHeight * 0.55);
-        ruler.style.top = (centerY - h / 2) + 'px';
-        ruler.style.height = h + 'px';
-        ruler.classList.add('visible');
-        ruler.setAttribute('aria-hidden', 'false');
-      } else if (ruler) {
-        ruler.classList.remove('visible');
-        ruler.setAttribute('aria-hidden', 'true');
-      }
-    } catch (err) {
-      // defensive: log but don't blow up
-      console.warn('updateScrollProgress error', err);
-    }
-  }
-
-  window.addEventListener('scroll', () => { try { updateScrollProgress(); } catch (e) { /* ignore */ } });
-  window.addEventListener('resize', () => { try { updateScrollProgress(); } catch (e) { /* ignore */ } });
-
-  // ---------------------------------------------
-  // Render index and posts
-  // ---------------------------------------------
-  function renderIndex() {
-    if (!app) return;
-    app.innerHTML = '';
-    const h = document.createElement('h2'); h.textContent = 'Posts';
-    app.appendChild(h);
-    const list = document.createElement('div'); list.className = 'post-list';
-    (blogs || []).forEach(b => {
-      const a = document.createElement('a');
-      a.className = 'post-link';
-      a.href = location.pathname + '?id=' + encodeURIComponent(b.id || '');
-      a.textContent = (b.title || b.id || 'Untitled') + (b.subtitle ? ' — ' + b.subtitle : '');
-      list.appendChild(a);
-    });
-    app.appendChild(list);
-    document.title = 'BlankLabs — All posts';
-  }
-
-  function renderPostByIndex(idx) {
-    if (!blogs || idx < 0 || idx >= blogs.length) return;
-    currentIndex = idx;
-    const post = blogs[idx];
-    renderPost(post);
-    const url = new URL(window.location.href);
-    url.searchParams.set('id', post.id);
-    history.replaceState({}, '', url.toString());
-  }
-
-  function renderPost(post) {
-    if (!app) return;
-    app.innerHTML = '';
-    // build article
-    const article = document.createElement('article');
-    article.setAttribute('role', 'article');
-    article.setAttribute('aria-labelledby', 'post-title');
-    article.tabIndex = -1;
-
-    const header = document.createElement('header');
-    const h2 = document.createElement('h2');
-    h2.id = 'post-title';
-    h2.textContent = post.title || '';
-    header.appendChild(h2);
-
-    const meta = document.createElement('div');
-    meta.className = 'meta';
-    const author = document.createElement('span');
-    author.textContent = post.author || 'BlankLabs';
-    meta.appendChild(author);
-    if (post.date) {
-      const time = document.createElement('time');
-      time.dateTime = post.date;
-      time.textContent = post.date;
-      meta.appendChild(time);
-    }
-    header.appendChild(meta);
-    article.appendChild(header);
-
-    const content = document.createElement('div');
-    content.className = 'content';
-    const blocks = Array.isArray(post.blocks) ? post.blocks : [{ type: 'text', format: 'paragraph', content: post.content || post.description || '' }];
-
-    blocks.forEach(b => {
-      const node = renderBlock(b);
-      if (node) content.appendChild(node);
-    });
-
-    article.appendChild(content);
-
-    // navigation to other posts
-    if (blogs && blogs.length > 1) {
-      const nav = document.createElement('nav');
-      nav.style.marginTop = '14px';
-      nav.setAttribute('aria-label', 'Other posts');
-      const list = document.createElement('div');
-      list.style.display = 'flex';
-      list.style.gap = '8px';
-      list.style.flexWrap = 'wrap';
-      blogs.forEach(b => {
-        if (b.id === post.id) return;
-        const a = document.createElement('a');
-        a.className = 'post-link';
-        a.href = location.pathname + '?id=' + encodeURIComponent(b.id);
-        a.textContent = b.title || b.id;
-        list.appendChild(a);
-      });
-      nav.appendChild(list);
-      article.appendChild(nav);
-    }
-
-    app.appendChild(article);
-    document.title = (post.title || post.id || 'BlankLabs');
-
-    // build segments for TTS
-    buildSegments(article);
-    populateVoices(); // refresh voice list
-    refreshTTSUI();
-
-    // show TTS bar (kept hidden visually until user presses play, but shown area)
-    showTTS(true);
-
-    // focus for screen readers
-    setTimeout(() => { try { article.focus(); } catch (e) {} }, 50);
-
-    // update scroll progress & ruler
-    updateScrollProgress();
-  }
-
-  // ---------------------------------------------
-  // Helpers: export markdown
-  // ---------------------------------------------
-  function exportCurrentToMarkdown() {
-    if (!blogs || currentIndex < 0) return alert('No post open');
-    const p = blogs[currentIndex];
-    let md = `# ${p.title || ''}\n\n`;
-    if (p.subtitle) md += `_${p.subtitle}_\n\n`;
-    if (p.description) md += `${p.description}\n\n`;
-    (p.blocks || []).forEach(b => {
-      if (b.type === 'text') {
-        if (b.format === 'header') md += `### ${b.content}\n\n`;
-        else if (b.format === 'list') md += (b.items || []).map(i => `- ${i}`).join('\n') + '\n\n';
-        else md += `${b.content}\n\n`;
-      } else if (b.type === 'image') md += `![${b.caption || ''}](${b.src || ''})\n\n`;
-      else if (b.type === 'code') md += `\`\`\`${b.language || ''}\n${b.content}\n\`\`\`\n\n`;
-    });
-    const blob = new Blob([md], { type: 'text/markdown' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = (p.id || 'post') + '.md';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  }
-
-  // ---------------------------------------------
-  // Navigation and keyboard
-  // ---------------------------------------------
-  function navigatePosts(delta) {
-    if (!blogs || currentIndex < 0) return;
-    let next = currentIndex + delta;
-    if (next < 0) next = blogs.length - 1;
-    if (next >= blogs.length) next = 0;
-    renderPostByIndex(next);
-  }
-
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'm' || e.key === 'M') {
-      // toggle hub
-      const isHidden = hubPanel.classList.contains('hidden');
-      hubPanel.classList.toggle('hidden');
-      hubToggle.setAttribute('aria-expanded', String(!isHidden));
-    }
-    if (e.key === 't' || e.key === 'T') {
-      if (ttsState.playing) pauseTTS();
-      else startTTS(ttsState.index);
-    }
-    if (e.key === '+') { prefs.textScale = Math.min(1.6, parseFloat((prefs.textScale + 0.1).toFixed(2))); applyPrefs(); savePrefs(); }
-    if (e.key === '-') { prefs.textScale = Math.max(0.7, parseFloat((prefs.textScale - 0.1).toFixed(2))); applyPrefs(); savePrefs(); }
-    if (e.key === '[') navigatePosts(-1);
-    if (e.key === ']') navigatePosts(1);
-  });
-
-  // hub events (defensive checks)
-  if (hubToggle) hubToggle.addEventListener('click', () => {
-    const hidden = hubPanel ? hubPanel.classList.toggle('hidden') : true;
-    hubToggle.setAttribute('aria-expanded', String(!hidden));
-  });
-  if (closeHub) closeHub.addEventListener('click', () => { if (hubPanel) { hubPanel.classList.add('hidden'); hubToggle.setAttribute('aria-expanded', 'false'); } });
-  if (increaseText) increaseText.addEventListener('click', () => { prefs.textScale = Math.min(1.6, parseFloat((prefs.textScale + 0.1).toFixed(2))); applyPrefs(); savePrefs(); });
-  if (decreaseText) decreaseText.addEventListener('click', () => { prefs.textScale = Math.max(0.7, parseFloat((prefs.textScale - 0.1).toFixed(2))); applyPrefs(); savePrefs(); });
-  if (lineSpacing) lineSpacing.addEventListener('change', (e) => { prefs.lineSpacing = parseFloat(e.target.value); applyPrefs(); savePrefs(); });
-  if (fontSelect) fontSelect.addEventListener('change', (e) => { prefs.font = e.target.value; applyPrefs(); savePrefs(); });
-  if (highContrast) highContrast.addEventListener('change', (e) => { prefs.highContrast = e.target.checked; applyPrefs(); savePrefs(); });
-  if (rulerToggle) rulerToggle.addEventListener('change', (e) => { prefs.ruler = e.target.checked; applyPrefs(); savePrefs(); if (prefs.ruler) showRulerTutorial(); });
-  if (reducedMotion) reducedMotion.addEventListener('change', (e) => { prefs.reducedMotion = e.target.checked; applyPrefs(); savePrefs(); });
-
-  if (openHelp) openHelp.addEventListener('click', () => { if (helpModal) helpModal.classList.remove('hidden'); });
-  if (closeHelp) closeHelp.addEventListener('click', () => { if (helpModal) helpModal.classList.add('hidden'); });
-
-  if (exportMD) exportMD.addEventListener('click', () => exportCurrentToMarkdown());
-  if (copyLink) copyLink.addEventListener('click', () => {
-    try {
-      const url = new URL(window.location.href);
-      if (currentIndex >= 0 && blogs[currentIndex]) url.searchParams.set('id', blogs[currentIndex].id);
-      navigator.clipboard.writeText(url.toString()).then(() => { alert('Permalink copied'); });
-    } catch (e) { console.warn(e); }
-  });
-
-  // ruler tutorial
-  function showRulerTutorial() {
-    try {
-      if (localStorage.getItem('blanklabs-ruler-shown')) return;
-      localStorage.setItem('blanklabs-ruler-shown', '1');
-      const overlay = document.createElement('div');
-      overlay.style.position = 'fixed'; overlay.style.left = '50%'; overlay.style.top = '50%';
-      overlay.style.transform = 'translate(-50%,-50%)'; overlay.style.zIndex = '10001';
-      overlay.style.background = 'var(--panel)'; overlay.style.padding = '14px'; overlay.style.borderRadius = '10px';
-      overlay.style.boxShadow = '0 20px 80px rgba(0,0,0,0.7)'; overlay.style.border = '1px solid rgba(255,255,255,0.03)';
-      overlay.innerHTML = '<strong>Reading ruler</strong><p style="color:var(--muted)">The ruler is a soft band that follows your viewport to help focus while reading. Click anywhere to dismiss this tip.</p>';
-      document.body.appendChild(overlay);
-      overlay.addEventListener('click', () => overlay.remove());
-    } catch (e) { /* ignore */ }
-  }
-
-  // scroll progress update called periodically after rendering
-  function scheduledProgressUpdate() {
-    try {
-      updateScrollProgress();
-      setTimeout(scheduledProgressUpdate, 250);
-    } catch (e) { /* ignore */ }
-  }
-
-  // ---------------------------------------------
-  // Init: load blogs and route
-  // ---------------------------------------------
-  (async function init() {
-    await loadBlogs();
-    // route by ?id only
-    const id = getRequestedId();
-    if (!id) {
-      renderIndex();
-    } else {
-      const idx = (blogs || []).findIndex(b => String(b.id || '').toLowerCase() === id.toLowerCase());
-      if (idx === -1) {
-        if (app) app.innerHTML = '<h2>Not found</h2><p class="muted">No post with id ' + String(id) + '</p>';
-      } else {
-        renderPostByIndex(idx);
-      }
-    }
-
-    // set up small periodic tasks
-    scheduledProgressUpdate();
-
-    // safety: ensure logo fallback if server returned 404
-    if (siteLogo && siteLogo.tagName === 'IMG') {
-      siteLogo.addEventListener('error', () => { try { siteLogo.src = INLINE_LOGO; } catch (e) {} });
-      setTimeout(() => { if (!siteLogo.src || siteLogo.naturalWidth === 0) siteLogo.src = INLINE_LOGO; }, 500);
-    }
-  })();
-
-  // expose for debugging in console
-  try { window.BlankLabsReader = { prefs, ttsState, reload: () => location.reload(), segments }; } catch (e) { /* ignore */ }
-})();
+
+const app = document.getElementById("app")
+
+let segments=[]
+let currentIndex=0
+let speaking=false
+let utterance
+
+const progress=document.getElementById("progress")
+const progressText=document.getElementById("progressText")
+const ttsBar=document.getElementById("ttsBar")
+
+async function loadBlogs(){
+
+const res=await fetch("/blogs.json")
+const data=await res.json()
+
+const params=new URLSearchParams(location.search)
+const id=params.get("id")
+
+let blog=data.find(b=>b.id===id)
+
+if(!blog){
+app.innerHTML="Blog not found"
+return
+}
+
+renderBlog(blog)
+
+}
+
+function renderBlog(blog){
+
+let html=`<h1>${blog.title||""}</h1>`
+
+if(blog.date){
+html+=`<div class="meta">${blog.date}</div>`
+}
+
+if(blog.content){
+
+blog.content.forEach(block=>{
+
+if(block.type==="text"){
+
+html+=`<p class="segment">${block.text}</p>`
+
+}
+
+if(block.type==="image"){
+
+html+=`<img src="${block.src}" onerror="this.style.display='none'">`
+
+}
+
+})
+
+}
+
+app.innerHTML=html
+
+segments=[...document.querySelectorAll(".segment")]
+
+progress.max=segments.length-1
+
+}
+
+function speak(){
+
+if(!segments.length)return
+
+ttsBar.style.display="block"
+
+speaking=true
+
+playSegment(currentIndex)
+
+}
+
+function playSegment(i){
+
+if(!speaking)return
+
+currentIndex=i
+
+progress.value=i
+
+progressText.textContent=(i+1)+" / "+segments.length
+
+segments.forEach(s=>s.classList.remove("highlight"))
+segments[i].classList.add("highlight")
+
+utterance=new SpeechSynthesisUtterance(segments[i].innerText)
+
+utterance.rate=document.getElementById("speed").value
+
+utterance.onend=()=>{
+
+if(i+1<segments.length){
+playSegment(i+1)
+}
+
+}
+
+speechSynthesis.speak(utterance)
+
+}
+
+function stop(){
+
+speechSynthesis.cancel()
+
+speaking=false
+
+segments.forEach(s=>s.classList.remove("highlight"))
+
+}
+
+document.getElementById("playTTS").onclick=speak
+document.getElementById("stopTTS").onclick=stop
+
+document.getElementById("pauseTTS").onclick=()=>{
+speechSynthesis.pause()
+}
+
+progress.oninput=()=>{
+speechSynthesis.cancel()
+playSegment(progress.value)
+}
+
+document.getElementById("menuButton").onclick=()=>{
+const m=document.getElementById("menu")
+m.style.display=m.style.display==="block"?"none":"block"
+}
+
+document.getElementById("helpBtn").onclick=()=>{
+document.getElementById("help").style.display="block"
+}
+
+const ruler=document.getElementById("ruler")
+
+document.getElementById("toggleRuler").onclick=()=>{
+
+ruler.style.display=ruler.style.display==="block"?"none":"block"
+
+}
+
+document.addEventListener("mousemove",e=>{
+
+if(ruler.style.display==="block"){
+ruler.style.top=(e.clientY-20)+"px"
+}
+
+})
+
+loadBlogs()
+
 </script>
+
 </body>
 </html>
