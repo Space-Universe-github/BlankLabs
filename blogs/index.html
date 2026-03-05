@@ -1,40 +1,151 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BlankLabs — blog</title>
-  <meta name="description" content="Monochrome, accessible blog viewer for BlankLabs. Detects blog id in URL and renders the post." />
+<script>
+const BLOG_PATH = "/blogs.json";
 
-  <style>
-    /*
-      Monochrome cool UI
-      - high contrast, readable, minimal
-      - respects prefers-reduced-motion
-    */
+function getBlogId() {
+  const path = window.location.pathname.split("/").pop();
+  if (/^blog\d+$/i.test(path)) return path.toLowerCase();
 
-    :root{
-      --bg:#0b0b0c;
-      --card:#0f0f10;
-      --muted:#9aa0a6;
-      --accent:#ffffff;
-      --glass: rgba(255,255,255,0.02);
-      --max-width:900px;
-      --radius:14px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-      --ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  const params = new URLSearchParams(window.location.search);
+  const q = params.get("id");
+  if (q && /^blog\d+$/i.test(q)) return q.toLowerCase();
+
+  return null;
+}
+
+async function loadBlogs() {
+  const res = await fetch(BLOG_PATH);
+  if (!res.ok) throw new Error("Failed to load blogs.json");
+  return await res.json();
+}
+
+function renderText(block) {
+  if (block.format === "header") {
+    const h = document.createElement("h3");
+    h.textContent = block.content;
+    return h;
+  }
+
+  if (block.format === "list") {
+    const ul = document.createElement("ul");
+    block.items.forEach(i => {
+      const li = document.createElement("li");
+      li.textContent = i;
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+
+  const p = document.createElement("p");
+  p.textContent = block.content;
+  return p;
+}
+
+function renderImage(block) {
+  const fig = document.createElement("figure");
+
+  const img = document.createElement("img");
+  img.src = block.src;
+  img.alt = block.caption || "";
+  img.loading = "lazy";
+
+  fig.appendChild(img);
+
+  if (block.caption) {
+    const cap = document.createElement("figcaption");
+    cap.textContent = block.caption;
+    fig.appendChild(cap);
+  }
+
+  return fig;
+}
+
+function renderCode(block) {
+  const pre = document.createElement("pre");
+  const code = document.createElement("code");
+  code.textContent = block.content;
+  pre.appendChild(code);
+  return pre;
+}
+
+function renderBlock(block) {
+  switch (block.type) {
+    case "text":
+      return renderText(block);
+
+    case "image":
+      return renderImage(block);
+
+    case "code":
+      return renderCode(block);
+
+    default:
+      const p = document.createElement("p");
+      p.textContent = "Unsupported block type";
+      return p;
+  }
+}
+
+function renderPost(post) {
+  const app = document.getElementById("app");
+  app.innerHTML = "";
+
+  const article = document.createElement("article");
+
+  const title = document.createElement("h2");
+  title.textContent = post.title;
+
+  const meta = document.createElement("p");
+  meta.textContent = post.author + " • " + post.date;
+
+  article.appendChild(title);
+  article.appendChild(meta);
+
+  post.blocks.forEach(block => {
+    article.appendChild(renderBlock(block));
+  });
+
+  app.appendChild(article);
+}
+
+function renderList(blogs) {
+  const app = document.getElementById("app");
+  app.innerHTML = "<h2>Posts</h2>";
+
+  blogs.forEach(blog => {
+    const a = document.createElement("a");
+    a.href = "/" + blog.id;
+    a.textContent = blog.title;
+    a.style.display = "block";
+    a.style.marginBottom = "10px";
+    app.appendChild(a);
+  });
+}
+
+async function init() {
+  try {
+    const blogs = await loadBlogs();
+    const id = getBlogId();
+
+    if (!id) {
+      renderList(blogs);
+      return;
     }
 
-    /* Reset-ish */
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      min-height:100%;
-      font-family:var(--ui);
-      background:
-        radial-gradient(1600px 400px at 10% 10%, rgba(255,255,255,0.02), transparent 8%),
-        linear-gradient(180deg, #060606 0%, var(--bg) 100%);
+    const post = blogs.find(b => b.id.toLowerCase() === id);
+    if (!post) {
+      document.getElementById("app").textContent = "Blog not found.";
+      return;
+    }
+
+    renderPost(post);
+  } catch (err) {
+    console.error(err);
+    document.getElementById("app").textContent = "Error loading blog.";
+  }
+}
+
+init();
+</script>        linear-gradient(180deg, #060606 0%, var(--bg) 100%);
       color:var(--accent);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
