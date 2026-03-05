@@ -1,737 +1,706 @@
-<script>
-const BLOG_PATH = "/blogs.json";
-
-function getBlogId() {
-  const path = window.location.pathname.split("/").pop();
-  if (/^blog\d+$/i.test(path)) return path.toLowerCase();
-
-  const params = new URLSearchParams(window.location.search);
-  const q = params.get("id");
-  if (q && /^blog\d+$/i.test(q)) return q.toLowerCase();
-
-  return null;
-}
-
-async function loadBlogs() {
-  const res = await fetch(BLOG_PATH);
-  if (!res.ok) throw new Error("Failed to load blogs.json");
-  return await res.json();
-}
-
-function renderText(block) {
-  if (block.format === "header") {
-    const h = document.createElement("h3");
-    h.textContent = block.content;
-    return h;
-  }
-
-  if (block.format === "list") {
-    const ul = document.createElement("ul");
-    block.items.forEach(i => {
-      const li = document.createElement("li");
-      li.textContent = i;
-      ul.appendChild(li);
-    });
-    return ul;
-  }
-
-  const p = document.createElement("p");
-  p.textContent = block.content;
-  return p;
-}
-
-function renderImage(block) {
-  const fig = document.createElement("figure");
-
-  const img = document.createElement("img");
-  img.src = block.src;
-  img.alt = block.caption || "";
-  img.loading = "lazy";
-
-  fig.appendChild(img);
-
-  if (block.caption) {
-    const cap = document.createElement("figcaption");
-    cap.textContent = block.caption;
-    fig.appendChild(cap);
-  }
-
-  return fig;
-}
-
-function renderCode(block) {
-  const pre = document.createElement("pre");
-  const code = document.createElement("code");
-  code.textContent = block.content;
-  pre.appendChild(code);
-  return pre;
-}
-
-function renderBlock(block) {
-  switch (block.type) {
-    case "text":
-      return renderText(block);
-
-    case "image":
-      return renderImage(block);
-
-    case "code":
-      return renderCode(block);
-
-    default:
-      const p = document.createElement("p");
-      p.textContent = "Unsupported block type";
-      return p;
-  }
-}
-
-function renderPost(post) {
-  const app = document.getElementById("app");
-  app.innerHTML = "";
-
-  const article = document.createElement("article");
-
-  const title = document.createElement("h2");
-  title.textContent = post.title;
-
-  const meta = document.createElement("p");
-  meta.textContent = post.author + " • " + post.date;
-
-  article.appendChild(title);
-  article.appendChild(meta);
-
-  post.blocks.forEach(block => {
-    article.appendChild(renderBlock(block));
-  });
-
-  app.appendChild(article);
-}
-
-function renderList(blogs) {
-  const app = document.getElementById("app");
-  app.innerHTML = "<h2>Posts</h2>";
-
-  blogs.forEach(blog => {
-    const a = document.createElement("a");
-    a.href = "/" + blog.id;
-    a.textContent = blog.title;
-    a.style.display = "block";
-    a.style.marginBottom = "10px";
-    app.appendChild(a);
-  });
-}
-
-async function init() {
-  try {
-    const blogs = await loadBlogs();
-    const id = getBlogId();
-
-    if (!id) {
-      renderList(blogs);
-      return;
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>BlankLabs — monochrome reader</title>
+  <meta name="description" content="Monochrome, accessible blog reader for BlankLabs. Find posts by URL like /blog003." />
+  <style>
+    /* --- Monochrome, readable, cool style --- */
+    :root{
+      --bg: #050506;
+      --panel: #0f0f10;
+      --muted: #9aa0a6;
+      --text: #e9ecef;
+      --accent: #ffffff;
+      --glass: rgba(255,255,255,0.02);
+      --max-width: 900px;
+      --radius: 14px;
+      --base-font: 17px;
+      --line: 1.6;
+      --measure: 72ch;
+      --ui-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+      --reduced-motion: 0;
+      --ruler-opacity: 0;
     }
 
-    const post = blogs.find(b => b.id.toLowerCase() === id);
-    if (!post) {
-      document.getElementById("app").textContent = "Blog not found.";
-      return;
-    }
-
-    renderPost(post);
-  } catch (err) {
-    console.error(err);
-    document.getElementById("app").textContent = "Error loading blog.";
-  }
-}
-
-init();
-</script>        linear-gradient(180deg, #060606 0%, var(--bg) 100%);
-      color:var(--accent);
+    /* resets */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100%;
+      font-family:var(--ui-font);
+      background:
+        radial-gradient(1200px 300px at 10% 8%, rgba(255,255,255,0.02), transparent 6%),
+        linear-gradient(180deg, #040405 0%, var(--bg) 100%);
+      color:var(--text);
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      line-height:1.6;
-      padding:48px 20px;
+      line-height:var(--line);
+      padding:36px 20px;
+      transition: background-color 220ms ease;
     }
 
-    main{
-      max-width:var(--max-width);
-      margin:0 auto;
-    }
+    a{color:var(--text); text-decoration:underline dotted; text-underline-offset:4px;}
+    a:focus{outline:3px solid rgba(255,255,255,0.06); outline-offset:4px}
 
-    /* Skip link for screen readers */
-    .skip{
-      position:absolute;
-      left:12px;
-      top:12px;
-      background:#fff;
-      color:#000;
-      padding:6px 10px;
-      border-radius:8px;
-      text-decoration:none;
-      transform:translateY(-200%);
-      transition:transform 160ms ease;
-      z-index:999;
-    }
+    main{max-width:var(--max-width); margin:0 auto;}
+
+    /* skip link */
+    .skip{position:absolute;left:12px;top:12px;background:#fff;color:#000;padding:6px 10px;border-radius:8px; z-index:999; transform:translateY(-200%); transition:transform 160ms ease}
     .skip:focus{transform:translateY(0)}
 
     header.site-head{
       display:flex;
       align-items:center;
       gap:16px;
-      margin-bottom:28px;
+      margin-bottom:22px;
     }
-
     .logo{
-      width:56px;
-      height:56px;
-      border-radius:12px;
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
-      border:1px solid rgba(255,255,255,0.03);
-      flex:0 0 56px;
+      width:60px;height:60px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+      flex:0 0 60px;
     }
-    .logo img{max-width:86%; max-height:86%; display:block; filter:grayscale(1) contrast(1.05) brightness(1.1)}
+    .logo img{max-width:86%; max-height:86%; display:block; filter:grayscale(1) contrast(1.05) brightness(1.05)}
+    .site-title h1{margin:0;font-size:20px}
+    .site-title p{margin:0;color:var(--muted); font-size:13px}
 
-    .site-title{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-    }
-    .site-title h1{
-      margin:0;
-      font-size:18px;
-      letter-spacing:0.2px;
-      font-weight:600;
-    }
-    .site-title p{margin:0;color:var(--muted);font-size:13px}
-
-    .card{
+    /* container card */
+    .viewer{
       background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01));
       border-radius:var(--radius);
-      padding:28px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+      padding:22px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.6);
       border:1px solid rgba(255,255,255,0.03);
-      overflow-wrap:break-word;
+      position:relative;
+      overflow:hidden;
     }
 
-    article header{
-      margin-bottom:18px;
-    }
-    article h2{
-      margin:0 0 6px 0;
-      font-size:24px;
-      line-height:1.1;
-      letter-spacing:-0.2px;
-    }
-    article .meta{
-      color:var(--muted);
-      font-size:13px;
+    /* top controls row */
+    .controls{
       display:flex;
-      gap:14px;
-      align-items:center;
-    }
-
-    .content{
-      margin-top:10px;
-      font-size:17px;
-      color: #e9ecef;
-    }
-
-    .content p{margin:0 0 16px 0; font-size:17px}
-    .content h3{margin:20px 0 10px 0; font-size:18px}
-    .content ul{padding-left:20px; margin:0 0 16px 0}
-    .content li{margin:6px 0}
-    .content pre{
-      background: rgba(0,0,0,0.3);
-      padding:14px;
-      border-radius:10px;
-      overflow:auto;
-      font-family:var(--mono);
-      font-size:13px;
-      color:var(--accent);
-      border:1px solid rgba(255,255,255,0.03);
-    }
-
-    .code-row{
-      display:flex;
-      gap:8px;
       justify-content:space-between;
       align-items:center;
-    }
-
-    .btn-copy{
-      background:transparent;
-      color:var(--muted);
-      border:1px solid rgba(255,255,255,0.03);
-      padding:6px 8px;
-      border-radius:8px;
-      cursor:pointer;
-      font-size:13px;
-    }
-    .btn-copy:focus{outline:2px solid rgba(255,255,255,0.08)}
-
-    .figure{
-      margin:18px 0;
-      border-radius:10px;
-      overflow:hidden;
-      background:var(--glass);
-      border:1px solid rgba(255,255,255,0.02);
-    }
-    .figure img{display:block; width:100%; height:auto; filter:grayscale(1) contrast(1.05)}
-    .caption{padding:10px;color:var(--muted); font-size:13px}
-
-    .columns{
-      display:grid;
       gap:12px;
-      grid-template-columns:1fr 1fr;
-      align-items:start;
-      margin:16px 0;
+      margin-bottom:12px;
     }
-    @media (max-width:720px){ .columns{grid-template-columns:1fr} }
+    .left-controls{display:flex;align-items:center;gap:10px}
+    .right-controls{display:flex;align-items:center;gap:8px}
+
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:10px;color:var(--text);cursor:pointer}
+    .btn:focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
+    .badge{color:var(--muted);font-size:13px}
+
+    /* hamburger */
+    .hamburger{
+      width:46px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);cursor:pointer;
+      background:transparent;
+    }
+    .hamburger .lines{width:20px;height:2px;background:var(--text);box-shadow:0 6px 0 0 var(--text),0 -6px 0 0 var(--text)}
+
+    /* post */
+    article header{margin-bottom:18px}
+    article h2{margin:0 0 6px 0;font-size:26px;line-height:1.05}
+    article .meta{color:var(--muted);font-size:13px;display:flex;gap:12px;align-items:center}
+    .content{margin-top:10px;font-size:var(--base-font); color:var(--text); max-width:var(--measure)}
+    .content p{margin:0 0 16px}
+    .content h3{margin:20px 0 10px}
+    .content ul{padding-left:20px;margin:0 0 16px}
+    .content li{margin:6px 0}
+
+    /* figures */
+    figure.figure{margin:18px 0;border-radius:10px;overflow:hidden;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
+    figure.figure img{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.05)}
+    .caption{padding:10px;color:var(--muted);font-size:13px}
+
+    pre{background:rgba(0,0,0,0.35);padding:14px;border-radius:10px;overflow:auto;font-family:var(--mono-font);font-size:13px;color:var(--text);border:1px solid rgba(255,255,255,0.03)}
+    .code-row{display:flex;gap:8px;justify-content:space-between;align-items:center}
+
+    /* columns layout */
+    .columns{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin:18px 0}
+    @media (max-width:780px){.columns{grid-template-columns:1fr}}
 
     /* accordion */
-    .accordion-item{
-      margin:10px 0;
-      border-radius:10px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,0.03);
-      background: rgba(255,255,255,0.01);
-    }
-    .accordion-btn{
-      width:100%;
-      text-align:left;
-      background:transparent;
-      border:0;
-      padding:12px 16px;
-      font-size:15px;
-      color:var(--accent);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      cursor:pointer;
-    }
-    .accordion-panel{
-      padding:12px 16px 18px 16px;
-      border-top:1px solid rgba(255,255,255,0.02);
-      display:none;
-    }
+    .accordion-item{margin:10px 0;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01)}
+    .accordion-btn{width:100%;text-align:left;background:transparent;border:0;padding:12px 16px;font-size:15px;color:var(--text);display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+    .accordion-panel{padding:12px 16px 18px 16px;display:none}
     .accordion-btn[aria-expanded="true"] + .accordion-panel{display:block}
 
-    /* list of posts fallback */
+    /* post list fallback */
     .post-list{display:flex;flex-direction:column;gap:10px}
-    .post-link{
-      padding:12px 14px;
-      border-radius:10px;
-      background:transparent;
-      color:var(--accent);
-      text-decoration:none;
-      border:1px solid rgba(255,255,255,0.03);
+    .post-link{padding:12px 14px;border-radius:10px;background:transparent;color:var(--text);text-decoration:none;border:1px solid rgba(255,255,255,0.03)}
+
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+
+    /* reading ruler */
+    .ruler{
+      position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;
+      width:calc(100% - 160px);pointer-events:none;mix-blend-mode:overlay;
+      background:linear-gradient(transparent, rgba(255,255,255,var(--ruler-opacity)), transparent);
+      opacity: var(--ruler-opacity); border-radius:var(--radius);
     }
 
-    footer{
-      margin-top:22px;
-      color:var(--muted);
-      font-size:13px;
-      text-align:center;
-    }
+    /* reading progress */
+    .progress-wrap{height:6px;background:transparent;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
+    .progress{height:6px;background:linear-gradient(90deg,#fff,#cfcfcf);width:0%}
 
-    /* reduce motion */
+    /* small helpers */
+    .muted{color:var(--muted)}
+    .hidden{display:none}
+    .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+
+    /* accessibility: focus outline */
+    :focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
+
+    /* reduced motion */
     @media (prefers-reduced-motion: reduce){
       *{transition:none!important}
     }
-
   </style>
 </head>
 <body>
-  <a href="#content" class="skip">Skip to content</a>
-
-  <main>
+  <a href="#maincontent" class="skip">Skip to content</a>
+  <main id="main" style="max-width:1100px;margin:0 auto;">
     <header class="site-head" aria-hidden="false">
-      <div class="logo" aria-hidden="true">
-        <img src="logo.png" alt="BlankLabs logo" />
-      </div>
+      <div class="logo" aria-hidden="true"><img src="logo.png" alt="BlankLabs logo"></div>
       <div class="site-title">
         <h1>BlankLabs</h1>
-        <p>monochrome blog reader</p>
+        <p>monochrome reader — find posts by URL like /blog003</p>
       </div>
     </header>
 
-    <div id="app" class="card" role="main" aria-live="polite">
-      <!-- content is injected here -->
-      <div id="loading" class="loading">
-        Loading...
+    <div class="viewer" role="region" aria-labelledby="viewer-title">
+      <div class="controls" aria-hidden="false">
+        <div class="left-controls">
+          <button id="hamburger" class="hamburger" aria-expanded="false" aria-controls="menu" title="Open menu (m)">
+            <span class="lines" aria-hidden="true"></span>
+          </button>
+          <div style="display:flex;flex-direction:column">
+            <div class="badge" id="viewer-title">Monochrome reading room</div>
+            <div class="muted" style="font-size:12px">this part of the site is ment to found by yourself and if your seeing it cool!</div>
+          </div>
+        </div>
+
+        <div class="right-controls">
+          <button id="ttsBtn" class="btn" title="Read aloud (t)">🔊 Read</button>
+          <button id="readingModeBtn" class="btn" title="Toggle reading mode (r)">📰 Reading</button>
+          <button id="printBtn" class="btn" title="Printable view">🖨 Print</button>
+        </div>
       </div>
+
+      <div id="menu" role="dialog" aria-modal="false" aria-hidden="true" class="hidden" style="position:absolute;left:18px;top:86px;z-index:60;width:320px;">
+        <div style="background:var(--panel);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)">
+          <h3 style="margin:0 0 8px 0">Accessibility & Settings</h3>
+
+          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+            <span style="min-width:120px;color:var(--muted)">Text size</span>
+            <div style="display:flex;gap:6px">
+              <button id="decreaseText" class="btn" aria-label="Decrease text">-</button>
+              <span id="textSizeLabel" class="muted">Default</span>
+              <button id="increaseText" class="btn" aria-label="Increase text">+</button>
+            </div>
+          </label>
+
+          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+            <span style="min-width:120px;color:var(--muted)">Line spacing</span>
+            <select id="lineSpacing" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
+              <option value="1.4">Comfort</option>
+              <option value="1.6" selected>Default</option>
+              <option value="1.9">Loose</option>
+            </select>
+          </label>
+
+          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+            <span style="min-width:120px;color:var(--muted)">Font</span>
+            <select id="fontSelect" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
+              <option value="system">System Sans</option>
+              <option value="serif">Serif (book)</option>
+              <option value="mono">Monospace</option>
+              <option value="dyslexic">Dyslexic-friendly</option>
+            </select>
+          </label>
+
+          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+            <input id="highContrast" type="checkbox" />
+            <span style="color:var(--muted)">High contrast</span>
+          </label>
+
+          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+            <input id="rulerToggle" type="checkbox" />
+            <span style="color:var(--muted)">Reading ruler</span>
+          </label>
+
+          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+            <input id="reducedMotion" type="checkbox" />
+            <span style="color:var(--muted)">Reduced motion</span>
+          </label>
+
+          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <button id="resetPrefs" class="btn">Reset</button>
+            <button id="closeMenu" class="btn">Close</button>
+          </div>
+
+          <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:12px 0" />
+          <div style="color:var(--muted);font-size:13px">
+            <strong>Keyboard</strong>
+            <ul style="padding-left:18px;margin:8px 0">
+              <li><code>m</code> toggle menu</li>
+              <li><code>r</code> reading mode</li>
+              <li><code>t</code> text-to-speech</li>
+              <li><code>[</code> previous, <code>]</code> next post</li>
+              <li><code>+</code> increase text, <code>-</code> decrease</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-wrap" aria-hidden="true" style="margin-bottom:10px">
+        <div class="progress" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+
+      <div id="app" role="main" aria-live="polite" tabindex="-1">
+        <p class="muted">Loading posts...</p>
+      </div>
+
+      <div class="ruler" id="ruler" aria-hidden="true"></div>
     </div>
 
     <footer>
-      Built with care. Accessible reading, reduced-motion friendly.
+      <div class="muted">Built with care. Accessible reading, reduced-motion friendly.</div>
     </footer>
   </main>
 
   <script>
-    /* Utility: get requested id from path or ?id= */
-    function getRequestedId(){
-      // Try pathname last segment if it matches blogNNN
-      const path = window.location.pathname.replace(/\/+$/,'');
-      const last = path.split('/').pop();
-      if (/^blog\\d+$/i.test(last)) return last.toLowerCase();
+    (function(){
+      const BLOG_PATH = '/blogs.json';
+      const app = document.getElementById('app');
+      const menu = document.getElementById('menu');
+      const hamburger = document.getElementById('hamburger');
+      const ttsBtn = document.getElementById('ttsBtn');
+      const readingModeBtn = document.getElementById('readingModeBtn');
+      const printBtn = document.getElementById('printBtn');
+      const increaseText = document.getElementById('increaseText');
+      const decreaseText = document.getElementById('decreaseText');
+      const textSizeLabel = document.getElementById('textSizeLabel');
+      const lineSpacing = document.getElementById('lineSpacing');
+      const fontSelect = document.getElementById('fontSelect');
+      const highContrast = document.getElementById('highContrast');
+      const rulerToggle = document.getElementById('rulerToggle');
+      const ruler = document.getElementById('ruler');
+      const resetPrefs = document.getElementById('resetPrefs');
+      const closeMenu = document.getElementById('closeMenu');
+      const reducedMotionChk = document.getElementById('reducedMotion');
+      const progressBar = document.getElementById('progressBar');
 
-      // Try search param id
-      const qp = new URLSearchParams(location.search).get('id');
-      if (qp && /^blog\\d+$/i.test(qp)) return qp.toLowerCase();
+      let blogs = [];
+      let currentPostIndex = -1;
+      let settings = {
+        textScale: 1,
+        lineSpacing: 1.6,
+        font: 'system',
+        highContrast: false,
+        ruler: false,
+        reducedMotion: false
+      };
 
-      // Also support hash like #blog003
-      const hash = (location.hash || '').replace('#','');
-      if (hash && /^blog\\d+$/i.test(hash)) return hash.toLowerCase();
-
-      return null;
-    }
-
-    const app = document.getElementById('app');
-
-    function setTitle(t){
-      document.title = t ? t + ' — BlankLabs' : 'BlankLabs — blog';
-    }
-
-    async function loadAndRender(){
-      const id = getRequestedId();
-
-      // fetch blogs.json
-      let blogs;
-      try{
-        const res = await fetch('/blogs.json', {cache:'no-store'});
-        if (!res.ok) throw new Error('Failed to fetch blogs.json: ' + res.status);
-        blogs = await res.json();
-      }catch(err){
-        renderError('Could not load blog data. Check that /blogs.json exists and is valid JSON.\\n' + err.message);
-        console.error(err);
-        return;
-      }
-
-      if (!Array.isArray(blogs)){
-        renderError('blogs.json did not return an array.');
-        return;
-      }
-
-      if (!id){
-        renderIndex(blogs);
-        return;
-      }
-
-      const post = blogs.find(b => (b.id || '').toLowerCase() === id.toLowerCase());
-      if (!post){
-        renderNotFound(id, blogs);
-        return;
-      }
-
-      renderPost(post, blogs);
-    }
-
-    function renderError(msg){
-      app.innerHTML = '';
-      const el = document.createElement('div');
-      el.className = 'card';
-      el.innerHTML = '<h2>Error</h2><pre style="color:var(--muted)">' + escapeHtml(msg) + '</pre>';
-      app.appendChild(el);
-      setTitle('Error');
-    }
-
-    function renderIndex(blogs){
-      app.innerHTML = '';
-      const wrap = document.createElement('div');
-
-      const heading = document.createElement('h2');
-      heading.textContent = 'Choose a post';
-      wrap.appendChild(heading);
-
-      const list = document.createElement('div');
-      list.className = 'post-list';
-      blogs.forEach(b => {
-        const a = document.createElement('a');
-        a.className = 'post-link';
-        a.href = ensureLinkFor(b.id);
-        a.textContent = (b.title || b.id || 'Untitled') + (b.subtitle ? ' — ' + b.subtitle : '');
-        list.appendChild(a);
-      });
-
-      const help = document.createElement('p');
-      help.style.color = 'var(--muted)';
-      help.style.marginTop = '12px';
-      help.textContent = 'Tip: you can open a post directly via URL, for example /blog003 or ?id=blog003';
-
-      app.appendChild(wrap);
-      app.appendChild(list);
-      app.appendChild(help);
-      setTitle('All posts');
-    }
-
-    function ensureLinkFor(id){
-      // Keep same page path but append id as last segment
-      // If current path already contains a blog id, replace it
-      let base = window.location.pathname.replace(/\\/?blog\\d+$/i,'').replace(/\\/$/,'');
-      return base + '/' + id;
-    }
-
-    function renderNotFound(id, blogs){
-      app.innerHTML = '';
-      const h = document.createElement('h2');
-      h.textContent = 'Post not found: ' + id;
-      app.appendChild(h);
-
-      const p = document.createElement('p');
-      p.style.color = 'var(--muted)';
-      p.textContent = 'Available posts:';
-      app.appendChild(p);
-
-      const list = document.createElement('div');
-      list.className = 'post-list';
-      blogs.forEach(b => {
-        const a = document.createElement('a');
-        a.className = 'post-link';
-        a.href = ensureLinkFor(b.id);
-        a.textContent = (b.title || b.id);
-        list.appendChild(a);
-      });
-      app.appendChild(list);
-      setTitle('Not found');
-    }
-
-    function renderPost(post, allPosts){
-      app.innerHTML = '';
-
-      // ARTICLE wrapper
-      const article = document.createElement('article');
-      article.setAttribute('role','article');
-      article.setAttribute('aria-labelledby','post-title');
-      article.tabIndex = -1;
-
-      // header
-      const header = document.createElement('header');
-      const h = document.createElement('h2');
-      h.id = 'post-title';
-      h.textContent = post.title || 'Untitled';
-      header.appendChild(h);
-
-      const meta = document.createElement('div');
-      meta.className = 'meta';
-      const author = document.createElement('span');
-      author.textContent = post.author || 'BlankLabs';
-      const date = document.createElement('time');
-      if (post.date) date.setAttribute('datetime', post.date);
-      date.textContent = post.date || '';
-      meta.appendChild(author);
-      if (post.date) meta.appendChild(date);
-      header.appendChild(meta);
-      article.appendChild(header);
-
-      const container = document.createElement('div');
-      container.className = 'content';
-      // Render blocks
-      const blocks = Array.isArray(post.blocks) ? post.blocks : [{
-        type:'text',
-        format:'paragraph',
-        content: (post.content || post.description || '')
-      }];
-
-      blocks.forEach((blk, idx) => {
-        try{
-          const node = renderBlock(blk, idx);
-          if (node) container.appendChild(node);
-        }catch(e){
-          console.error('Error rendering block', blk, e);
+      /* persistence */
+      function saveSettings(){ localStorage.setItem('reader-settings', JSON.stringify(settings)); }
+      function loadSettings(){
+        const raw = localStorage.getItem('reader-settings');
+        if (raw) {
+          try { Object.assign(settings, JSON.parse(raw)); } catch(e){}
         }
-      });
+      }
 
-      article.appendChild(container);
+      loadSettings();
 
-      // small nav for other posts
-      if (Array.isArray(allPosts) && allPosts.length > 1){
-        const nav = document.createElement('nav');
-        nav.style.marginTop = '18px';
-        nav.setAttribute('aria-label','Other posts');
-        const list = document.createElement('div');
-        list.style.display = 'flex';
-        list.style.gap = '8px';
-        list.style.flexWrap = 'wrap';
-        allPosts.forEach(p => {
-          if (p.id === post.id) return;
-          const a = document.createElement('a');
-          a.className = 'post-link';
-          a.href = ensureLinkFor(p.id);
-          a.textContent = p.title || p.id;
+      /* apply settings */
+      function applySettings(){
+        document.documentElement.style.setProperty('--base-font', (17 * settings.textScale) + 'px');
+        document.documentElement.style.setProperty('--line', settings.lineSpacing);
+        document.documentElement.style.setProperty('--ruler-opacity', settings.ruler ? 0.08 : 0);
+        document.documentElement.style.setProperty('--reduced-motion', settings.reducedMotion ? 1 : 0);
+        textSizeLabel.textContent = (settings.textScale === 1 ? 'Default' : Math.round(settings.textScale * 100) + '%');
+        lineSpacing.value = String(settings.lineSpacing);
+        highContrast.checked = !!settings.highContrast;
+        rulerToggle.checked = !!settings.ruler;
+        reducedMotionChk.checked = !!settings.reducedMotion;
+        fontSelect.value = settings.font || 'system';
+
+        // font families
+        if (settings.font === 'system'){
+          document.body.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
+        } else if (settings.font === 'serif'){
+          document.body.style.fontFamily = 'Georgia, "Times New Roman", serif';
+        } else if (settings.font === 'mono'){
+          document.body.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace';
+        } else if (settings.font === 'dyslexic'){
+          // use a dyslexia friendly stack fallback (Atkinson not guaranteed)
+          document.body.style.fontFamily = '"OpenDyslexic", "Lexend", "Trebuchet MS", "Segoe UI", Arial, sans-serif';
+        }
+
+        // high contrast: tweak colors
+        if (settings.highContrast){
+          document.documentElement.style.setProperty('--text', '#ffffff');
+          document.documentElement.style.setProperty('--muted', '#cfcfcf');
+          document.documentElement.style.setProperty('--panel', '#0b0b0b');
+          document.documentElement.style.setProperty('--panel', '#0b0b0b');
+        } else {
+          document.documentElement.style.setProperty('--text', '#e9ecef');
+          document.documentElement.style.setProperty('--muted', '#9aa0a6');
+        }
+
+        if (settings.reducedMotion) {
+          document.documentElement.style.transition = 'none';
+        } else {
+          document.documentElement.style.removeProperty('transition');
+        }
+
+        saveSettings();
+      }
+
+      applySettings();
+
+      /* helpers for URL id */
+      function getRequestedId(){
+        const path = window.location.pathname.replace(/\/+$/,'');
+        const last = path.split('/').pop();
+        if (/^blog\d+$/i.test(last)) return last.toLowerCase();
+        const qp = new URLSearchParams(window.location.search).get('id');
+        if (qp && /^blog\d+$/i.test(qp)) return qp.toLowerCase();
+        const hash = (location.hash || '').replace('#','');
+        if (hash && /^blog\d+$/i.test(hash)) return hash.toLowerCase();
+        return null;
+      }
+
+      /* load blogs */
+      async function loadBlogs(){
+        try{
+          const res = await fetch(BLOG_PATH, {cache:'no-store'});
+          if (!res.ok) throw new Error('Failed to fetch');
+          const data = await res.json();
+          if (!Array.isArray(data)) throw new Error('blogs.json must be array');
+          blogs = data;
+        }catch(e){
+          app.innerHTML = '<h2>Error</h2><p class="muted">Could not load /blogs.json — check path and JSON.</p>';
+          console.error(e);
+          return;
+        }
+      }
+
+      /* routing / render */
+      function ensureLinkFor(id){
+        let base = window.location.pathname.replace(/\/?blog\d+$/i,'').replace(/\/$/,'');
+        if (!base) base = '/';
+        return base + (base.endsWith('/') ? '' : '/') + id;
+      }
+
+      function renderIndex(){
+        app.innerHTML = '';
+        const h = document.createElement('h2'); h.textContent = 'Posts';
+        app.appendChild(h);
+
+        const list = document.createElement('div'); list.className = 'post-list';
+        blogs.forEach(b=>{
+          const a = document.createElement('a'); a.className = 'post-link';
+          a.href = ensureLinkFor(b.id);
+          a.textContent = (b.title || b.id) + (b.subtitle ? ' — ' + b.subtitle : '');
           list.appendChild(a);
         });
-        nav.appendChild(list);
-        article.appendChild(nav);
+        app.appendChild(list);
       }
 
-      // attach
-      app.appendChild(article);
-
-      // accessibility: move focus to article
-      setTimeout(()=> {
-        article.focus();
-      }, 50);
-
-      // set document title
-      setTitle(post.title || post.id || 'BlankLabs');
-
-      // announce for screen readers
-      app.setAttribute('aria-live','polite');
-    }
-
-    function renderBlock(blk, idx){
-      if (!blk || typeof blk !== 'object') return null;
-      const t = (blk.type || 'text').toLowerCase();
-
-      if (t === 'text'){
-        const fmt = (blk.format || 'paragraph').toLowerCase();
-        if (fmt === 'header'){
-          const h3 = document.createElement('h3');
-          h3.textContent = blk.content || '';
-          return h3;
-        }
-        if (fmt === 'list'){
-          const ul = document.createElement('ul');
-          (blk.items || []).forEach(li => {
-            const liEl = document.createElement('li');
-            liEl.textContent = li;
-            ul.appendChild(liEl);
-          });
-          return ul;
-        }
-        // default paragraph
-        const p = document.createElement('p');
-        p.textContent = blk.content || '';
-        return p;
+      function renderNotFound(id){
+        app.innerHTML = '';
+        const h = document.createElement('h2'); h.textContent = 'Post not found: ' + id;
+        app.appendChild(h);
+        const p = document.createElement('p'); p.className='muted'; p.textContent = 'Available posts:';
+        app.appendChild(p);
+        const list = document.createElement('div'); list.className='post-list';
+        blogs.forEach(b=>{
+          const a = document.createElement('a'); a.className='post-link'; a.href=ensureLinkFor(b.id); a.textContent=b.title || b.id;
+          list.appendChild(a);
+        });
+        app.appendChild(list);
       }
 
-      if (t === 'image'){
-        const figure = document.createElement('figure');
-        figure.className = 'figure';
-        const img = document.createElement('img');
-        img.src = blk.src || 'logo.png';
-        // alt: prefer caption, fallback to title or empty string
-        img.alt = blk.caption || blk.alt || (blk.title || '');
-        img.loading = 'lazy';
-        figure.appendChild(img);
-        if (blk.caption){
-          const cap = document.createElement('figcaption');
-          cap.className = 'caption';
-          cap.textContent = blk.caption;
-          figure.appendChild(cap);
-        }
-        return figure;
+      function setDocTitle(title){
+        document.title = title ? title + ' — BlankLabs' : 'BlankLabs';
       }
 
-      if (t === 'code'){
-        const container = document.createElement('div');
-        container.className = 'code-row';
-        const pre = document.createElement('pre');
-        const code = document.createElement('code');
-        code.textContent = blk.content || '';
-        code.setAttribute('data-lang', blk.language || '');
-        pre.appendChild(code);
+      /* text to speech */
+      let synth = window.speechSynthesis;
+      let uttering = null;
+      function speak(text){
+        if (!synth) return alert('Speech not supported');
+        if (uttering){
+          synth.cancel(); uttering = null; ttsBtn.textContent = '🔊 Read';
+          return;
+        }
+        uttering = new SpeechSynthesisUtterance(text);
+        uttering.rate = 1;
+        uttering.pitch = 1;
+        synth.speak(uttering);
+        ttsBtn.textContent = '⏸ Stop';
+        uttering.onend = ()=>{ uttering = null; ttsBtn.textContent = '🔊 Read'; };
+      }
 
-        const copyBtn = document.createElement('button');
-        copyBtn.className = 'btn-copy';
-        copyBtn.type = 'button';
-        copyBtn.innerText = 'Copy';
-        copyBtn.addEventListener('click', async () => {
-          try{
-            await navigator.clipboard.writeText(blk.content || '');
-            copyBtn.innerText = 'Copied';
-            setTimeout(()=> copyBtn.innerText = 'Copy', 1500);
-          }catch(e){
-            copyBtn.innerText = 'Unavailable';
-            setTimeout(()=> copyBtn.innerText = 'Copy', 1500);
+      /* block rendering */
+      function renderBlock(blk){
+        if (!blk || typeof blk !== 'object') return null;
+        const type = (blk.type || 'text').toLowerCase();
+        if (type === 'text'){
+          const fmt = (blk.format || 'paragraph').toLowerCase();
+          if (fmt === 'header'){
+            const h3 = document.createElement('h3'); h3.textContent = blk.content || '';
+            return h3;
           }
-        });
-
-        container.appendChild(pre);
-        container.appendChild(copyBtn);
-        return container;
-      }
-
-      if (t === 'video'){
-        const figure = document.createElement('figure');
-        figure.className = 'figure';
-        const vid = document.createElement('video');
-        vid.controls = true;
-        vid.src = blk.src || '';
-        vid.setAttribute('aria-label', blk.caption || 'video');
-        vid.style.width = '100%';
-        figure.appendChild(vid);
-        if (blk.caption){
-          const cap = document.createElement('figcaption');
-          cap.className = 'caption';
-          cap.textContent = blk.caption;
-          figure.appendChild(cap);
+          if (fmt === 'list'){
+            const ul = document.createElement('ul');
+            (blk.items || []).forEach(it => { const li = document.createElement('li'); li.textContent = it; ul.appendChild(li); });
+            return ul;
+          }
+          const p = document.createElement('p'); p.textContent = blk.content || '';
+          return p;
         }
-        return figure;
+
+        if (type === 'image'){
+          const fig = document.createElement('figure'); fig.className='figure';
+          const img = document.createElement('img');
+          img.src = blk.src || 'logo.png';
+          img.alt = blk.caption || blk.alt || '';
+          img.loading = 'lazy';
+          fig.appendChild(img);
+          if (blk.caption){
+            const cap = document.createElement('figcaption'); cap.className='caption'; cap.textContent = blk.caption; fig.appendChild(cap);
+          }
+          return fig;
+        }
+
+        if (type === 'code'){
+          const wrapper = document.createElement('div'); wrapper.className='code-row';
+          const pre = document.createElement('pre'); const code = document.createElement('code'); code.textContent = blk.content || ''; pre.appendChild(code);
+          const btn = document.createElement('button'); btn.className='btn'; btn.textContent='Copy';
+          btn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(blk.content || ''); btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',1200)}catch(e){btn.textContent='Err'; setTimeout(()=>btn.textContent='Copy',1200)} });
+          wrapper.appendChild(pre); wrapper.appendChild(btn);
+          return wrapper;
+        }
+
+        if (type === 'video'){
+          const fig = document.createElement('figure'); fig.className='figure';
+          const v = document.createElement('video'); v.controls=true; v.src = blk.src || ''; v.style.width='100%'; fig.appendChild(v);
+          if (blk.caption){ const cap = document.createElement('figcaption'); cap.className='caption'; cap.textContent = blk.caption; fig.appendChild(cap); }
+          return fig;
+        }
+
+        if (type === 'columns'){
+          const wrap = document.createElement('div'); wrap.className='columns';
+          (blk.columns || []).forEach(col => {
+            const inner = document.createElement('div');
+            const node = renderBlock(col) || (function(){ const p = document.createElement('p'); p.textContent = col.content || ''; return p; })();
+            inner.appendChild(node);
+            wrap.appendChild(inner);
+          });
+          return wrap;
+        }
+
+        if (type === 'accordion'){
+          const item = document.createElement('div'); item.className='accordion-item';
+          const btn = document.createElement('button'); btn.className='accordion-btn'; btn.type='button'; btn.setAttribute('aria-expanded','false'); btn.textContent = blk.title || 'More';
+          const che = document.createElement('span'); che.setAttribute('aria-hidden','true'); che.textContent = '+';
+          btn.appendChild(che);
+          const panel = document.createElement('div'); panel.className='accordion-panel'; panel.setAttribute('role','region');
+          (blk.blocks || []).forEach(b => { const n = renderBlock(b); if (n) panel.appendChild(n); });
+          btn.addEventListener('click', ()=>{ const exp = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!exp)); che.textContent = exp ? '+' : '-'; });
+          item.appendChild(btn); item.appendChild(panel);
+          return item;
+        }
+
+        // fallback to raw
+        const pre = document.createElement('pre'); pre.textContent = JSON.stringify(blk, null, 2); return pre;
       }
 
-      if (t === 'columns'){
-        const wrap = document.createElement('div');
-        wrap.className = 'columns';
-        (blk.columns || []).forEach(col => {
-          // for each column, render the block inside a small inner card
-          const inner = document.createElement('div');
-          // reuse renderBlock for the inner single item; fallback to paragraph
-          const node = renderBlock(col) || (function(){ const p = document.createElement('p'); p.textContent = col.content || ''; return p })();
-          inner.appendChild(node);
-          wrap.appendChild(inner);
-        });
-        return wrap;
+      function renderPostByIndex(idx){
+        if (idx < 0 || idx >= blogs.length) return;
+        const post = blogs[idx];
+        if (!post) return;
+        currentPostIndex = idx;
+        renderPost(post);
       }
 
-      if (t === 'accordion'){
-        const item = document.createElement('div');
-        item.className = 'accordion-item';
-        const btn = document.createElement('button');
-        btn.className = 'accordion-btn';
-        btn.type = 'button';
-        btn.setAttribute('aria-expanded','false');
-        btn.textContent = blk.title || 'More';
-        const chev = document.createElement('span');
-        chev.setAttribute('aria-hidden','true');
-        chev.textContent = '+';
-        btn.appendChild(chev);
-        const panel = document.createElement('div');
-        panel.className = 'accordion-panel';
-        panel.setAttribute('role','region');
-        // render child blocks inside panel
-        (blk.blocks || []).forEach(b => {
-          const node = renderBlock(b);
-          if (node) panel.appendChild(node);
-        });
-
-        btn.addEventListener('click', () => {
-          const exp = btn.getAttribute('aria-expanded') === 'true';
-          btn.setAttribute('aria-expanded', String(!exp));
-          chev.textContent = exp ? '+' : '-';
-        });
-
-        item.appendChild(btn);
-        item.appendChild(panel);
-        return item;
+      function findIndexById(id){
+        return blogs.findIndex(b => (b.id || '').toLowerCase() === (id || '').toLowerCase());
       }
 
-      // fallback: try to show raw JSON
-      const pre = document.createElement('pre');
-      pre.textContent = JSON.stringify(blk, null, 2);
-      return pre;
-    }
+      function renderPost(post){
+        app.innerHTML = '';
+        const article = document.createElement('article'); article.setAttribute('role','article'); article.setAttribute('aria-labelledby','post-title'); article.tabIndex = -1;
 
-    function escapeHtml(str){
-      return String(str).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-    }
+        const header = document.createElement('header');
+        const h2 = document.createElement('h2'); h2.id='post-title'; h2.textContent = post.title || '';
+        header.appendChild(h2);
+        const meta = document.createElement('div'); meta.className='meta';
+        const auth = document.createElement('span'); auth.textContent = post.author || 'BlankLabs';
+        meta.appendChild(auth);
+        if (post.date){ const time = document.createElement('time'); time.dateTime = post.date; time.textContent = post.date; meta.appendChild(time); }
+        header.appendChild(meta);
+        article.appendChild(header);
 
-    // Kick off
-    loadAndRender();
+        const content = document.createElement('div'); content.className='content';
+        const blocks = Array.isArray(post.blocks) ? post.blocks : [{type:'text',format:'paragraph', content: post.content || post.description || ''}];
+        blocks.forEach(blk => {
+          try{
+            const node = renderBlock(blk);
+            if (node) content.appendChild(node);
+          }catch(e){ console.error('render block failed',e) }
+        });
+
+        article.appendChild(content);
+
+        // nav to other posts
+        if (blogs.length > 1){
+          const nav = document.createElement('nav'); nav.style.marginTop='18px'; nav.setAttribute('aria-label','Other posts');
+          const list = document.createElement('div'); list.style.display='flex'; list.style.gap='8px'; list.style.flexWrap='wrap';
+          blogs.forEach(b=>{
+            if (b.id === post.id) return;
+            const a = document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent = b.title || b.id;
+            list.appendChild(a);
+          });
+          nav.appendChild(list); article.appendChild(nav);
+        }
+
+        app.appendChild(article);
+        setDocTitle(post.title || post.id || 'BlankLabs');
+
+        // focus for screen readers
+        setTimeout(()=>{ article.focus(); }, 60);
+
+        // update progress on scroll
+        updateProgress();
+      }
+
+      function updateProgress(){
+        const article = app.querySelector('article');
+        if (!article) { progressBar.style.width = '0%'; return; }
+        const rect = article.getBoundingClientRect();
+        const full = article.scrollHeight - window.innerHeight;
+        const scrolled = window.scrollY - article.offsetTop + 120;
+        const pct = Math.min(100, Math.max(0, (scrolled / (article.scrollHeight || 1)) * 100));
+        progressBar.style.width = pct + '%';
+        progressBar.setAttribute('aria-valuenow', String(Math.round(pct)));
+      }
+
+      /* wire controls */
+      function toggleMenu(open){
+        const already = menu.classList.contains('hidden') === false;
+        const shouldOpen = (typeof open === 'boolean') ? open : !already;
+        if (shouldOpen){
+          menu.classList.remove('hidden'); menu.setAttribute('aria-hidden','false'); hamburger.setAttribute('aria-expanded','true');
+        } else {
+          menu.classList.add('hidden'); menu.setAttribute('aria-hidden','true'); hamburger.setAttribute('aria-expanded','false');
+        }
+      }
+
+      hamburger.addEventListener('click', ()=> toggleMenu());
+      closeMenu.addEventListener('click', ()=> toggleMenu(false));
+      document.addEventListener('keydown', (e)=>{
+        if (e.key === 'm' || e.key === 'M') { e.preventDefault(); toggleMenu(); }
+        if (e.key === 'r' || e.key === 'R') { e.preventDefault(); toggleReadingMode(); }
+        if (e.key === 't' || e.key === 'T') { e.preventDefault(); triggerTTS(); }
+        if (e.key === ']') navigatePost(1);
+        if (e.key === '[') navigatePost(-1);
+        if (e.key === '+') { e.preventDefault(); adjustText(0.1); }
+        if (e.key === '-') { e.preventDefault(); adjustText(-0.1); }
+      });
+
+      ttsBtn.addEventListener('click', triggerTTS);
+      readingModeBtn.addEventListener('click', toggleReadingMode);
+      printBtn.addEventListener('click', ()=> window.print());
+
+      increaseText.addEventListener('click', ()=> adjustText(0.1));
+      decreaseText.addEventListener('click', ()=> adjustText(-0.1));
+      lineSpacing.addEventListener('change', (e)=> { settings.lineSpacing = parseFloat(e.target.value); applySettings(); });
+      fontSelect.addEventListener('change', (e)=> { settings.font = e.target.value; applySettings(); });
+      highContrast.addEventListener('change', (e)=> { settings.highContrast = e.target.checked; applySettings(); });
+      rulerToggle.addEventListener('change', (e)=> { settings.ruler = e.target.checked; applySettings(); });
+      reducedMotionChk.addEventListener('change', (e)=> { settings.reducedMotion = e.target.checked; applySettings(); });
+
+      resetPrefs.addEventListener('click', ()=> {
+        settings = { textScale: 1, lineSpacing: 1.6, font: 'system', highContrast: false, ruler: false, reducedMotion: false };
+        applySettings();
+      });
+
+      function adjustText(delta){
+        settings.textScale = Math.max(0.7, Math.min(1.6, Number((settings.textScale + delta).toFixed(2))));
+        applySettings();
+      }
+
+      function toggleReadingMode(){
+        const reading = document.documentElement.classList.toggle('reading-mode');
+        readingModeBtn.textContent = reading ? '📰 Reading' : '📰 Reading';
+        // reading mode: increase measure and reduce chrome
+        if (reading){
+          document.documentElement.style.setProperty('--measure', '68ch');
+        } else {
+          document.documentElement.style.setProperty('--measure', '72ch');
+        }
+      }
+
+      function triggerTTS(){
+        const article = app.querySelector('article');
+        if (!article) return;
+        const text = article.innerText;
+        speak(text);
+      }
+
+      function navigatePost(delta){
+        if (currentPostIndex < 0) return;
+        let next = currentPostIndex + delta;
+        if (next < 0) next = blogs.length - 1;
+        if (next >= blogs.length) next = 0;
+        location.href = ensureLinkFor(blogs[next].id);
+      }
+
+      /* click outside menu closes it */
+      document.addEventListener('click', (e)=>{
+        if (!menu.contains(e.target) && !hamburger.contains(e.target)) toggleMenu(false);
+      });
+
+      /* scroll progress */
+      window.addEventListener('scroll', ()=> {
+        updateProgress();
+        // ruler follow: move ruler to center of viewport
+        if (settings.ruler){
+          const top = window.scrollY + (window.innerHeight / 2) - 120;
+          ruler.style.top = (top) + 'px';
+          ruler.style.height = (240) + 'px';
+        }
+      });
+
+      /* initialize */
+      async function init(){
+        await loadBlogs();
+        const id = getRequestedId();
+        if (!id){
+          renderIndex(); setDocTitle('All posts');
+        } else {
+          const idx = findIndexById(id);
+          if (idx === -1) renderNotFound(id);
+          else renderPostByIndex(idx);
+        }
+        applySettings();
+      }
+
+      init();
+
+      // expose some helpers for dev console
+      window.blanklabs = {
+        reload: init,
+        settings
+      };
+    })();
   </script>
 </body>
 </html>
