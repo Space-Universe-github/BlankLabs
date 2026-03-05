@@ -4,137 +4,82 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BlankLabs — monochrome reader</title>
-  <meta name="description" content="Monochrome, accessible blog reader for BlankLabs. Open posts with ?id=blog003" />
+  <meta name="description" content="Monochrome accessible blog reader — open posts with ?id=blog003" />
   <style>
-    /* Monochrome, readable, cool style (improved) */
+    /* condensed but readable monochrome style */
     :root{
-      --bg:#050506;
-      --panel:#0f0f10;
-      --muted:#9aa0a6;
-      --text:#e9ecef;
-      --accent:#ffffff;
-      --glass:rgba(255,255,255,0.02);
-      --max-width:1000px;
-      --radius:14px;
-      --base-font:17px;
-      --line:1.6;
-      --measure:72ch;
-      --ui-font:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-      --ruler-opacity:0;
-      --highlight: rgba(255,255,255,0.07);
+      --bg:#050506; --panel:#0f0f10; --muted:#9aa0a6; --text:#e9ecef;
+      --accent:#ffffff; --glass:rgba(255,255,255,0.02);
+      --max-width:1000px; --radius:14px; --base-font:17px; --line:1.6;
+      --measure:72ch; --ui-font:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      --mono-font: ui-monospace, Menlo, Monaco, "Roboto Mono", monospace;
+      --ruler-opacity:0; --highlight: rgba(255,255,255,0.07);
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0;
-      min-height:100%;
-      font-family:var(--ui-font);
-      background:
-        radial-gradient(1200px 300px at 10% 8%, rgba(255,255,255,0.02), transparent 6%),
-        linear-gradient(180deg, #040405 0%, var(--bg) 100%);
-      color:var(--text);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      line-height:var(--line);
-      padding:36px 20px;
-      transition:background-color 220ms ease;
-      font-size:var(--base-font);
+      margin:0; font-family:var(--ui-font); background:
+      radial-gradient(900px 240px at 10% 8%, rgba(255,255,255,0.02), transparent 6%),
+      linear-gradient(180deg,#040405 0%,var(--bg) 100%);
+      color:var(--text); -webkit-font-smoothing:antialiased;
+      line-height:var(--line); padding:36px 20px; font-size:var(--base-font);
     }
-
-    a{color:var(--text); text-decoration:underline dotted; text-underline-offset:4px}
-    a:focus{outline:3px solid rgba(255,255,255,0.06); outline-offset:4px}
-
-    main{max-width:var(--max-width); margin:0 auto;}
-
-    /* skip link */
-    .skip{position:absolute;left:12px;top:12px;background:#fff;color:#000;padding:6px 10px;border-radius:8px; z-index:999; transform:translateY(-200%); transition:transform 160ms ease}
+    a{color:var(--text); text-decoration:underline dotted}
+    a:focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
+    main{max-width:var(--max-width);margin:0 auto}
+    .skip{position:absolute;left:12px;top:12px;background:#fff;color:#000;padding:6px 10px;border-radius:8px; transform:translateY(-200%);transition:transform 160ms}
     .skip:focus{transform:translateY(0)}
-
-    header.site-head{display:flex;align-items:center;gap:16px;margin-bottom:22px}
-    .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 24px rgba(0,0,0,0.6);flex:0 0 60px}
-    .logo img{max-width:86%; max-height:86%; display:block; filter:grayscale(1) contrast(1.05) brightness(1.05)}
-    .site-title h1{margin:0;font-size:20px}
-    .site-title p{margin:0;color:var(--muted); font-size:13px}
-
-    .viewer{background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01)); border-radius:var(--radius); padding:18px; box-shadow:0 18px 60px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.03); position:relative; overflow:hidden}
-
-    .controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .site-head{display:flex;gap:16px;align-items:center;margin-bottom:22px}
+    .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03)}
+    .logo img{max-width:86%;max-height:86%;filter:grayscale(1) contrast(1.05)}
+    .viewer{background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01));border-radius:var(--radius);padding:18px;box-shadow:0 18px 60px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);position:relative;overflow:hidden}
+    .controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
     .left-controls{display:flex;align-items:center;gap:10px}
-    .right-controls{display:flex;align-items:center;gap:8px}
     .btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:10px;color:var(--text);cursor:pointer}
     .btn:focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
     .badge{color:var(--muted);font-size:13px}
-
-    .hamburger{width:46px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);cursor:pointer;background:transparent}
+    .hamburger{width:46px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
     .hamburger .lines{width:20px;height:2px;background:var(--text);box-shadow:0 6px 0 0 var(--text),0 -6px 0 0 var(--text)}
-
     article header{margin-bottom:18px}
     article h2{margin:0 0 6px 0;font-size:26px;line-height:1.05}
     article .meta{color:var(--muted);font-size:13px;display:flex;gap:12px;align-items:center}
-    .content{margin-top:10px;font-size:var(--base-font); color:var(--text); max-width:var(--measure)}
+    .content{margin-top:10px;font-size:var(--base-font);color:var(--text);max-width:var(--measure)}
     .content p{margin:0 0 16px}
-    .content h3{margin:20px 0 10px}
-    .content ul{padding-left:20px;margin:0 0 16px}
-    .content li{margin:6px 0}
-
-    figure.figure{margin:18px 0;border-radius:10px;overflow:hidden;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
-    figure.figure img{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.05);transition:transform 250ms ease, box-shadow 250ms ease}
-    figure.figure img:hover{transform:scale(1.02);box-shadow:0 18px 40px rgba(0,0,0,0.6)}
+    .figure{margin:18px 0;border-radius:10px;overflow:hidden;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
+    .figure img{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.05);transition:transform 200ms}
+    .figure img:hover{transform:scale(1.02)}
     .caption{padding:10px;color:var(--muted);font-size:13px}
-
-    pre{background:rgba(0,0,0,0.35);padding:14px;border-radius:10px;overflow:auto;font-family:var(--mono-font);font-size:13px;color:var(--text);border:1px solid rgba(255,255,255,0.03)}
-    .code-row{display:flex;gap:8px;justify-content:space-between;align-items:center}
-
+    pre{background:rgba(0,0,0,0.35);padding:14px;border-radius:10px;overflow:auto;font-family:var(--mono-font);font-size:13px}
     .columns{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin:18px 0}
     @media (max-width:780px){.columns{grid-template-columns:1fr}}
-
     .accordion-item{margin:10px 0;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01)}
-    .accordion-btn{width:100%;text-align:left;background:transparent;border:0;padding:12px 16px;font-size:15px;color:var(--text);display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+    .accordion-btn{width:100%;text-align:left;background:transparent;border:0;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:var(--text)}
     .accordion-panel{padding:12px 16px 18px 16px;display:none}
     .accordion-btn[aria-expanded="true"] + .accordion-panel{display:block}
-
     .post-list{display:flex;flex-direction:column;gap:10px}
     .post-link{padding:12px 14px;border-radius:10px;background:transparent;color:var(--text);text-decoration:none;border:1px solid rgba(255,255,255,0.03)}
-
     footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
-
-    .ruler{position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:calc(100% - 160px);pointer-events:none;mix-blend-mode:overlay;background:linear-gradient(transparent, rgba(255,255,255,var(--ruler-opacity)), transparent);opacity:var(--ruler-opacity);border-radius:var(--radius)}
-
-    .progress-wrap{height:6px;background:transparent;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
+    .ruler{position:fixed;left:50%;transform:translateX(-50%);top:0;width:calc(100% - 160px);pointer-events:none;mix-blend-mode:overlay;background:linear-gradient(transparent, rgba(255,255,255,var(--ruler-opacity)), transparent);opacity:var(--ruler-opacity);border-radius:var(--radius);z-index:10}
+    .progress-wrap{height:6px;background:transparent;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.02);margin-bottom:10px}
     .progress{height:6px;background:linear-gradient(90deg,#fff,#cfcfcf);width:0%}
-
-    /* TTS highlighting */
     .segment{display:inline}
     .segment.highlight{background:var(--highlight);border-radius:6px;padding:2px 6px}
-
     .tts-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
-    .tts-controls label{font-size:13px;color:var(--muted);margin-right:6px}
-
-    .slider{appearance:none;height:8px;border-radius:6px;background:rgba(255,255,255,0.06);outline:none}
-    .slider::-webkit-slider-thumb{appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 4px 8px rgba(0,0,0,0.5)}
     .muted{color:var(--muted)}
     .hidden{display:none}
-
+    .slider{appearance:none;height:8px;border-radius:6px;background:rgba(255,255,255,0.06);outline:none}
+    .slider::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 4px 8px rgba(0,0,0,0.5)}
     :focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
-
-    @media (prefers-reduced-motion: reduce){*{transition:none!important}}
+    @media (prefers-reduced-motion:reduce){*{transition:none!important}}
   </style>
 </head>
 <body>
   <a href="#maincontent" class="skip">Skip to content</a>
-  <main id="main" style="max-width:1100px;margin:0 auto;">
-    <header class="site-head" aria-hidden="false">
-      <div class="logo" aria-hidden="true"><img src="logo.png" alt="BlankLabs logo"></div>
-      <div class="site-title">
-        <h1>BlankLabs</h1>
-        <p>monochrome reader — open posts with ?id=blog003</p>
-      </div>
-    </header>
+  <main id="main" style="max-width:1100px;margin:0 auto">
+    <header class="site-head"><div class="logo"><img src="logo.png" alt="BlankLabs logo"></div><div class="site-title"><h1>BlankLabs</h1><p class="muted">monochrome reader — open posts with ?id=blog003</p></div></header>
 
     <div class="viewer" role="region" aria-labelledby="viewer-title">
-      <div class="controls" aria-hidden="false">
+      <div class="controls">
         <div class="left-controls">
           <button id="hamburger" class="hamburger" aria-expanded="false" aria-controls="menu" title="Open menu (m)"><span class="lines" aria-hidden="true"></span></button>
           <div style="display:flex;flex-direction:column">
@@ -144,13 +89,14 @@
         </div>
 
         <div class="right-controls">
-          <button id="playTTS" class="btn" title="Play/Pause TTS (t)">🔊 Play</button>
-          <button id="readingModeBtn" class="btn" title="Toggle reading mode (r)">📰 Reading</button>
+          <button id="playTTS" class="btn" title="Play/pause TTS (t)">🔊 Play</button>
+          <button id="readingModeBtn" class="btn" title="Reading mode (r)">📰 Reading</button>
           <button id="printBtn" class="btn" title="Printable view">🖨 Print</button>
         </div>
       </div>
 
-      <div id="menu" role="dialog" aria-modal="false" aria-hidden="true" class="hidden" style="position:absolute;left:18px;top:86px;z-index:60;width:360px;">
+      <!-- big menu with extra items and help -->
+      <div id="menu" role="dialog" aria-modal="false" aria-hidden="true" class="hidden" style="position:absolute;left:18px;top:86px;z-index:60;width:420px">
         <div style="background:var(--panel);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)">
           <h3 style="margin:0 0 8px 0">Accessibility & Settings</h3>
 
@@ -163,7 +109,7 @@
             </div>
           </label>
 
-          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
             <span style="min-width:120px;color:var(--muted)">Line spacing</span>
             <select id="lineSpacing" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
               <option value="1.4">Comfort</option>
@@ -172,7 +118,7 @@
             </select>
           </label>
 
-          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
             <span style="min-width:120px;color:var(--muted)">Font</span>
             <select id="fontSelect" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
               <option value="system">System Sans</option>
@@ -182,22 +128,25 @@
             </select>
           </label>
 
-          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
             <input id="highContrast" type="checkbox" />
             <span style="color:var(--muted)">High contrast</span>
           </label>
 
-          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
             <input id="rulerToggle" type="checkbox" />
             <span style="color:var(--muted)">Reading ruler</span>
           </label>
 
-          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
+          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
             <input id="reducedMotion" type="checkbox" />
             <span style="color:var(--muted)">Reduced motion</span>
           </label>
 
           <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+            <button id="helpBtn" class="btn">Help</button>
+            <button id="exportMarkdown" class="btn">Export MD</button>
+            <button id="copyPermalink" class="btn">Copy permalink</button>
             <button id="resetPrefs" class="btn">Reset</button>
             <button id="closeMenu" class="btn">Close</button>
           </div>
@@ -210,7 +159,7 @@
               <li><code>r</code> reading mode</li>
               <li><code>t</code> text-to-speech play/pause</li>
               <li><code>[</code> previous, <code>]</code> next post</li>
-              <li><code>+</code> increase text, <code>-</code> decrease text</li>
+              <li><code>+</code> increase text, <code>-</code> decrease</li>
             </ul>
           </div>
         </div>
@@ -227,15 +176,59 @@
       <div class="ruler" id="ruler" aria-hidden="true"></div>
     </div>
 
-    <footer>
-      <div class="muted">Built with care. Accessible reading, reduced-motion friendly.</div>
-    </footer>
+    <footer><div class="muted">Built with care. Accessible reading, reduced-motion friendly.</div></footer>
   </main>
+
+  <!-- Help modal content (hidden) -->
+  <div id="helpModal" class="hidden" role="dialog" aria-modal="true" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:200;background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);width:90%;max-width:820px;box-shadow:0 20px 80px rgba(0,0,0,0.7)">
+    <h2 style="margin-top:0">How to use this reader</h2>
+    <div style="max-height:60vh;overflow:auto">
+      <h3>Open a post</h3>
+      <p>Use a URL with the query param <code>?id=blog003</code> (replace with the id you want). Example: <code>https://yoursite.example/?id=blog003</code>. This file only uses query routing so links generated by the reader always use <code>?id=</code>.</p>
+
+      <h3>Images and paths</h3>
+      <p>The reader will try to load images referenced in your JSON in this order:</p>
+      <ol>
+        <li>If the JSON path starts with <code>http</code> or <code>//</code> or a starting slash <code>/</code>, it uses it directly.</li>
+        <li>If the path is relative (like <code>pictures/image.png</code>), it will try resolving relative to the current page's directory (where <code>index.html</code> is located).</li>
+        <li>Then it tries resolving relative to the <code>blogs.json</code> file location (in case your JSON lives beside the blogs).</li>
+        <li>If all of the above fail, it falls back to <code>logo.png</code>.</li>
+      </ol>
+
+      <h3>Text to Speech (TTS)</h3>
+      <p>Press the top right Play button or use <code>t</code> to toggle play/pause. The reader splits the article into short segments and highlights the sentence currently being read. You can change voice, speed, and volume in the TTS controls that appear above the article. Progress, rate, voice, and last-read segment are saved so you can resume later.</p>
+
+      <h3>Reading ruler</h3>
+      <p>Enable the Reading ruler in the menu to get a soft band across the page that helps focus. It tracks your viewport and follows as you scroll.</p>
+
+      <h3>Accessibility & Preferences</h3>
+      <p>Open the menu (hamburger or <code>m</code>) to change text size, spacing, font, contrast, and reduced motion. These preferences persist in localStorage.</p>
+
+      <h3>Other features</h3>
+      <ul>
+        <li>Copy permalink to currently open post (menu).</li>
+        <li>Export the post to Markdown (menu) for quick notes.</li>
+        <li>Printable view with the Print button.</li>
+        <li>Keyboard shortcuts listed in the menu.</li>
+      </ul>
+
+      <h3>Troubleshooting</h3>
+      <ul>
+        <li>If an image 404s, check filename case sensitivity and whether the path is relative to the blog file or the site root.</li>
+        <li>If TTS fails in some browsers, try selecting a different voice in the TTS controls (some voice engines reject certain characters).</li>
+      </ul>
+    </div>
+    <div style="text-align:right;margin-top:10px"><button id="closeHelp" class="btn">Close</button></div>
+  </div>
 
   <script>
   (function(){
-    // CONFIG
-    const BLOG_PATH = '/blogs.json'; // as you said
+    // CONSTANTS
+    const BLOG_PATH = '/blogs.json'; // keep this consistent with your setup
+    const SETTINGS_KEY = 'blanklabs-reader-settings';
+    const TTS_STATE_KEY = 'blanklabs-tts-state';
+
+    // UI references
     const app = document.getElementById('app');
     const menu = document.getElementById('menu');
     const hamburger = document.getElementById('hamburger');
@@ -254,33 +247,19 @@
     const closeMenu = document.getElementById('closeMenu');
     const reducedMotionChk = document.getElementById('reducedMotion');
     const progressBar = document.getElementById('progressBar');
+    const helpBtn = document.getElementById('helpBtn');
+    const helpModal = document.getElementById('helpModal');
+    const closeHelp = document.getElementById('closeHelp');
+    const exportMDBtn = document.getElementById('exportMarkdown');
+    const copyPermalinkBtn = document.getElementById('copyPermalink');
 
-    // TTS UI will be injected into the post area
+    // State
     let blogs = [];
     let currentPostIndex = -1;
-    let ttsState = {
-      index: 0,        // current segment index
-      rate: 1.0,
-      volume: 1.0,
-      voiceURI: null,
-      isPlaying: false
-    };
-    const SETTINGS_KEY = 'blanklabs-reader-settings';
-    const TTS_STATE_KEY = 'blanklabs-tts-state';
+    let segments = []; // [{el, text}]
+    let voiceMap = {};
+    let voicesLoaded = false;
 
-    // load saved state
-    function loadSaved(){
-      try{
-        const raw = localStorage.getItem(SETTINGS_KEY);
-        if (raw) Object.assign(settings, JSON.parse(raw));
-      }catch(e){}
-      try{
-        const raw2 = localStorage.getItem(TTS_STATE_KEY);
-        if (raw2) Object.assign(ttsState, JSON.parse(raw2));
-      }catch(e){}
-    }
-
-    // UI settings default
     const settings = {
       textScale: 1,
       lineSpacing: 1.6,
@@ -290,31 +269,40 @@
       reducedMotion: false
     };
 
+    let ttsState = {
+      index: 0,
+      rate: 1.0,
+      volume: 1.0,
+      voiceURI: null,
+      isPlaying: false
+    };
+
+    // load saved
+    function loadSaved(){
+      try{ const raw = localStorage.getItem(SETTINGS_KEY); if (raw) Object.assign(settings, JSON.parse(raw)); }catch(e){}
+      try{ const raw2 = localStorage.getItem(TTS_STATE_KEY); if (raw2) Object.assign(ttsState, JSON.parse(raw2)); }catch(e){}
+    }
     loadSaved();
 
     function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
     function saveTTSState(){ localStorage.setItem(TTS_STATE_KEY, JSON.stringify(ttsState)); }
 
+    // apply UI preferences
     function applySettings(){
       document.documentElement.style.setProperty('--base-font', (17 * settings.textScale) + 'px');
       document.documentElement.style.setProperty('--line', settings.lineSpacing);
       document.documentElement.style.setProperty('--ruler-opacity', settings.ruler ? 0.08 : 0);
-      textSizeLabel.textContent = (settings.textScale === 1 ? 'Default' : Math.round(settings.textScale * 100) + '%');
+      textSizeLabel.textContent = settings.textScale === 1 ? 'Default' : Math.round(settings.textScale * 100) + '%';
       lineSpacing.value = String(settings.lineSpacing);
       highContrast.checked = !!settings.highContrast;
       rulerToggle.checked = !!settings.ruler;
       reducedMotionChk.checked = !!settings.reducedMotion;
       fontSelect.value = settings.font || 'system';
 
-      if (settings.font === 'system'){
-        document.body.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
-      } else if (settings.font === 'serif'){
-        document.body.style.fontFamily = 'Georgia, "Times New Roman", serif';
-      } else if (settings.font === 'mono'){
-        document.body.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace';
-      } else if (settings.font === 'dyslexic'){
-        document.body.style.fontFamily = '"OpenDyslexic", "Lexend", "Trebuchet MS", "Segoe UI", Arial, sans-serif';
-      }
+      if (settings.font === 'system') document.body.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial';
+      else if (settings.font === 'serif') document.body.style.fontFamily = 'Georgia, "Times New Roman", serif';
+      else if (settings.font === 'mono') document.body.style.fontFamily = 'ui-monospace, Menlo, Monaco, "Roboto Mono", monospace';
+      else if (settings.font === 'dyslexic') document.body.style.fontFamily = '"OpenDyslexic", "Lexend", "Trebuchet MS", "Segoe UI", Arial, sans-serif';
 
       if (settings.highContrast){
         document.documentElement.style.setProperty('--text', '#ffffff');
@@ -331,40 +319,97 @@
     }
     applySettings();
 
-    // routing: ONLY use query param ?id=blog003
-    function getRequestedId(){
-      const qp = new URLSearchParams(location.search).get('id');
-      if (qp && /^blog\d+$/i.test(qp)) return qp.toLowerCase();
-      return null;
+    // --------------------------
+    // Image resolution helper
+    // tries multiple fallbacks:
+    // 1) absolute: http(s) or starting /
+    // 2) relative to current page (window.location)
+    // 3) relative to BLOG_PATH location (where blogs.json lives)
+    // 4) same directory as blogs.json with /pictures/ prefix
+    // 5) fallback logo.png
+    // --------------------------
+    function resolveImageUrl(src){
+      if (!src) return 'logo.png';
+      const s = String(src).trim();
+
+      // absolute http(s) or protocol-relative or starting slash
+      if (/^(https?:)?\/\//i.test(s) || s.startsWith('/')) return s;
+
+      // try relative to current page
+      try{
+        const pageBase = new URL(window.location.href);
+        const try1 = new URL(s, pageBase).href;
+        // quick check via creating element won't tell if 404, but it's an ok candidate
+        return try1;
+      }catch(e){ /* ignore */ }
+
+      // try relative to blogs.json location
+      try{
+        const blogJsonUrl = new URL(BLOG_PATH, window.location.origin + window.location.pathname);
+        const blogBase = new URL('.', blogJsonUrl).href;
+        const try2 = new URL(s, blogBase).href;
+        return try2;
+      }catch(e){ /* ignore */ }
+
+      // finally try root/pictures/...
+      if (!s.startsWith('pictures/') && !s.startsWith('./') && !s.startsWith('../')){
+        return '/pictures/' + s;
+      }
+
+      return 'logo.png';
     }
 
+    function makeImageElement(src, caption){
+      const fig = document.createElement('figure'); fig.className = 'figure';
+      const img = document.createElement('img');
+      img.src = resolveImageUrl(src);
+      img.alt = caption || '';
+      img.loading = 'lazy';
+      // fallback if 404
+      img.onerror = function(){
+        if (!img.dataset.fallbacked){
+          img.dataset.fallbacked = '1';
+          img.src = 'logo.png';
+        }
+      };
+      fig.appendChild(img);
+      if (caption){
+        const cap = document.createElement('figcaption'); cap.className = 'caption'; cap.textContent = caption;
+        fig.appendChild(cap);
+      }
+      return fig;
+    }
+
+    // --------------------------
+    // Fetch blogs.json
+    // --------------------------
     async function loadBlogs(){
       try{
         const res = await fetch(BLOG_PATH, {cache:'no-store'});
-        if(!res.ok) throw new Error('Failed to fetch ' + BLOG_PATH + ' (' + res.status + ')');
+        if (!res.ok) throw new Error('Fetch ' + BLOG_PATH + ' returned ' + res.status);
         const data = await res.json();
         if (!Array.isArray(data)) throw new Error('blogs.json must be an array');
         blogs = data;
       }catch(e){
-        app.innerHTML = '<h2>Error</h2><p class="muted">Could not load /blogs.json. Check path & JSON in console.</p>';
         console.error(e);
+        app.innerHTML = '<h2>Error</h2><p class="muted">Failed to load blogs.json. Check path and console.</p>';
       }
     }
 
-    function ensureLinkFor(id){
-      // Always use ?id=... links
-      const base = location.pathname.replace(/\/+$/,'') || '/';
-      return base + '?id=' + encodeURIComponent(id);
-    }
+    // --------------------------
+    // Simple rendering helpers
+    // --------------------------
+    function ensureLinkFor(id){ return (location.pathname || '/') + '?id=' + encodeURIComponent(id); }
+    function setDocTitle(t){ document.title = t ? t + ' — BlankLabs' : 'BlankLabs'; }
 
     function renderIndex(){
       app.innerHTML = '';
-      const heading = document.createElement('h2');
-      heading.textContent = 'Posts';
-      app.appendChild(heading);
-      const list = document.createElement('div'); list.className='post-list';
+      const h = document.createElement('h2'); h.textContent = 'Posts';
+      app.appendChild(h);
+      const list = document.createElement('div'); list.className = 'post-list';
       blogs.forEach(b=>{
-        const a = document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent = (b.title || b.id) + (b.subtitle ? ' — ' + b.subtitle : '');
+        const a = document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id);
+        a.textContent = (b.title || b.id) + (b.subtitle ? ' — ' + b.subtitle : '');
         list.appendChild(a);
       });
       app.appendChild(list);
@@ -372,293 +417,252 @@
     }
 
     function renderNotFound(id){
-      app.innerHTML = '';
-      const h = document.createElement('h2'); h.textContent = 'Post not found: ' + id;
-      app.appendChild(h);
-      const p = document.createElement('p'); p.className='muted'; p.textContent = 'Available posts:';
-      app.appendChild(p);
-      const list = document.createElement('div'); list.className='post-list';
-      blogs.forEach(b=>{ const a=document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent = b.title || b.id; list.appendChild(a) });
-      app.appendChild(list);
-      setDocTitle('Not found');
+      app.innerHTML = ''; const h = document.createElement('h2'); h.textContent = 'Post not found: ' + id; app.appendChild(h);
+      const p = document.createElement('p'); p.className='muted'; p.textContent = 'Available posts:'; app.appendChild(p);
+      const list = document.createElement('div'); list.className='post-list'; blogs.forEach(b=>{ const a=document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent=b.title || b.id; list.appendChild(a) });
+      app.appendChild(list); setDocTitle('Not found');
     }
 
-    function setDocTitle(t){ document.title = t ? t + ' — BlankLabs' : 'BlankLabs'; }
-
-    // IMAGE helper: try to normalise path and fallback to logo.png
-    function makeImageElement(src, caption){
-      const fig = document.createElement('figure'); fig.className='figure';
-      const img = document.createElement('img');
-      // normalize: if src begins with http, https, or / keep; otherwise keep as-is (relative).
-      let normalized = String(src || '').trim();
-      if (!normalized) normalized = 'logo.png';
-      img.src = normalized;
-      img.alt = caption || '';
-      img.loading = 'lazy';
-      img.onerror = function(){ if (!img.dataset.fallback){ img.dataset.fallback = '1'; img.src = 'logo.png'; } };
-      fig.appendChild(img);
-      if (caption){
-        const cap = document.createElement('figcaption'); cap.className='caption'; cap.textContent = caption; fig.appendChild(cap);
+    // --------------------------
+    // Render a post
+    // --------------------------
+    function renderBlock(blk){
+      if (!blk || typeof blk !== 'object') return null;
+      const type = (blk.type || 'text').toLowerCase();
+      if (type === 'text'){
+        const fmt = (blk.format || 'paragraph').toLowerCase();
+        if (fmt === 'header'){ const h3 = document.createElement('h3'); h3.textContent = blk.content || ''; return h3; }
+        if (fmt === 'list'){ const ul = document.createElement('ul'); (blk.items || []).forEach(it=>{ const li=document.createElement('li'); li.textContent=it; ul.appendChild(li); }); return ul; }
+        const p = document.createElement('p'); p.textContent = blk.content || ''; return p;
       }
-      return fig;
+      if (type === 'image') return makeImageElement(blk.src || 'logo.png', blk.caption || '');
+      if (type === 'code'){ const cwrap=document.createElement('div'); cwrap.className='code-row'; const pre=document.createElement('pre'); const code=document.createElement('code'); code.textContent = blk.content || ''; pre.appendChild(code); const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Copy'; btn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(blk.content || ''); btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',900)}catch(e){btn.textContent='Err';setTimeout(()=>btn.textContent='Copy',900)} }); cwrap.appendChild(pre); cwrap.appendChild(btn); return cwrap; }
+      if (type === 'video'){ const fig=document.createElement('figure'); fig.className='figure'; const v=document.createElement('video'); v.controls=true; v.src=blk.src||''; v.style.width='100%'; fig.appendChild(v); if (blk.caption){ const cap=document.createElement('figcaption'); cap.className='caption'; cap.textContent = blk.caption; fig.appendChild(cap);} return fig; }
+      if (type === 'columns'){ const wrap=document.createElement('div'); wrap.className='columns'; (blk.columns||[]).forEach(col=>{ const inner=document.createElement('div'); const node = renderBlock(col) || (function(){const p=document.createElement('p'); p.textContent=col.content||''; return p; })(); inner.appendChild(node); wrap.appendChild(inner); }); return wrap; }
+      if (type === 'accordion'){ const item=document.createElement('div'); item.className='accordion-item'; const btn=document.createElement('button'); btn.className='accordion-btn'; btn.type='button'; btn.setAttribute('aria-expanded','false'); btn.textContent = blk.title || 'More'; const che=document.createElement('span'); che.setAttribute('aria-hidden','true'); che.textContent='+'; btn.appendChild(che); const panel=document.createElement('div'); panel.className='accordion-panel'; panel.setAttribute('role','region'); (blk.blocks||[]).forEach(b=>{ const n=renderBlock(b); if (n) panel.appendChild(n); }); btn.addEventListener('click', ()=>{ const exp = btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded', String(!exp)); che.textContent = exp ? '+' : '-'; }); item.appendChild(btn); item.appendChild(panel); return item; }
+      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(blk, null, 2); return pre;
     }
 
-    // TTS: segmentization and playback
-    let segments = []; // {el, text}
-    let voices = [];
-    let voiceMap = {}; // uri -> voice object
-    let utterance = null;
-    function gatherSegmentsForArticle(articleEl){
-      // Clear any previous
+    // Build segments for TTS: split each paragraph/list item/header/pre into sentence-like segments.
+    function gatherSegments(articleEl){
       segments = [];
-      // We'll collect text nodes from the article content area and split into sentence-ish segments.
-      // Strategy: find paragraphs, headers, list items, code blocks, and split by sentence punctuation.
-      const content = articleEl.querySelector('.content') || articleEl;
+      const content = articleEl.querySelector('.content');
       if (!content) return;
-      const selectors = 'p, h3, li, blockquote, pre';
-      content.querySelectorAll(selectors).forEach(node => {
-        // don't capture text from certain child nodes like code inside pre that is not suitable; pre handled separately
-        const text = node.innerText || node.textContent || '';
-        if (!text.trim()) return;
-        // split into sentences with regex, keep punctuation
-        const parts = text.split(/(?<=\.|\?|!|\n)\s+/g).map(s => s.trim()).filter(Boolean);
-        parts.forEach(part => {
-          // create a span wrapper in the DOM for highlighting
-          const span = document.createElement('span');
-          span.className = 'segment';
-          span.textContent = part + ' ';
-          // append span at end of node for highlighting sync; we will replace node's text with spans (safe approach)
-        });
-      });
-
-      // Instead of replacing inline, we'll build segments from the DOM while updating displayed content with spans
-      // rebuild content nodes:
-      content.querySelectorAll('p, h3, li, blockquote, pre').forEach(node => {
-        // For pre/code, treat as one segment
-        if (node.tagName.toLowerCase() === 'pre'){
-          const text = node.innerText.trim();
-          if (!text) return;
-          const span = document.createElement('span');
-          span.className = 'segment';
-          span.textContent = text + ' ';
-          const wrapper = document.createElement('div');
-          wrapper.appendChild(span);
-          node.innerHTML = '';
-          node.appendChild(wrapper);
-          segments.push({el: span, text: text});
-          return;
+      const nodes = content.querySelectorAll('p, h3, li, blockquote, pre');
+      nodes.forEach(node=>{
+        const tag = node.tagName.toLowerCase();
+        const raw = (node.innerText || node.textContent || '').trim();
+        if (!raw) return;
+        // for pre, treat as single
+        if (tag === 'pre'){
+          node.innerHTML = ''; const span=document.createElement('span'); span.className='segment'; span.textContent = raw + ' '; node.appendChild(span); segments.push({el:span, text:raw}); return;
         }
-
-        const text = node.innerText || node.textContent || '';
-        if (!text.trim()) return;
-        const parts = text.split(/(?<=\.|\?|!|\n)\s+/g).map(s => s.trim()).filter(Boolean);
-        node.innerHTML = ''; // clear node
-        parts.forEach(part=>{
+        // split by sentences, but keep segments under ~220 chars
+        const parts = raw.split(/(?<=\.|\?|!|\n)\s+/g).map(s=>s.trim()).filter(Boolean);
+        const output = [];
+        parts.forEach(p=>{
+          if (p.length <= 240) output.push(p);
+          else {
+            // break long segment into ~200-char chunks on commas/spaces
+            let remain = p;
+            while (remain.length > 240){
+              let idx = remain.lastIndexOf(',', 240);
+              if (idx < 0) idx = remain.lastIndexOf(' ', 240);
+              if (idx < 0) idx = 240;
+              output.push(remain.slice(0, idx).trim());
+              remain = remain.slice(idx).trim();
+            }
+            if (remain) output.push(remain);
+          }
+        });
+        node.innerHTML = '';
+        output.forEach(part=>{
           const span = document.createElement('span');
           span.className = 'segment';
           span.textContent = part + ' ';
           node.appendChild(span);
-          segments.push({el: span, text: part});
+          segments.push({el:span, text:part});
         });
       });
     }
 
-    // Fill voices
-    function populateVoices(selectEl){
-      voices = speechSynthesis.getVoices() || [];
-      selectEl.innerHTML = '';
-      voices.forEach(v=>{
-        const opt = document.createElement('option');
-        opt.value = v.voiceURI || v.name;
-        opt.textContent = `${v.name} ${v.lang ? '• ' + v.lang : ''}`;
-        selectEl.appendChild(opt);
-        voiceMap[v.voiceURI || v.name] = v;
-      });
-      // restore selected
-      if (ttsState.voiceURI && selectEl.querySelector('option[value="' + ttsState.voiceURI.replace(/"/g,'\\"') + '"]')){
-        selectEl.value = ttsState.voiceURI;
+    // TTS playback (robust)
+    let ttsPlaying = false;
+    let ttsUtterance = null;
+
+    function populateVoiceMap(){
+      const vlist = speechSynthesis.getVoices() || [];
+      vlist.forEach(v => { voiceMap[v.voiceURI || v.name] = v; });
+      voicesLoaded = true;
+    }
+    if ('speechSynthesis' in window){
+      populateVoiceMap();
+      if (speechSynthesis.onvoiceschanged !== undefined){
+        speechSynthesis.onvoiceschanged = populateVoiceMap;
       }
     }
 
-    // Create TTS controls UI inside article area
-    function createTTSControls(container){
-      // container is element after meta
-      const wrapper = document.createElement('div');
-      wrapper.className = 'tts-controls';
-      wrapper.setAttribute('aria-label','Text to speech controls');
-
-      // Play/Pause is main (we also have top control)
-      const playBtn = document.createElement('button'); playBtn.className='btn'; playBtn.id='playPauseLocal'; playBtn.textContent = ttsState.isPlaying ? '⏸ Pause' : '▶ Play';
-      wrapper.appendChild(playBtn);
-
-      // progress slider for segments
-      const segLabel = document.createElement('label'); segLabel.className='muted'; segLabel.style.marginLeft='8px'; segLabel.textContent='Progress';
-      wrapper.appendChild(segLabel);
-      const progressRange = document.createElement('input');
-      progressRange.type='range';
-      progressRange.min=0; progressRange.max= Math.max(0, segments.length-1);
-      progressRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
-      progressRange.className='slider';
-      progressRange.style.width='240px';
-      wrapper.appendChild(progressRange);
-
-      // voice select
-      const voiceLabel = document.createElement('label'); voiceLabel.className='muted'; voiceLabel.textContent='Voice';
-      wrapper.appendChild(voiceLabel);
-      const voiceSelect = document.createElement('select');
-      voiceSelect.id='voiceSelect';
-      voiceSelect.style.padding='6px;border-radius:' + '8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)';
-      wrapper.appendChild(voiceSelect);
-
-      // rate slider
-      const rateLabel = document.createElement('label'); rateLabel.className='muted'; rateLabel.textContent='Speed';
-      wrapper.appendChild(rateLabel);
-      const rateRange = document.createElement('input'); rateRange.type='range'; rateRange.min=0.5; rateRange.max=2.0; rateRange.step=0.05; rateRange.value = ttsState.rate; rateRange.className='slider'; rateRange.style.width='140px';
-      wrapper.appendChild(rateRange);
-
-      // volume
-      const volLabel = document.createElement('label'); volLabel.className='muted'; volLabel.textContent='Volume';
-      wrapper.appendChild(volLabel);
-      const volRange = document.createElement('input'); volRange.type='range'; volRange.min=0; volRange.max=1; volRange.step=0.05; volRange.value = ttsState.volume; volRange.className='slider'; volRange.style.width='120px';
-      wrapper.appendChild(volRange);
-
-      // show current reading index
-      const idxInfo = document.createElement('div'); idxInfo.className='muted'; idxInfo.style.marginLeft='8px'; idxInfo.style.minWidth='120px';
-      idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
-      wrapper.appendChild(idxInfo);
-
-      // add event wiring
-      playBtn.addEventListener('click', () => {
-        if (ttsState.isPlaying) pauseTTS();
-        else startTTS(ttsState.index);
+    // speak one segment and return promise
+    function speakOne(text){
+      return new Promise((resolve, reject)=>{
+        if (!('speechSynthesis' in window)) return reject(new Error('TTS not supported in this browser'));
+        try{
+          const u = new SpeechSynthesisUtterance(text);
+          u.rate = ttsState.rate || 1.0;
+          u.volume = ttsState.volume || 1.0;
+          if (ttsState.voiceURI && voiceMap[ttsState.voiceURI]) u.voice = voiceMap[ttsState.voiceURI];
+          u.onend = ()=> resolve();
+          u.onerror = (e)=> { console.warn('utterance error', e); resolve(); /* resolve to skip gracefully */ };
+          speechSynthesis.speak(u);
+          ttsUtterance = u;
+        }catch(err){
+          console.error('speakOne error', err);
+          resolve(); // skip on error
+        }
       });
-
-      progressRange.addEventListener('input', (e)=> {
-        const val = Number(e.target.value);
-        ttsState.index = val;
-        saveTTSState();
-        updateSegmentHighlight();
-        idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
-      });
-
-      rateRange.addEventListener('input', (e)=> {
-        ttsState.rate = Number(e.target.value);
-        saveTTSState();
-      });
-
-      volRange.addEventListener('input', (e)=> {
-        ttsState.volume = Number(e.target.value);
-        saveTTSState();
-      });
-
-      voiceSelect.addEventListener('change', (e)=> {
-        ttsState.voiceURI = e.target.value;
-        saveTTSState();
-      });
-
-      // populate voices asynchronously
-      function ensureVoices() {
-        populateVoices(voiceSelect);
-      }
-      ensureVoices();
-      if (speechSynthesis && speechSynthesis.onvoiceschanged !== undefined){
-        speechSynthesis.onvoiceschanged = ensureVoices;
-      }
-
-      return {wrapper, progressRange, rateRange, volRange, voiceSelect, playBtn, idxInfo};
     }
 
-    // highlight update
-    function updateSegmentHighlight(){
-      segments.forEach((seg, i)=>{
-        if (!seg.el) return;
-        if (i === ttsState.index) seg.el.classList.add('highlight');
-        else seg.el.classList.remove('highlight');
-      });
-      // update progress bar in top chrome
-      const pct = segments.length ? Math.round(((ttsState.index) / Math.max(1, segments.length-1)) * 100) : 0;
-      progressBar.style.width = pct + '%';
-    }
-
-    // TTS control functions (chunked playback):
-    let ttsQueueActive = false;
-    function startTTS(startIndex){
-      if (!segments.length) return alert('No readable content found for TTS.');
-      if (startIndex !== undefined) ttsState.index = startIndex;
-      ttsState.isPlaying = true;
-      saveTTSState();
-      playTTS.textContent = '⏸ Playing';
-      // begin queue
-      if (!ttsQueueActive) {
-        ttsQueueActive = true;
-        playQueue().finally(()=> { ttsQueueActive = false; });
+    async function startTTS(fromIndex){
+      if (!('speechSynthesis' in window)){
+        alert('Text to speech not supported in this browser.');
+        return;
       }
-      updateSegmentHighlight();
-    }
+      if (!segments || segments.length === 0){
+        // nothing to read
+        return;
+      }
+      if (typeof fromIndex === 'number') ttsState.index = fromIndex;
+      ttsState.isPlaying = true; saveTTSState(); updatePlayUI();
+      ttsPlaying = true;
 
-    async function playQueue(){
-      while (ttsState.index < segments.length && ttsState.isPlaying){
+      while (ttsState.isPlaying && ttsState.index < segments.length){
         const seg = segments[ttsState.index];
         if (!seg) break;
-        // speak seg.text
-        try{
-          await speakSegment(seg.text);
-        }catch(err){
-          console.error('TTS error', err);
-          break;
-        }
-        // advance
+        highlightSegment(ttsState.index);
+        // scroll into view gently
+        try{ seg.el.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
+        await speakOne(seg.text);
+        if (!ttsState.isPlaying) break; // paused/stopped during utterance
         ttsState.index++;
         saveTTSState();
-        updateSegmentHighlight();
+        refreshTTSControlsUI();
       }
-      // finished or paused
-      if (ttsState.index >= segments.length) {
-        ttsState.isPlaying = false;
-        playTTS.textContent = '🔊 Play';
+
+      // finished
+      if (ttsState.index >= segments.length){
+        ttsState.isPlaying = false; ttsState.index = Math.max(0, segments.length-1);
         saveTTSState();
       }
-      updateSegmentHighlight();
+      ttsPlaying = false;
+      updatePlayUI();
+      refreshTTSControlsUI();
     }
 
     function pauseTTS(){
-      if (speechSynthesis) speechSynthesis.cancel();
-      ttsState.isPlaying = false;
-      playTTS.textContent = '🔊 Play';
-      saveTTSState();
+      if ('speechSynthesis' in window){
+        speechSynthesis.cancel();
+      }
+      ttsState.isPlaying = false; saveTTSState(); updatePlayUI();
     }
 
     function stopTTS(){
-      if (speechSynthesis) speechSynthesis.cancel();
-      ttsState.isPlaying = false;
-      ttsState.index = 0;
-      saveTTSState();
-      updateSegmentHighlight();
+      if ('speechSynthesis' in window) speechSynthesis.cancel();
+      ttsState.isPlaying = false; ttsState.index = 0; saveTTSState(); updatePlayUI(); refreshTTSControlsUI();
     }
 
-    function speakSegment(text){
-      return new Promise((resolve, reject) => {
-        if (!('speechSynthesis' in window)) return reject(new Error('TTS not supported'));
-        const u = new SpeechSynthesisUtterance(text);
-        u.rate = ttsState.rate || 1.0;
-        u.volume = ttsState.volume || 1.0;
-        // match chosen voice if available
-        if (ttsState.voiceURI && voiceMap[ttsState.voiceURI]) u.voice = voiceMap[ttsState.voiceURI];
-        u.onend = function(){ resolve(); };
-        u.onerror = function(e){ reject(e || new Error('TTS error')); };
-        // start
-        speechSynthesis.cancel(); // flush previous
-        speechSynthesis.speak(u);
+    function highlightSegment(idx){
+      segments.forEach((s,i)=> s.el.classList.toggle('highlight', i===idx) );
+    }
+
+    // UI sync helpers (update top play button, progress bar)
+    function updatePlayUI(){
+      playTTS.textContent = ttsState.isPlaying ? '⏸ Pause' : '🔊 Play';
+    }
+    function refreshTTSControlsUI(){
+      // If article has tts controls, update its range/label
+      const localRange = document.querySelector('.tts-controls input[type="range"].segment-range');
+      const idxInfo = document.querySelector('.tts-controls .idx-info');
+      if (localRange){
+        localRange.max = Math.max(0, segments.length-1);
+        localRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
+      }
+      if (idxInfo) idxInfo.textContent = 'Segment ' + (ttsState.index+1) + ' / ' + Math.max(segments.length,1);
+      updateProgress();
+    }
+
+    // create TTS controls and inject above content; returns object with elements
+    function createTTSControls(container){
+      const wrapper = document.createElement('div'); wrapper.className = 'tts-controls'; wrapper.setAttribute('aria-label','Text to speech controls');
+
+      const localPlay = document.createElement('button'); localPlay.className='btn'; localPlay.textContent = ttsState.isPlaying ? '⏸ Pause' : '▶ Play';
+      wrapper.appendChild(localPlay);
+
+      const segRange = document.createElement('input'); segRange.type='range'; segRange.className='slider segment-range';
+      segRange.min = 0; segRange.max = Math.max(0, segments.length-1); segRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
+      segRange.style.width = '260px'; wrapper.appendChild(segRange);
+
+      const idxInfo = document.createElement('div'); idxInfo.className='muted idx-info'; idxInfo.style.minWidth='120px'; idxInfo.textContent = 'Segment ' + (ttsState.index+1) + ' / ' + Math.max(segments.length,1);
+      wrapper.appendChild(idxInfo);
+
+      // voice select
+      const voiceSelect = document.createElement('select'); voiceSelect.style.padding='6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)';
+      voiceSelect.title = 'Select voice';
+      wrapper.appendChild(voiceSelect);
+
+      // rate
+      const rateRange = document.createElement('input'); rateRange.type='range'; rateRange.min=0.5; rateRange.max=2.0; rateRange.step=0.05; rateRange.value = ttsState.rate || 1.0; rateRange.className='slider'; rateRange.style.width='140px'; wrapper.appendChild(rateRange);
+      const rateLabel = document.createElement('div'); rateLabel.className='muted'; rateLabel.textContent = 'Speed ' + (rateRange.value); rateLabel.style.marginLeft='6px'; wrapper.appendChild(rateLabel);
+
+      // volume
+      const volRange = document.createElement('input'); volRange.type='range'; volRange.min=0; volRange.max=1; volRange.step=0.05; volRange.value = ttsState.volume || 1.0; volRange.className='slider'; volRange.style.width='120px'; wrapper.appendChild(volRange);
+      const volLabel = document.createElement('div'); volLabel.className='muted'; volLabel.textContent = 'Vol ' + (volRange.value); volLabel.style.marginLeft='6px'; wrapper.appendChild(volLabel);
+
+      // event wiring
+      localPlay.addEventListener('click', ()=> {
+        if (ttsState.isPlaying) pauseTTS();
+        else startTTS(ttsState.index);
       });
+      segRange.addEventListener('input', (e)=> { ttsState.index = Number(e.target.value); saveTTSState(); highlightSegment(ttsState.index); refreshTTSControlsUI(); });
+      rateRange.addEventListener('input', (e)=> { ttsState.rate = Number(e.target.value); rateLabel.textContent = 'Speed ' + ttsState.rate; saveTTSState(); });
+      volRange.addEventListener('input', (e)=> { ttsState.volume = Number(e.target.value); volLabel.textContent = 'Vol ' + ttsState.volume; saveTTSState(); });
+
+      // populate voices
+      function fillVoices(){
+        const vlist = speechSynthesis.getVoices() || [];
+        voiceSelect.innerHTML = '';
+        vlist.forEach(v => {
+          const opt = document.createElement('option'); opt.value = v.voiceURI || v.name; opt.textContent = v.name + (v.lang ? ' • ' + v.lang : '');
+          voiceSelect.appendChild(opt);
+          voiceMap[v.voiceURI || v.name] = v;
+        });
+        if (ttsState.voiceURI && voiceSelect.querySelector('option[value="'+ttsState.voiceURI+'"]')){
+          voiceSelect.value = ttsState.voiceURI;
+        } else if (vlist.length){
+          voiceSelect.value = voiceSelect.value || (vlist[0].voiceURI || vlist[0].name);
+        }
+      }
+      if ('speechSynthesis' in window){
+        fillVoices();
+        if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = fillVoices;
+      } else {
+        // hide voice select if unsupported
+        voiceSelect.style.display = 'none';
+      }
+
+      voiceSelect.addEventListener('change', (e)=> { ttsState.voiceURI = e.target.value; saveTTSState(); });
+
+      return { wrapper, segRange, rateRange, volRange, voiceSelect, localPlay, idxInfo, rateLabel, volLabel };
     }
 
-    // Build and render a post by index
+    // --------------------------
+    // Render a post by index
+    // --------------------------
     function renderPostByIndex(idx){
       if (idx < 0 || idx >= blogs.length) return;
       currentPostIndex = idx;
       const post = blogs[idx];
       renderPost(post);
-      // update URL query param without reload
+      // update URL query without reload
       const url = new URL(window.location.href);
       url.searchParams.set('id', post.id);
       history.replaceState({}, '', url.toString());
@@ -666,26 +670,21 @@
 
     function renderPost(post){
       app.innerHTML = '';
-      const article = document.createElement('article');
-      article.setAttribute('role', 'article');
-      article.setAttribute('aria-labelledby', 'post-title');
-      article.tabIndex = -1;
+      const article = document.createElement('article'); article.setAttribute('role','article'); article.setAttribute('aria-labelledby','post-title'); article.tabIndex = -1;
 
       const header = document.createElement('header');
-      const h2 = document.createElement('h2'); h2.id = 'post-title'; h2.textContent = post.title || '';
+      const h2 = document.createElement('h2'); h2.id='post-title'; h2.textContent = post.title || '';
       header.appendChild(h2);
-      const meta = document.createElement('div'); meta.className = 'meta';
+      const meta = document.createElement('div'); meta.className='meta';
       const auth = document.createElement('span'); auth.textContent = post.author || 'BlankLabs';
       meta.appendChild(auth);
       if (post.date){ const time = document.createElement('time'); time.dateTime = post.date; time.textContent = post.date; meta.appendChild(time); }
       header.appendChild(meta);
       article.appendChild(header);
 
-      // content container
-      const content = document.createElement('div'); content.className = 'content';
-
+      const content = document.createElement('div'); content.className='content';
       const blocks = Array.isArray(post.blocks) ? post.blocks : [{type:'text',format:'paragraph', content: post.content || post.description || ''}];
-      blocks.forEach(blk => {
+      blocks.forEach(blk=>{
         try{
           const node = renderBlock(blk);
           if (node) content.appendChild(node);
@@ -694,30 +693,20 @@
 
       article.appendChild(content);
 
-      // create TTS controls and segmentize
-      gatherSegmentsForArticle(article);
+      // segmentize for TTS and create controls
+      gatherSegments(article);
       const ttsUI = createTTSControls(article);
-      article.insertBefore(ttsUI.wrapper, article.querySelector('.content'));
+      article.insertBefore(ttsUI.wrapper, article.firstChild.nextSibling.nextSibling || article.firstChild);
 
-      // wire progressRange to ttsState.index
-      ttsUI.progressRange.max = Math.max(0, segments.length-1);
-      ttsUI.progressRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
-      ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
-      // sync top play button too
-      playTTS.textContent = ttsState.isPlaying ? '⏸ Playing' : '🔊 Play';
-
-      // propagate voice list into local select
-      populateVoices(ttsUI.voiceSelect);
-      if (ttsState.voiceURI && ttsUI.voiceSelect.querySelector('option[value="'+ttsState.voiceURI+'"]')){
-        ttsUI.voiceSelect.value = ttsState.voiceURI;
-      }
-
-      // rate/volume initial
+      // set segRange limits and initial values
+      ttsUI.segRange.max = Math.max(0, segments.length-1);
+      ttsUI.segRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
+      ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index+1) + ' / ' + Math.max(segments.length,1);
       ttsUI.rateRange.value = ttsState.rate || 1.0;
       ttsUI.volRange.value = ttsState.volume || 1.0;
 
-      // update segment highlight initially
-      updateSegmentHighlight();
+      // wire top-level play button to behave same as local control
+      playTTS.onclick = ()=> { if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); };
 
       // nav to other posts
       if (blogs.length > 1){
@@ -734,181 +723,59 @@
       app.appendChild(article);
       setDocTitle(post.title || post.id || 'BlankLabs');
 
-      // focus for screen readers
-      setTimeout(()=>{ article.focus(); }, 50);
+      // focus article for screen readers
+      setTimeout(()=> article.focus(), 40);
 
-      // attach local tts event wiring: when local play clicked, forward to global functions
-      ttsUI.playBtn.addEventListener('click', ()=> {
-        if (ttsState.isPlaying) { pauseTTS(); ttsUI.playBtn.textContent = '▶ Play'; playTTS.textContent = '🔊 Play'; }
-        else { startTTS(ttsState.index); ttsUI.playBtn.textContent = '⏸ Pause'; playTTS.textContent = '⏸ Playing'; }
-      });
+      // Update TTS UI periodically
+      const interval = setInterval(()=> {
+        if (!document.body.contains(ttsUI.wrapper)) { clearInterval(interval); return; }
+        ttsUI.segRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
+        ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index+1) + ' / ' + Math.max(segments.length,1);
+      }, 200);
 
-      ttsUI.progressRange.addEventListener('input', (e)=>{
-        ttsState.index = Number(e.target.value);
-        saveTTSState();
-        updateSegmentHighlight();
-        ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
-      });
-
-      ttsUI.rateRange.addEventListener('input', (e)=> {
-        ttsState.rate = Number(e.target.value);
-        saveTTSState();
-      });
-      ttsUI.volRange.addEventListener('input', (e)=> {
-        ttsState.volume = Number(e.target.value);
-        saveTTSState();
-      });
-      ttsUI.voiceSelect.addEventListener('change', (e)=> {
-        ttsState.voiceURI = e.target.value;
-        saveTTSState();
-      });
-
-      // update top level play button syncing to local
-      playTTS.onclick = function(){ if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); };
-
-      // anchor TTS index updates to local range when playing
-      (function syncInterval(){
-        // run periodically to reflect state in UI
-        const interval = setInterval(()=> {
-          if (!document.body.contains(ttsUI.progressRange)) { clearInterval(interval); return; }
-          ttsUI.progressRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
-          ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
-        }, 200);
-      })();
-
-      // handle image onerror fallback (already assigned in makeImageElement)
-      // update reading progress on scroll
-      window.requestAnimationFrame(updateProgress);
+      // refresh progress
+      updateProgress();
     }
 
-    // renderBlock similar to earlier but leaves original text replaced by segments for TTS
-    function renderBlock(blk){
-      if (!blk || typeof blk !== 'object') return null;
-      const t = (blk.type || 'text').toLowerCase();
-
-      if (t === 'text'){
-        const fmt = (blk.format || 'paragraph').toLowerCase();
-        if (fmt === 'header'){
-          const h3 = document.createElement('h3'); h3.textContent = blk.content || ''; return h3;
-        }
-        if (fmt === 'list'){
-          const ul = document.createElement('ul');
-          (blk.items || []).forEach(li => { const liEl = document.createElement('li'); liEl.textContent = li; ul.appendChild(liEl); });
-          return ul;
-        }
-        const p = document.createElement('p'); p.textContent = blk.content || ''; return p;
-      }
-
-      if (t === 'image'){
-        return makeImageElement(blk.src || 'logo.png', blk.caption || '');
-      }
-
-      if (t === 'code'){
-        const container = document.createElement('div'); container.className='code-row';
-        const pre = document.createElement('pre'); const code = document.createElement('code'); code.textContent = blk.content || ''; pre.appendChild(code);
-        const copyBtn = document.createElement('button'); copyBtn.className='btn'; copyBtn.type='button'; copyBtn.innerText='Copy';
-        copyBtn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(blk.content || ''); copyBtn.innerText='Copied'; setTimeout(()=>copyBtn.innerText='Copy',1000)}catch(e){copyBtn.innerText='Err';setTimeout(()=>copyBtn.innerText='Copy',1000)} });
-        container.appendChild(pre); container.appendChild(copyBtn); return container;
-      }
-
-      if (t === 'video'){
-        const fig = document.createElement('figure'); fig.className='figure';
-        const vid = document.createElement('video'); vid.controls = true; vid.src = blk.src || ''; vid.setAttribute('aria-label', blk.caption || 'video'); vid.style.width='100%'; fig.appendChild(vid);
-        if (blk.caption){ const cap = document.createElement('figcaption'); cap.className='caption'; cap.textContent = blk.caption; fig.appendChild(cap); } return fig;
-      }
-
-      if (t === 'columns'){
-        const wrap = document.createElement('div'); wrap.className='columns';
-        (blk.columns || []).forEach(col => { const inner = document.createElement('div'); const node = renderBlock(col) || (function(){ const p = document.createElement('p'); p.textContent = col.content || ''; return p; })(); inner.appendChild(node); wrap.appendChild(inner); });
-        return wrap;
-      }
-
-      if (t === 'accordion'){
-        const item = document.createElement('div'); item.className='accordion-item';
-        const btn = document.createElement('button'); btn.className='accordion-btn'; btn.type='button'; btn.setAttribute('aria-expanded','false'); btn.textContent = blk.title || 'More';
-        const che = document.createElement('span'); che.setAttribute('aria-hidden','true'); che.textContent = '+';
-        btn.appendChild(che);
-        const panel = document.createElement('div'); panel.className='accordion-panel'; panel.setAttribute('role','region');
-        (blk.blocks || []).forEach(b => { const n = renderBlock(b); if (n) panel.appendChild(n); });
-        btn.addEventListener('click', ()=>{ const exp = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!exp)); che.textContent = exp ? '+' : '-'; });
-        item.appendChild(btn); item.appendChild(panel); return item;
-      }
-
-      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(blk, null, 2); return pre;
-    }
-
-    // Build segments by replacing text nodes in the article content
-    function gatherSegmentsForArticle(articleEl){
-      segments = [];
-      const content = articleEl.querySelector('.content');
-      if (!content) return;
-      // We will process p, h3, li, pre
-      content.querySelectorAll('p, h3, li, pre, blockquote').forEach(node => {
-        const tag = node.tagName.toLowerCase();
-        const text = (node.innerText || node.textContent || '').trim();
-        if (!text) return;
-        if (tag === 'pre'){ // treat whole pre as one segment
-          node.innerHTML = ''; // clear
-          const span = document.createElement('span'); span.className='segment'; span.textContent = text + ' ';
-          node.appendChild(span);
-          segments.push({el: span, text: text});
-          return;
-        }
-        // split into sentences by punctuation or newline
-        const parts = text.split(/(?<=\.|\?|\!|\n)\s+/g).map(s=>s.trim()).filter(Boolean);
-        node.innerHTML = ''; // clear original text and replace with spans
-        parts.forEach(part => {
-          const span = document.createElement('span');
-          span.className = 'segment';
-          span.textContent = part + ' ';
-          node.appendChild(span);
-          segments.push({el: span, text: part});
-        });
-      });
-    }
-
-    // TTS voice population on load
-    function populateVoices(selectEl){
-      const vlist = speechSynthesis.getVoices() || [];
-      selectEl.innerHTML = '';
-      vlist.forEach(v=>{
-        const opt = document.createElement('option');
-        opt.value = v.voiceURI || v.name;
-        opt.textContent = `${v.name}${v.lang ? ' • ' + v.lang : ''}`;
-        selectEl.appendChild(opt);
-        voiceMap[v.voiceURI || v.name] = v;
-      });
-      // keep selection
-      if (ttsState.voiceURI && selectEl.querySelector('option[value="'+ttsState.voiceURI+'"]')){
-        selectEl.value = ttsState.voiceURI;
-      } else if (vlist.length){
-        selectEl.value = selectEl.value || (vlist[0].voiceURI || vlist[0].name);
-      }
-    }
-
-    // update progress bar for reading viewport
+    // --------------------------
+    // Scrolling progress & ruler
+    // --------------------------
     function updateProgress(){
       const article = app.querySelector('article');
-      if (!article) { progressBar.style.width = '0%'; return;}
-      const rect = article.getBoundingClientRect();
-      const total = article.scrollHeight - window.innerHeight;
-      const scrolled = window.scrollY - article.offsetTop + 120;
-      const pct = Math.min(100, Math.max(0, (scrolled / (article.scrollHeight || 1)) * 100));
+      if (!article){ progressBar.style.width = '0%'; return; }
+      const top = article.getBoundingClientRect().top + window.scrollY;
+      const totalHeight = article.scrollHeight;
+      const scrolled = Math.min(Math.max(window.scrollY - top + window.innerHeight*0.2, 0), totalHeight);
+      const pct = Math.round( (scrolled / Math.max(1, totalHeight)) * 100 );
       progressBar.style.width = pct + '%';
+      progressBar.setAttribute('aria-valuenow', String(pct));
+      // ruler follow
+      if (settings.ruler){
+        const centerY = window.scrollY + (window.innerHeight / 2);
+        const rulerHeight = Math.min(300, window.innerHeight * 0.5);
+        ruler.style.top = (centerY - rulerHeight/2) + 'px';
+        ruler.style.height = rulerHeight + 'px';
+        ruler.style.setProperty('--ruler-opacity', '0.08');
+        ruler.setAttribute('aria-hidden','false');
+      } else {
+        ruler.style.setProperty('--ruler-opacity', '0');
+        ruler.setAttribute('aria-hidden','true');
+      }
     }
 
-    // Menu toggle and keyboard
+    // --------------------------
+    // Menu and controls wiring
+    // --------------------------
     function toggleMenu(open){
-      const visible = !menu.classList.contains('hidden');
-      const shouldOpen = typeof open === 'boolean' ? open : !visible;
-      if (shouldOpen){ menu.classList.remove('hidden'); menu.setAttribute('aria-hidden','false'); hamburger.setAttribute('aria-expanded','true'); }
+      const vis = !menu.classList.contains('hidden');
+      const should = typeof open === 'boolean' ? open : !vis;
+      if (should){ menu.classList.remove('hidden'); menu.setAttribute('aria-hidden','false'); hamburger.setAttribute('aria-expanded','true'); }
       else { menu.classList.add('hidden'); menu.setAttribute('aria-hidden','true'); hamburger.setAttribute('aria-expanded','false'); }
     }
     hamburger.addEventListener('click', ()=> toggleMenu());
     closeMenu.addEventListener('click', ()=> toggleMenu(false));
     document.addEventListener('click', (e)=> { if (!menu.contains(e.target) && !hamburger.contains(e.target)) toggleMenu(false); });
 
-    // keyboard shortcuts
     document.addEventListener('keydown', (e)=>{
       if (e.key === 'm' || e.key === 'M'){ e.preventDefault(); toggleMenu(); }
       if (e.key === 'r' || e.key === 'R'){ e.preventDefault(); document.documentElement.classList.toggle('reading-mode'); }
@@ -919,11 +786,9 @@
       if (e.key === ']') navigatePost(1);
     });
 
-    // wire top UI
     playTTS.addEventListener('click', ()=> { if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); });
     readingModeBtn.addEventListener('click', ()=> { document.documentElement.classList.toggle('reading-mode'); });
     printBtn.addEventListener('click', ()=> window.print());
-
     increaseText.addEventListener('click', ()=> adjustText(0.1));
     decreaseText.addEventListener('click', ()=> adjustText(-0.1));
     lineSpacing.addEventListener('change', (e)=> { settings.lineSpacing = parseFloat(e.target.value); applySettings(); });
@@ -932,12 +797,19 @@
     rulerToggle.addEventListener('change', (e)=> { settings.ruler = e.target.checked; applySettings(); });
     reducedMotionChk.addEventListener('change', (e)=> { settings.reducedMotion = e.target.checked; applySettings(); });
     resetPrefs.addEventListener('click', ()=> { Object.assign(settings, { textScale:1, lineSpacing:1.6, font:'system', highContrast:false, ruler:false, reducedMotion:false }); applySettings(); });
+    helpBtn.addEventListener('click', ()=> { helpModal.classList.remove('hidden'); });
+    closeHelp.addEventListener('click', ()=> { helpModal.classList.add('hidden'); });
+    exportMDBtn.addEventListener('click', ()=> exportCurrentPostToMarkdown());
+    copyPermalinkBtn.addEventListener('click', ()=> {
+      const url = new URL(window.location.href);
+      if (currentPostIndex >= 0 && blogs[currentPostIndex]) url.searchParams.set('id', blogs[currentPostIndex].id);
+      navigator.clipboard.writeText(url.toString()).then(()=> alert('Permalink copied.'));
+    });
 
     function adjustText(delta){
       settings.textScale = Math.max(0.7, Math.min(1.6, Number((settings.textScale + delta).toFixed(2))));
       applySettings();
     }
-
     function navigatePost(delta){
       if (currentPostIndex < 0) return;
       let next = currentPostIndex + delta;
@@ -946,34 +818,53 @@
       renderPostByIndex(next);
     }
 
-    // init
-    async function init(){
-      await loadBlogs();
-      // only query param routing
-      const id = getRequestedId();
-      if (!id) { renderIndex(); return; }
-      const idx = blogs.findIndex(b => (b.id || '').toLowerCase() === id.toLowerCase());
-      if (idx === -1) { renderNotFound(id); return; }
-      renderPostByIndex(idx);
-      // load voices for selects globally
-      if ('speechSynthesis' in window) {
-        if (speechSynthesis.getVoices().length) {
-          // populate voiceMap for potential uses
-          speechSynthesis.getVoices().forEach(v => { voiceMap[v.voiceURI || v.name] = v; });
-        } else {
-          speechSynthesis.onvoiceschanged = function(){ speechSynthesis.getVoices().forEach(v => { voiceMap[v.voiceURI || v.name] = v; }); };
+    // --------------------------
+    // Export current post to markdown (simple)
+    // --------------------------
+    function exportCurrentPostToMarkdown(){
+      if (currentPostIndex < 0) return alert('No post open');
+      const p = blogs[currentPostIndex];
+      let md = `# ${p.title || ''}\n\n`;
+      if (p.subtitle) md += `_${p.subtitle}_\n\n`;
+      if (p.description) md += `${p.description}\n\n`;
+      (p.blocks || []).forEach(b=>{
+        if (b.type === 'text'){
+          if (b.format === 'header') md += `### ${b.content}\n\n`;
+          else if (b.format === 'list') md += (b.items || []).map(i=>`- ${i}`).join('\n') + '\n\n';
+          else md += `${b.content}\n\n`;
+        } else if (b.type === 'image'){
+          md += `![${b.caption || ''}](${resolveImageUrl(b.src)})\n\n`;
+        } else if (b.type === 'code'){
+          md += `\`\`\`${b.language || ''}\n${b.content}\n\`\`\`\n\n`;
         }
-      }
-      // apply saved TTS state (some applied in TTS UI when rendered)
+      });
+      const blob = new Blob([md], {type:'text/markdown'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = (p.id || 'post') + '.md'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     }
 
-    // small utilities
-    function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    // --------------------------
+    // Init and routing
+    // --------------------------
+    async function init(){
+      await loadBlogs();
+      const id = new URLSearchParams(location.search).get('id');
+      if (!id){
+        renderIndex();
+        return;
+      }
+      const idx = blogs.findIndex(b => (b.id || '').toLowerCase() === id.toLowerCase());
+      if (idx === -1){ renderNotFound(id); return; }
+      renderPostByIndex(idx);
 
-    // start
+      // wire global scrolling updates
+      window.addEventListener('scroll', ()=> updateProgress());
+      window.addEventListener('resize', ()=> updateProgress());
+    }
+
     init();
 
-    // expose for debugging
+    // expose debug
     window.blanklabs = { reload: init, settings, ttsState, segments };
 
   })();
