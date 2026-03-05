@@ -4,28 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>BlankLabs — monochrome reader</title>
-  <meta name="description" content="Monochrome, accessible blog reader for BlankLabs. Find posts by URL like /blog003." />
+  <meta name="description" content="Monochrome, accessible blog reader for BlankLabs. Open posts with ?id=blog003" />
   <style>
-    /* --- Monochrome, readable, cool style --- */
+    /* Monochrome, readable, cool style (improved) */
     :root{
-      --bg: #050506;
-      --panel: #0f0f10;
-      --muted: #9aa0a6;
-      --text: #e9ecef;
-      --accent: #ffffff;
-      --glass: rgba(255,255,255,0.02);
-      --max-width: 900px;
-      --radius: 14px;
-      --base-font: 17px;
-      --line: 1.6;
-      --measure: 72ch;
-      --ui-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --bg:#050506;
+      --panel:#0f0f10;
+      --muted:#9aa0a6;
+      --text:#e9ecef;
+      --accent:#ffffff;
+      --glass:rgba(255,255,255,0.02);
+      --max-width:1000px;
+      --radius:14px;
+      --base-font:17px;
+      --line:1.6;
+      --measure:72ch;
+      --ui-font:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       --mono-font: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-      --reduced-motion: 0;
-      --ruler-opacity: 0;
+      --ruler-opacity:0;
+      --highlight: rgba(255,255,255,0.07);
     }
 
-    /* resets */
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -40,10 +39,11 @@
       -moz-osx-font-smoothing:grayscale;
       line-height:var(--line);
       padding:36px 20px;
-      transition: background-color 220ms ease;
+      transition:background-color 220ms ease;
+      font-size:var(--base-font);
     }
 
-    a{color:var(--text); text-decoration:underline dotted; text-underline-offset:4px;}
+    a{color:var(--text); text-decoration:underline dotted; text-underline-offset:4px}
     a:focus{outline:3px solid rgba(255,255,255,0.06); outline-offset:4px}
 
     main{max-width:var(--max-width); margin:0 auto;}
@@ -52,55 +52,24 @@
     .skip{position:absolute;left:12px;top:12px;background:#fff;color:#000;padding:6px 10px;border-radius:8px; z-index:999; transform:translateY(-200%); transition:transform 160ms ease}
     .skip:focus{transform:translateY(0)}
 
-    header.site-head{
-      display:flex;
-      align-items:center;
-      gap:16px;
-      margin-bottom:22px;
-    }
-    .logo{
-      width:60px;height:60px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.6);
-      flex:0 0 60px;
-    }
+    header.site-head{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+    .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 24px rgba(0,0,0,0.6);flex:0 0 60px}
     .logo img{max-width:86%; max-height:86%; display:block; filter:grayscale(1) contrast(1.05) brightness(1.05)}
     .site-title h1{margin:0;font-size:20px}
     .site-title p{margin:0;color:var(--muted); font-size:13px}
 
-    /* container card */
-    .viewer{
-      background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01));
-      border-radius:var(--radius);
-      padding:22px;
-      box-shadow: 0 18px 60px rgba(0,0,0,0.6);
-      border:1px solid rgba(255,255,255,0.03);
-      position:relative;
-      overflow:hidden;
-    }
+    .viewer{background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01)); border-radius:var(--radius); padding:18px; box-shadow:0 18px 60px rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.03); position:relative; overflow:hidden}
 
-    /* top controls row */
-    .controls{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:12px;
-    }
+    .controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
     .left-controls{display:flex;align-items:center;gap:10px}
     .right-controls{display:flex;align-items:center;gap:8px}
-
     .btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:10px;color:var(--text);cursor:pointer}
     .btn:focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
     .badge{color:var(--muted);font-size:13px}
 
-    /* hamburger */
-    .hamburger{
-      width:46px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);cursor:pointer;
-      background:transparent;
-    }
+    .hamburger{width:46px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);cursor:pointer;background:transparent}
     .hamburger .lines{width:20px;height:2px;background:var(--text);box-shadow:0 6px 0 0 var(--text),0 -6px 0 0 var(--text)}
 
-    /* post */
     article header{margin-bottom:18px}
     article h2{margin:0 0 6px 0;font-size:26px;line-height:1.05}
     article .meta{color:var(--muted);font-size:13px;display:flex;gap:12px;align-items:center}
@@ -110,54 +79,47 @@
     .content ul{padding-left:20px;margin:0 0 16px}
     .content li{margin:6px 0}
 
-    /* figures */
     figure.figure{margin:18px 0;border-radius:10px;overflow:hidden;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
-    figure.figure img{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.05)}
+    figure.figure img{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.05);transition:transform 250ms ease, box-shadow 250ms ease}
+    figure.figure img:hover{transform:scale(1.02);box-shadow:0 18px 40px rgba(0,0,0,0.6)}
     .caption{padding:10px;color:var(--muted);font-size:13px}
 
     pre{background:rgba(0,0,0,0.35);padding:14px;border-radius:10px;overflow:auto;font-family:var(--mono-font);font-size:13px;color:var(--text);border:1px solid rgba(255,255,255,0.03)}
     .code-row{display:flex;gap:8px;justify-content:space-between;align-items:center}
 
-    /* columns layout */
     .columns{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin:18px 0}
     @media (max-width:780px){.columns{grid-template-columns:1fr}}
 
-    /* accordion */
     .accordion-item{margin:10px 0;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01)}
     .accordion-btn{width:100%;text-align:left;background:transparent;border:0;padding:12px 16px;font-size:15px;color:var(--text);display:flex;justify-content:space-between;align-items:center;cursor:pointer}
     .accordion-panel{padding:12px 16px 18px 16px;display:none}
     .accordion-btn[aria-expanded="true"] + .accordion-panel{display:block}
 
-    /* post list fallback */
     .post-list{display:flex;flex-direction:column;gap:10px}
     .post-link{padding:12px 14px;border-radius:10px;background:transparent;color:var(--text);text-decoration:none;border:1px solid rgba(255,255,255,0.03)}
 
     footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
 
-    /* reading ruler */
-    .ruler{
-      position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;
-      width:calc(100% - 160px);pointer-events:none;mix-blend-mode:overlay;
-      background:linear-gradient(transparent, rgba(255,255,255,var(--ruler-opacity)), transparent);
-      opacity: var(--ruler-opacity); border-radius:var(--radius);
-    }
+    .ruler{position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0;width:calc(100% - 160px);pointer-events:none;mix-blend-mode:overlay;background:linear-gradient(transparent, rgba(255,255,255,var(--ruler-opacity)), transparent);opacity:var(--ruler-opacity);border-radius:var(--radius)}
 
-    /* reading progress */
     .progress-wrap{height:6px;background:transparent;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
     .progress{height:6px;background:linear-gradient(90deg,#fff,#cfcfcf);width:0%}
 
-    /* small helpers */
+    /* TTS highlighting */
+    .segment{display:inline}
+    .segment.highlight{background:var(--highlight);border-radius:6px;padding:2px 6px}
+
+    .tts-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+    .tts-controls label{font-size:13px;color:var(--muted);margin-right:6px}
+
+    .slider{appearance:none;height:8px;border-radius:6px;background:rgba(255,255,255,0.06);outline:none}
+    .slider::-webkit-slider-thumb{appearance:none;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 4px 8px rgba(0,0,0,0.5)}
     .muted{color:var(--muted)}
     .hidden{display:none}
-    .sr-only{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
 
-    /* accessibility: focus outline */
     :focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
 
-    /* reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      *{transition:none!important}
-    }
+    @media (prefers-reduced-motion: reduce){*{transition:none!important}}
   </style>
 </head>
 <body>
@@ -167,16 +129,14 @@
       <div class="logo" aria-hidden="true"><img src="logo.png" alt="BlankLabs logo"></div>
       <div class="site-title">
         <h1>BlankLabs</h1>
-        <p>monochrome reader — find posts by URL like /blog003</p>
+        <p>monochrome reader — open posts with ?id=blog003</p>
       </div>
     </header>
 
     <div class="viewer" role="region" aria-labelledby="viewer-title">
       <div class="controls" aria-hidden="false">
         <div class="left-controls">
-          <button id="hamburger" class="hamburger" aria-expanded="false" aria-controls="menu" title="Open menu (m)">
-            <span class="lines" aria-hidden="true"></span>
-          </button>
+          <button id="hamburger" class="hamburger" aria-expanded="false" aria-controls="menu" title="Open menu (m)"><span class="lines" aria-hidden="true"></span></button>
           <div style="display:flex;flex-direction:column">
             <div class="badge" id="viewer-title">Monochrome reading room</div>
             <div class="muted" style="font-size:12px">this part of the site is ment to found by yourself and if your seeing it cool!</div>
@@ -184,13 +144,13 @@
         </div>
 
         <div class="right-controls">
-          <button id="ttsBtn" class="btn" title="Read aloud (t)">🔊 Read</button>
+          <button id="playTTS" class="btn" title="Play/Pause TTS (t)">🔊 Play</button>
           <button id="readingModeBtn" class="btn" title="Toggle reading mode (r)">📰 Reading</button>
           <button id="printBtn" class="btn" title="Printable view">🖨 Print</button>
         </div>
       </div>
 
-      <div id="menu" role="dialog" aria-modal="false" aria-hidden="true" class="hidden" style="position:absolute;left:18px;top:86px;z-index:60;width:320px;">
+      <div id="menu" role="dialog" aria-modal="false" aria-hidden="true" class="hidden" style="position:absolute;left:18px;top:86px;z-index:60;width:360px;">
         <div style="background:var(--panel);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)">
           <h3 style="margin:0 0 8px 0">Accessibility & Settings</h3>
 
@@ -248,9 +208,9 @@
             <ul style="padding-left:18px;margin:8px 0">
               <li><code>m</code> toggle menu</li>
               <li><code>r</code> reading mode</li>
-              <li><code>t</code> text-to-speech</li>
+              <li><code>t</code> text-to-speech play/pause</li>
               <li><code>[</code> previous, <code>]</code> next post</li>
-              <li><code>+</code> increase text, <code>-</code> decrease</li>
+              <li><code>+</code> increase text, <code>-</code> decrease text</li>
             </ul>
           </div>
         </div>
@@ -261,7 +221,7 @@
       </div>
 
       <div id="app" role="main" aria-live="polite" tabindex="-1">
-        <p class="muted">Loading posts...</p>
+        <p class="muted">Loading posts (use ?id=blog003)...</p>
       </div>
 
       <div class="ruler" id="ruler" aria-hidden="true"></div>
@@ -273,434 +233,750 @@
   </main>
 
   <script>
-    (function(){
-      const BLOG_PATH = '/blogs.json';
-      const app = document.getElementById('app');
-      const menu = document.getElementById('menu');
-      const hamburger = document.getElementById('hamburger');
-      const ttsBtn = document.getElementById('ttsBtn');
-      const readingModeBtn = document.getElementById('readingModeBtn');
-      const printBtn = document.getElementById('printBtn');
-      const increaseText = document.getElementById('increaseText');
-      const decreaseText = document.getElementById('decreaseText');
-      const textSizeLabel = document.getElementById('textSizeLabel');
-      const lineSpacing = document.getElementById('lineSpacing');
-      const fontSelect = document.getElementById('fontSelect');
-      const highContrast = document.getElementById('highContrast');
-      const rulerToggle = document.getElementById('rulerToggle');
-      const ruler = document.getElementById('ruler');
-      const resetPrefs = document.getElementById('resetPrefs');
-      const closeMenu = document.getElementById('closeMenu');
-      const reducedMotionChk = document.getElementById('reducedMotion');
-      const progressBar = document.getElementById('progressBar');
+  (function(){
+    // CONFIG
+    const BLOG_PATH = '/blogs.json'; // as you said
+    const app = document.getElementById('app');
+    const menu = document.getElementById('menu');
+    const hamburger = document.getElementById('hamburger');
+    const playTTS = document.getElementById('playTTS');
+    const readingModeBtn = document.getElementById('readingModeBtn');
+    const printBtn = document.getElementById('printBtn');
+    const increaseText = document.getElementById('increaseText');
+    const decreaseText = document.getElementById('decreaseText');
+    const textSizeLabel = document.getElementById('textSizeLabel');
+    const lineSpacing = document.getElementById('lineSpacing');
+    const fontSelect = document.getElementById('fontSelect');
+    const highContrast = document.getElementById('highContrast');
+    const rulerToggle = document.getElementById('rulerToggle');
+    const ruler = document.getElementById('ruler');
+    const resetPrefs = document.getElementById('resetPrefs');
+    const closeMenu = document.getElementById('closeMenu');
+    const reducedMotionChk = document.getElementById('reducedMotion');
+    const progressBar = document.getElementById('progressBar');
 
-      let blogs = [];
-      let currentPostIndex = -1;
-      let settings = {
-        textScale: 1,
-        lineSpacing: 1.6,
-        font: 'system',
-        highContrast: false,
-        ruler: false,
-        reducedMotion: false
-      };
+    // TTS UI will be injected into the post area
+    let blogs = [];
+    let currentPostIndex = -1;
+    let ttsState = {
+      index: 0,        // current segment index
+      rate: 1.0,
+      volume: 1.0,
+      voiceURI: null,
+      isPlaying: false
+    };
+    const SETTINGS_KEY = 'blanklabs-reader-settings';
+    const TTS_STATE_KEY = 'blanklabs-tts-state';
 
-      /* persistence */
-      function saveSettings(){ localStorage.setItem('reader-settings', JSON.stringify(settings)); }
-      function loadSettings(){
-        const raw = localStorage.getItem('reader-settings');
-        if (raw) {
-          try { Object.assign(settings, JSON.parse(raw)); } catch(e){}
-        }
+    // load saved state
+    function loadSaved(){
+      try{
+        const raw = localStorage.getItem(SETTINGS_KEY);
+        if (raw) Object.assign(settings, JSON.parse(raw));
+      }catch(e){}
+      try{
+        const raw2 = localStorage.getItem(TTS_STATE_KEY);
+        if (raw2) Object.assign(ttsState, JSON.parse(raw2));
+      }catch(e){}
+    }
+
+    // UI settings default
+    const settings = {
+      textScale: 1,
+      lineSpacing: 1.6,
+      font: 'system',
+      highContrast: false,
+      ruler: false,
+      reducedMotion: false
+    };
+
+    loadSaved();
+
+    function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
+    function saveTTSState(){ localStorage.setItem(TTS_STATE_KEY, JSON.stringify(ttsState)); }
+
+    function applySettings(){
+      document.documentElement.style.setProperty('--base-font', (17 * settings.textScale) + 'px');
+      document.documentElement.style.setProperty('--line', settings.lineSpacing);
+      document.documentElement.style.setProperty('--ruler-opacity', settings.ruler ? 0.08 : 0);
+      textSizeLabel.textContent = (settings.textScale === 1 ? 'Default' : Math.round(settings.textScale * 100) + '%');
+      lineSpacing.value = String(settings.lineSpacing);
+      highContrast.checked = !!settings.highContrast;
+      rulerToggle.checked = !!settings.ruler;
+      reducedMotionChk.checked = !!settings.reducedMotion;
+      fontSelect.value = settings.font || 'system';
+
+      if (settings.font === 'system'){
+        document.body.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
+      } else if (settings.font === 'serif'){
+        document.body.style.fontFamily = 'Georgia, "Times New Roman", serif';
+      } else if (settings.font === 'mono'){
+        document.body.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace';
+      } else if (settings.font === 'dyslexic'){
+        document.body.style.fontFamily = '"OpenDyslexic", "Lexend", "Trebuchet MS", "Segoe UI", Arial, sans-serif';
       }
 
-      loadSettings();
-
-      /* apply settings */
-      function applySettings(){
-        document.documentElement.style.setProperty('--base-font', (17 * settings.textScale) + 'px');
-        document.documentElement.style.setProperty('--line', settings.lineSpacing);
-        document.documentElement.style.setProperty('--ruler-opacity', settings.ruler ? 0.08 : 0);
-        document.documentElement.style.setProperty('--reduced-motion', settings.reducedMotion ? 1 : 0);
-        textSizeLabel.textContent = (settings.textScale === 1 ? 'Default' : Math.round(settings.textScale * 100) + '%');
-        lineSpacing.value = String(settings.lineSpacing);
-        highContrast.checked = !!settings.highContrast;
-        rulerToggle.checked = !!settings.ruler;
-        reducedMotionChk.checked = !!settings.reducedMotion;
-        fontSelect.value = settings.font || 'system';
-
-        // font families
-        if (settings.font === 'system'){
-          document.body.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial';
-        } else if (settings.font === 'serif'){
-          document.body.style.fontFamily = 'Georgia, "Times New Roman", serif';
-        } else if (settings.font === 'mono'){
-          document.body.style.fontFamily = 'ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace';
-        } else if (settings.font === 'dyslexic'){
-          // use a dyslexia friendly stack fallback (Atkinson not guaranteed)
-          document.body.style.fontFamily = '"OpenDyslexic", "Lexend", "Trebuchet MS", "Segoe UI", Arial, sans-serif';
-        }
-
-        // high contrast: tweak colors
-        if (settings.highContrast){
-          document.documentElement.style.setProperty('--text', '#ffffff');
-          document.documentElement.style.setProperty('--muted', '#cfcfcf');
-          document.documentElement.style.setProperty('--panel', '#0b0b0b');
-          document.documentElement.style.setProperty('--panel', '#0b0b0b');
-        } else {
-          document.documentElement.style.setProperty('--text', '#e9ecef');
-          document.documentElement.style.setProperty('--muted', '#9aa0a6');
-        }
-
-        if (settings.reducedMotion) {
-          document.documentElement.style.transition = 'none';
-        } else {
-          document.documentElement.style.removeProperty('transition');
-        }
-
-        saveSettings();
+      if (settings.highContrast){
+        document.documentElement.style.setProperty('--text', '#ffffff');
+        document.documentElement.style.setProperty('--muted', '#cfcfcf');
+      } else {
+        document.documentElement.style.setProperty('--text', '#e9ecef');
+        document.documentElement.style.setProperty('--muted', '#9aa0a6');
       }
 
-      applySettings();
+      if (settings.reducedMotion) document.documentElement.style.transition = 'none';
+      else document.documentElement.style.removeProperty('transition');
 
-      /* helpers for URL id */
-      function getRequestedId(){
-        const path = window.location.pathname.replace(/\/+$/,'');
-        const last = path.split('/').pop();
-        if (/^blog\d+$/i.test(last)) return last.toLowerCase();
-        const qp = new URLSearchParams(window.location.search).get('id');
-        if (qp && /^blog\d+$/i.test(qp)) return qp.toLowerCase();
-        const hash = (location.hash || '').replace('#','');
-        if (hash && /^blog\d+$/i.test(hash)) return hash.toLowerCase();
-        return null;
+      saveSettings();
+    }
+    applySettings();
+
+    // routing: ONLY use query param ?id=blog003
+    function getRequestedId(){
+      const qp = new URLSearchParams(location.search).get('id');
+      if (qp && /^blog\d+$/i.test(qp)) return qp.toLowerCase();
+      return null;
+    }
+
+    async function loadBlogs(){
+      try{
+        const res = await fetch(BLOG_PATH, {cache:'no-store'});
+        if(!res.ok) throw new Error('Failed to fetch ' + BLOG_PATH + ' (' + res.status + ')');
+        const data = await res.json();
+        if (!Array.isArray(data)) throw new Error('blogs.json must be an array');
+        blogs = data;
+      }catch(e){
+        app.innerHTML = '<h2>Error</h2><p class="muted">Could not load /blogs.json. Check path & JSON in console.</p>';
+        console.error(e);
+      }
+    }
+
+    function ensureLinkFor(id){
+      // Always use ?id=... links
+      const base = location.pathname.replace(/\/+$/,'') || '/';
+      return base + '?id=' + encodeURIComponent(id);
+    }
+
+    function renderIndex(){
+      app.innerHTML = '';
+      const heading = document.createElement('h2');
+      heading.textContent = 'Posts';
+      app.appendChild(heading);
+      const list = document.createElement('div'); list.className='post-list';
+      blogs.forEach(b=>{
+        const a = document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent = (b.title || b.id) + (b.subtitle ? ' — ' + b.subtitle : '');
+        list.appendChild(a);
+      });
+      app.appendChild(list);
+      setDocTitle('All posts');
+    }
+
+    function renderNotFound(id){
+      app.innerHTML = '';
+      const h = document.createElement('h2'); h.textContent = 'Post not found: ' + id;
+      app.appendChild(h);
+      const p = document.createElement('p'); p.className='muted'; p.textContent = 'Available posts:';
+      app.appendChild(p);
+      const list = document.createElement('div'); list.className='post-list';
+      blogs.forEach(b=>{ const a=document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent = b.title || b.id; list.appendChild(a) });
+      app.appendChild(list);
+      setDocTitle('Not found');
+    }
+
+    function setDocTitle(t){ document.title = t ? t + ' — BlankLabs' : 'BlankLabs'; }
+
+    // IMAGE helper: try to normalise path and fallback to logo.png
+    function makeImageElement(src, caption){
+      const fig = document.createElement('figure'); fig.className='figure';
+      const img = document.createElement('img');
+      // normalize: if src begins with http, https, or / keep; otherwise keep as-is (relative).
+      let normalized = String(src || '').trim();
+      if (!normalized) normalized = 'logo.png';
+      img.src = normalized;
+      img.alt = caption || '';
+      img.loading = 'lazy';
+      img.onerror = function(){ if (!img.dataset.fallback){ img.dataset.fallback = '1'; img.src = 'logo.png'; } };
+      fig.appendChild(img);
+      if (caption){
+        const cap = document.createElement('figcaption'); cap.className='caption'; cap.textContent = caption; fig.appendChild(cap);
+      }
+      return fig;
+    }
+
+    // TTS: segmentization and playback
+    let segments = []; // {el, text}
+    let voices = [];
+    let voiceMap = {}; // uri -> voice object
+    let utterance = null;
+    function gatherSegmentsForArticle(articleEl){
+      // Clear any previous
+      segments = [];
+      // We'll collect text nodes from the article content area and split into sentence-ish segments.
+      // Strategy: find paragraphs, headers, list items, code blocks, and split by sentence punctuation.
+      const content = articleEl.querySelector('.content') || articleEl;
+      if (!content) return;
+      const selectors = 'p, h3, li, blockquote, pre';
+      content.querySelectorAll(selectors).forEach(node => {
+        // don't capture text from certain child nodes like code inside pre that is not suitable; pre handled separately
+        const text = node.innerText || node.textContent || '';
+        if (!text.trim()) return;
+        // split into sentences with regex, keep punctuation
+        const parts = text.split(/(?<=\.|\?|!|\n)\s+/g).map(s => s.trim()).filter(Boolean);
+        parts.forEach(part => {
+          // create a span wrapper in the DOM for highlighting
+          const span = document.createElement('span');
+          span.className = 'segment';
+          span.textContent = part + ' ';
+          // append span at end of node for highlighting sync; we will replace node's text with spans (safe approach)
+        });
+      });
+
+      // Instead of replacing inline, we'll build segments from the DOM while updating displayed content with spans
+      // rebuild content nodes:
+      content.querySelectorAll('p, h3, li, blockquote, pre').forEach(node => {
+        // For pre/code, treat as one segment
+        if (node.tagName.toLowerCase() === 'pre'){
+          const text = node.innerText.trim();
+          if (!text) return;
+          const span = document.createElement('span');
+          span.className = 'segment';
+          span.textContent = text + ' ';
+          const wrapper = document.createElement('div');
+          wrapper.appendChild(span);
+          node.innerHTML = '';
+          node.appendChild(wrapper);
+          segments.push({el: span, text: text});
+          return;
+        }
+
+        const text = node.innerText || node.textContent || '';
+        if (!text.trim()) return;
+        const parts = text.split(/(?<=\.|\?|!|\n)\s+/g).map(s => s.trim()).filter(Boolean);
+        node.innerHTML = ''; // clear node
+        parts.forEach(part=>{
+          const span = document.createElement('span');
+          span.className = 'segment';
+          span.textContent = part + ' ';
+          node.appendChild(span);
+          segments.push({el: span, text: part});
+        });
+      });
+    }
+
+    // Fill voices
+    function populateVoices(selectEl){
+      voices = speechSynthesis.getVoices() || [];
+      selectEl.innerHTML = '';
+      voices.forEach(v=>{
+        const opt = document.createElement('option');
+        opt.value = v.voiceURI || v.name;
+        opt.textContent = `${v.name} ${v.lang ? '• ' + v.lang : ''}`;
+        selectEl.appendChild(opt);
+        voiceMap[v.voiceURI || v.name] = v;
+      });
+      // restore selected
+      if (ttsState.voiceURI && selectEl.querySelector('option[value="' + ttsState.voiceURI.replace(/"/g,'\\"') + '"]')){
+        selectEl.value = ttsState.voiceURI;
+      }
+    }
+
+    // Create TTS controls UI inside article area
+    function createTTSControls(container){
+      // container is element after meta
+      const wrapper = document.createElement('div');
+      wrapper.className = 'tts-controls';
+      wrapper.setAttribute('aria-label','Text to speech controls');
+
+      // Play/Pause is main (we also have top control)
+      const playBtn = document.createElement('button'); playBtn.className='btn'; playBtn.id='playPauseLocal'; playBtn.textContent = ttsState.isPlaying ? '⏸ Pause' : '▶ Play';
+      wrapper.appendChild(playBtn);
+
+      // progress slider for segments
+      const segLabel = document.createElement('label'); segLabel.className='muted'; segLabel.style.marginLeft='8px'; segLabel.textContent='Progress';
+      wrapper.appendChild(segLabel);
+      const progressRange = document.createElement('input');
+      progressRange.type='range';
+      progressRange.min=0; progressRange.max= Math.max(0, segments.length-1);
+      progressRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
+      progressRange.className='slider';
+      progressRange.style.width='240px';
+      wrapper.appendChild(progressRange);
+
+      // voice select
+      const voiceLabel = document.createElement('label'); voiceLabel.className='muted'; voiceLabel.textContent='Voice';
+      wrapper.appendChild(voiceLabel);
+      const voiceSelect = document.createElement('select');
+      voiceSelect.id='voiceSelect';
+      voiceSelect.style.padding='6px;border-radius:' + '8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)';
+      wrapper.appendChild(voiceSelect);
+
+      // rate slider
+      const rateLabel = document.createElement('label'); rateLabel.className='muted'; rateLabel.textContent='Speed';
+      wrapper.appendChild(rateLabel);
+      const rateRange = document.createElement('input'); rateRange.type='range'; rateRange.min=0.5; rateRange.max=2.0; rateRange.step=0.05; rateRange.value = ttsState.rate; rateRange.className='slider'; rateRange.style.width='140px';
+      wrapper.appendChild(rateRange);
+
+      // volume
+      const volLabel = document.createElement('label'); volLabel.className='muted'; volLabel.textContent='Volume';
+      wrapper.appendChild(volLabel);
+      const volRange = document.createElement('input'); volRange.type='range'; volRange.min=0; volRange.max=1; volRange.step=0.05; volRange.value = ttsState.volume; volRange.className='slider'; volRange.style.width='120px';
+      wrapper.appendChild(volRange);
+
+      // show current reading index
+      const idxInfo = document.createElement('div'); idxInfo.className='muted'; idxInfo.style.marginLeft='8px'; idxInfo.style.minWidth='120px';
+      idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
+      wrapper.appendChild(idxInfo);
+
+      // add event wiring
+      playBtn.addEventListener('click', () => {
+        if (ttsState.isPlaying) pauseTTS();
+        else startTTS(ttsState.index);
+      });
+
+      progressRange.addEventListener('input', (e)=> {
+        const val = Number(e.target.value);
+        ttsState.index = val;
+        saveTTSState();
+        updateSegmentHighlight();
+        idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
+      });
+
+      rateRange.addEventListener('input', (e)=> {
+        ttsState.rate = Number(e.target.value);
+        saveTTSState();
+      });
+
+      volRange.addEventListener('input', (e)=> {
+        ttsState.volume = Number(e.target.value);
+        saveTTSState();
+      });
+
+      voiceSelect.addEventListener('change', (e)=> {
+        ttsState.voiceURI = e.target.value;
+        saveTTSState();
+      });
+
+      // populate voices asynchronously
+      function ensureVoices() {
+        populateVoices(voiceSelect);
+      }
+      ensureVoices();
+      if (speechSynthesis && speechSynthesis.onvoiceschanged !== undefined){
+        speechSynthesis.onvoiceschanged = ensureVoices;
       }
 
-      /* load blogs */
-      async function loadBlogs(){
+      return {wrapper, progressRange, rateRange, volRange, voiceSelect, playBtn, idxInfo};
+    }
+
+    // highlight update
+    function updateSegmentHighlight(){
+      segments.forEach((seg, i)=>{
+        if (!seg.el) return;
+        if (i === ttsState.index) seg.el.classList.add('highlight');
+        else seg.el.classList.remove('highlight');
+      });
+      // update progress bar in top chrome
+      const pct = segments.length ? Math.round(((ttsState.index) / Math.max(1, segments.length-1)) * 100) : 0;
+      progressBar.style.width = pct + '%';
+    }
+
+    // TTS control functions (chunked playback):
+    let ttsQueueActive = false;
+    function startTTS(startIndex){
+      if (!segments.length) return alert('No readable content found for TTS.');
+      if (startIndex !== undefined) ttsState.index = startIndex;
+      ttsState.isPlaying = true;
+      saveTTSState();
+      playTTS.textContent = '⏸ Playing';
+      // begin queue
+      if (!ttsQueueActive) {
+        ttsQueueActive = true;
+        playQueue().finally(()=> { ttsQueueActive = false; });
+      }
+      updateSegmentHighlight();
+    }
+
+    async function playQueue(){
+      while (ttsState.index < segments.length && ttsState.isPlaying){
+        const seg = segments[ttsState.index];
+        if (!seg) break;
+        // speak seg.text
         try{
-          const res = await fetch(BLOG_PATH, {cache:'no-store'});
-          if (!res.ok) throw new Error('Failed to fetch');
-          const data = await res.json();
-          if (!Array.isArray(data)) throw new Error('blogs.json must be array');
-          blogs = data;
-        }catch(e){
-          app.innerHTML = '<h2>Error</h2><p class="muted">Could not load /blogs.json — check path and JSON.</p>';
-          console.error(e);
-          return;
+          await speakSegment(seg.text);
+        }catch(err){
+          console.error('TTS error', err);
+          break;
         }
+        // advance
+        ttsState.index++;
+        saveTTSState();
+        updateSegmentHighlight();
+      }
+      // finished or paused
+      if (ttsState.index >= segments.length) {
+        ttsState.isPlaying = false;
+        playTTS.textContent = '🔊 Play';
+        saveTTSState();
+      }
+      updateSegmentHighlight();
+    }
+
+    function pauseTTS(){
+      if (speechSynthesis) speechSynthesis.cancel();
+      ttsState.isPlaying = false;
+      playTTS.textContent = '🔊 Play';
+      saveTTSState();
+    }
+
+    function stopTTS(){
+      if (speechSynthesis) speechSynthesis.cancel();
+      ttsState.isPlaying = false;
+      ttsState.index = 0;
+      saveTTSState();
+      updateSegmentHighlight();
+    }
+
+    function speakSegment(text){
+      return new Promise((resolve, reject) => {
+        if (!('speechSynthesis' in window)) return reject(new Error('TTS not supported'));
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = ttsState.rate || 1.0;
+        u.volume = ttsState.volume || 1.0;
+        // match chosen voice if available
+        if (ttsState.voiceURI && voiceMap[ttsState.voiceURI]) u.voice = voiceMap[ttsState.voiceURI];
+        u.onend = function(){ resolve(); };
+        u.onerror = function(e){ reject(e || new Error('TTS error')); };
+        // start
+        speechSynthesis.cancel(); // flush previous
+        speechSynthesis.speak(u);
+      });
+    }
+
+    // Build and render a post by index
+    function renderPostByIndex(idx){
+      if (idx < 0 || idx >= blogs.length) return;
+      currentPostIndex = idx;
+      const post = blogs[idx];
+      renderPost(post);
+      // update URL query param without reload
+      const url = new URL(window.location.href);
+      url.searchParams.set('id', post.id);
+      history.replaceState({}, '', url.toString());
+    }
+
+    function renderPost(post){
+      app.innerHTML = '';
+      const article = document.createElement('article');
+      article.setAttribute('role', 'article');
+      article.setAttribute('aria-labelledby', 'post-title');
+      article.tabIndex = -1;
+
+      const header = document.createElement('header');
+      const h2 = document.createElement('h2'); h2.id = 'post-title'; h2.textContent = post.title || '';
+      header.appendChild(h2);
+      const meta = document.createElement('div'); meta.className = 'meta';
+      const auth = document.createElement('span'); auth.textContent = post.author || 'BlankLabs';
+      meta.appendChild(auth);
+      if (post.date){ const time = document.createElement('time'); time.dateTime = post.date; time.textContent = post.date; meta.appendChild(time); }
+      header.appendChild(meta);
+      article.appendChild(header);
+
+      // content container
+      const content = document.createElement('div'); content.className = 'content';
+
+      const blocks = Array.isArray(post.blocks) ? post.blocks : [{type:'text',format:'paragraph', content: post.content || post.description || ''}];
+      blocks.forEach(blk => {
+        try{
+          const node = renderBlock(blk);
+          if (node) content.appendChild(node);
+        }catch(e){ console.error('render block failed', e); }
+      });
+
+      article.appendChild(content);
+
+      // create TTS controls and segmentize
+      gatherSegmentsForArticle(article);
+      const ttsUI = createTTSControls(article);
+      article.insertBefore(ttsUI.wrapper, article.querySelector('.content'));
+
+      // wire progressRange to ttsState.index
+      ttsUI.progressRange.max = Math.max(0, segments.length-1);
+      ttsUI.progressRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
+      ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
+      // sync top play button too
+      playTTS.textContent = ttsState.isPlaying ? '⏸ Playing' : '🔊 Play';
+
+      // propagate voice list into local select
+      populateVoices(ttsUI.voiceSelect);
+      if (ttsState.voiceURI && ttsUI.voiceSelect.querySelector('option[value="'+ttsState.voiceURI+'"]')){
+        ttsUI.voiceSelect.value = ttsState.voiceURI;
       }
 
-      /* routing / render */
-      function ensureLinkFor(id){
-        let base = window.location.pathname.replace(/\/?blog\d+$/i,'').replace(/\/$/,'');
-        if (!base) base = '/';
-        return base + (base.endsWith('/') ? '' : '/') + id;
-      }
+      // rate/volume initial
+      ttsUI.rateRange.value = ttsState.rate || 1.0;
+      ttsUI.volRange.value = ttsState.volume || 1.0;
 
-      function renderIndex(){
-        app.innerHTML = '';
-        const h = document.createElement('h2'); h.textContent = 'Posts';
-        app.appendChild(h);
+      // update segment highlight initially
+      updateSegmentHighlight();
 
-        const list = document.createElement('div'); list.className = 'post-list';
+      // nav to other posts
+      if (blogs.length > 1){
+        const nav = document.createElement('nav'); nav.style.marginTop='18px'; nav.setAttribute('aria-label','Other posts');
+        const list = document.createElement('div'); list.style.display='flex'; list.style.gap='8px'; list.style.flexWrap='wrap';
         blogs.forEach(b=>{
-          const a = document.createElement('a'); a.className = 'post-link';
-          a.href = ensureLinkFor(b.id);
-          a.textContent = (b.title || b.id) + (b.subtitle ? ' — ' + b.subtitle : '');
+          if (b.id === post.id) return;
+          const a = document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent = b.title || b.id;
           list.appendChild(a);
         });
-        app.appendChild(list);
+        nav.appendChild(list); article.appendChild(nav);
       }
 
-      function renderNotFound(id){
-        app.innerHTML = '';
-        const h = document.createElement('h2'); h.textContent = 'Post not found: ' + id;
-        app.appendChild(h);
-        const p = document.createElement('p'); p.className='muted'; p.textContent = 'Available posts:';
-        app.appendChild(p);
-        const list = document.createElement('div'); list.className='post-list';
-        blogs.forEach(b=>{
-          const a = document.createElement('a'); a.className='post-link'; a.href=ensureLinkFor(b.id); a.textContent=b.title || b.id;
-          list.appendChild(a);
-        });
-        app.appendChild(list);
+      app.appendChild(article);
+      setDocTitle(post.title || post.id || 'BlankLabs');
+
+      // focus for screen readers
+      setTimeout(()=>{ article.focus(); }, 50);
+
+      // attach local tts event wiring: when local play clicked, forward to global functions
+      ttsUI.playBtn.addEventListener('click', ()=> {
+        if (ttsState.isPlaying) { pauseTTS(); ttsUI.playBtn.textContent = '▶ Play'; playTTS.textContent = '🔊 Play'; }
+        else { startTTS(ttsState.index); ttsUI.playBtn.textContent = '⏸ Pause'; playTTS.textContent = '⏸ Playing'; }
+      });
+
+      ttsUI.progressRange.addEventListener('input', (e)=>{
+        ttsState.index = Number(e.target.value);
+        saveTTSState();
+        updateSegmentHighlight();
+        ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
+      });
+
+      ttsUI.rateRange.addEventListener('input', (e)=> {
+        ttsState.rate = Number(e.target.value);
+        saveTTSState();
+      });
+      ttsUI.volRange.addEventListener('input', (e)=> {
+        ttsState.volume = Number(e.target.value);
+        saveTTSState();
+      });
+      ttsUI.voiceSelect.addEventListener('change', (e)=> {
+        ttsState.voiceURI = e.target.value;
+        saveTTSState();
+      });
+
+      // update top level play button syncing to local
+      playTTS.onclick = function(){ if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); };
+
+      // anchor TTS index updates to local range when playing
+      (function syncInterval(){
+        // run periodically to reflect state in UI
+        const interval = setInterval(()=> {
+          if (!document.body.contains(ttsUI.progressRange)) { clearInterval(interval); return; }
+          ttsUI.progressRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
+          ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index + 1) + ' / ' + Math.max(segments.length,1);
+        }, 200);
+      })();
+
+      // handle image onerror fallback (already assigned in makeImageElement)
+      // update reading progress on scroll
+      window.requestAnimationFrame(updateProgress);
+    }
+
+    // renderBlock similar to earlier but leaves original text replaced by segments for TTS
+    function renderBlock(blk){
+      if (!blk || typeof blk !== 'object') return null;
+      const t = (blk.type || 'text').toLowerCase();
+
+      if (t === 'text'){
+        const fmt = (blk.format || 'paragraph').toLowerCase();
+        if (fmt === 'header'){
+          const h3 = document.createElement('h3'); h3.textContent = blk.content || ''; return h3;
+        }
+        if (fmt === 'list'){
+          const ul = document.createElement('ul');
+          (blk.items || []).forEach(li => { const liEl = document.createElement('li'); liEl.textContent = li; ul.appendChild(liEl); });
+          return ul;
+        }
+        const p = document.createElement('p'); p.textContent = blk.content || ''; return p;
       }
 
-      function setDocTitle(title){
-        document.title = title ? title + ' — BlankLabs' : 'BlankLabs';
+      if (t === 'image'){
+        return makeImageElement(blk.src || 'logo.png', blk.caption || '');
       }
 
-      /* text to speech */
-      let synth = window.speechSynthesis;
-      let uttering = null;
-      function speak(text){
-        if (!synth) return alert('Speech not supported');
-        if (uttering){
-          synth.cancel(); uttering = null; ttsBtn.textContent = '🔊 Read';
+      if (t === 'code'){
+        const container = document.createElement('div'); container.className='code-row';
+        const pre = document.createElement('pre'); const code = document.createElement('code'); code.textContent = blk.content || ''; pre.appendChild(code);
+        const copyBtn = document.createElement('button'); copyBtn.className='btn'; copyBtn.type='button'; copyBtn.innerText='Copy';
+        copyBtn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(blk.content || ''); copyBtn.innerText='Copied'; setTimeout(()=>copyBtn.innerText='Copy',1000)}catch(e){copyBtn.innerText='Err';setTimeout(()=>copyBtn.innerText='Copy',1000)} });
+        container.appendChild(pre); container.appendChild(copyBtn); return container;
+      }
+
+      if (t === 'video'){
+        const fig = document.createElement('figure'); fig.className='figure';
+        const vid = document.createElement('video'); vid.controls = true; vid.src = blk.src || ''; vid.setAttribute('aria-label', blk.caption || 'video'); vid.style.width='100%'; fig.appendChild(vid);
+        if (blk.caption){ const cap = document.createElement('figcaption'); cap.className='caption'; cap.textContent = blk.caption; fig.appendChild(cap); } return fig;
+      }
+
+      if (t === 'columns'){
+        const wrap = document.createElement('div'); wrap.className='columns';
+        (blk.columns || []).forEach(col => { const inner = document.createElement('div'); const node = renderBlock(col) || (function(){ const p = document.createElement('p'); p.textContent = col.content || ''; return p; })(); inner.appendChild(node); wrap.appendChild(inner); });
+        return wrap;
+      }
+
+      if (t === 'accordion'){
+        const item = document.createElement('div'); item.className='accordion-item';
+        const btn = document.createElement('button'); btn.className='accordion-btn'; btn.type='button'; btn.setAttribute('aria-expanded','false'); btn.textContent = blk.title || 'More';
+        const che = document.createElement('span'); che.setAttribute('aria-hidden','true'); che.textContent = '+';
+        btn.appendChild(che);
+        const panel = document.createElement('div'); panel.className='accordion-panel'; panel.setAttribute('role','region');
+        (blk.blocks || []).forEach(b => { const n = renderBlock(b); if (n) panel.appendChild(n); });
+        btn.addEventListener('click', ()=>{ const exp = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!exp)); che.textContent = exp ? '+' : '-'; });
+        item.appendChild(btn); item.appendChild(panel); return item;
+      }
+
+      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(blk, null, 2); return pre;
+    }
+
+    // Build segments by replacing text nodes in the article content
+    function gatherSegmentsForArticle(articleEl){
+      segments = [];
+      const content = articleEl.querySelector('.content');
+      if (!content) return;
+      // We will process p, h3, li, pre
+      content.querySelectorAll('p, h3, li, pre, blockquote').forEach(node => {
+        const tag = node.tagName.toLowerCase();
+        const text = (node.innerText || node.textContent || '').trim();
+        if (!text) return;
+        if (tag === 'pre'){ // treat whole pre as one segment
+          node.innerHTML = ''; // clear
+          const span = document.createElement('span'); span.className='segment'; span.textContent = text + ' ';
+          node.appendChild(span);
+          segments.push({el: span, text: text});
           return;
         }
-        uttering = new SpeechSynthesisUtterance(text);
-        uttering.rate = 1;
-        uttering.pitch = 1;
-        synth.speak(uttering);
-        ttsBtn.textContent = '⏸ Stop';
-        uttering.onend = ()=>{ uttering = null; ttsBtn.textContent = '🔊 Read'; };
-      }
-
-      /* block rendering */
-      function renderBlock(blk){
-        if (!blk || typeof blk !== 'object') return null;
-        const type = (blk.type || 'text').toLowerCase();
-        if (type === 'text'){
-          const fmt = (blk.format || 'paragraph').toLowerCase();
-          if (fmt === 'header'){
-            const h3 = document.createElement('h3'); h3.textContent = blk.content || '';
-            return h3;
-          }
-          if (fmt === 'list'){
-            const ul = document.createElement('ul');
-            (blk.items || []).forEach(it => { const li = document.createElement('li'); li.textContent = it; ul.appendChild(li); });
-            return ul;
-          }
-          const p = document.createElement('p'); p.textContent = blk.content || '';
-          return p;
-        }
-
-        if (type === 'image'){
-          const fig = document.createElement('figure'); fig.className='figure';
-          const img = document.createElement('img');
-          img.src = blk.src || 'logo.png';
-          img.alt = blk.caption || blk.alt || '';
-          img.loading = 'lazy';
-          fig.appendChild(img);
-          if (blk.caption){
-            const cap = document.createElement('figcaption'); cap.className='caption'; cap.textContent = blk.caption; fig.appendChild(cap);
-          }
-          return fig;
-        }
-
-        if (type === 'code'){
-          const wrapper = document.createElement('div'); wrapper.className='code-row';
-          const pre = document.createElement('pre'); const code = document.createElement('code'); code.textContent = blk.content || ''; pre.appendChild(code);
-          const btn = document.createElement('button'); btn.className='btn'; btn.textContent='Copy';
-          btn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(blk.content || ''); btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',1200)}catch(e){btn.textContent='Err'; setTimeout(()=>btn.textContent='Copy',1200)} });
-          wrapper.appendChild(pre); wrapper.appendChild(btn);
-          return wrapper;
-        }
-
-        if (type === 'video'){
-          const fig = document.createElement('figure'); fig.className='figure';
-          const v = document.createElement('video'); v.controls=true; v.src = blk.src || ''; v.style.width='100%'; fig.appendChild(v);
-          if (blk.caption){ const cap = document.createElement('figcaption'); cap.className='caption'; cap.textContent = blk.caption; fig.appendChild(cap); }
-          return fig;
-        }
-
-        if (type === 'columns'){
-          const wrap = document.createElement('div'); wrap.className='columns';
-          (blk.columns || []).forEach(col => {
-            const inner = document.createElement('div');
-            const node = renderBlock(col) || (function(){ const p = document.createElement('p'); p.textContent = col.content || ''; return p; })();
-            inner.appendChild(node);
-            wrap.appendChild(inner);
-          });
-          return wrap;
-        }
-
-        if (type === 'accordion'){
-          const item = document.createElement('div'); item.className='accordion-item';
-          const btn = document.createElement('button'); btn.className='accordion-btn'; btn.type='button'; btn.setAttribute('aria-expanded','false'); btn.textContent = blk.title || 'More';
-          const che = document.createElement('span'); che.setAttribute('aria-hidden','true'); che.textContent = '+';
-          btn.appendChild(che);
-          const panel = document.createElement('div'); panel.className='accordion-panel'; panel.setAttribute('role','region');
-          (blk.blocks || []).forEach(b => { const n = renderBlock(b); if (n) panel.appendChild(n); });
-          btn.addEventListener('click', ()=>{ const exp = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!exp)); che.textContent = exp ? '+' : '-'; });
-          item.appendChild(btn); item.appendChild(panel);
-          return item;
-        }
-
-        // fallback to raw
-        const pre = document.createElement('pre'); pre.textContent = JSON.stringify(blk, null, 2); return pre;
-      }
-
-      function renderPostByIndex(idx){
-        if (idx < 0 || idx >= blogs.length) return;
-        const post = blogs[idx];
-        if (!post) return;
-        currentPostIndex = idx;
-        renderPost(post);
-      }
-
-      function findIndexById(id){
-        return blogs.findIndex(b => (b.id || '').toLowerCase() === (id || '').toLowerCase());
-      }
-
-      function renderPost(post){
-        app.innerHTML = '';
-        const article = document.createElement('article'); article.setAttribute('role','article'); article.setAttribute('aria-labelledby','post-title'); article.tabIndex = -1;
-
-        const header = document.createElement('header');
-        const h2 = document.createElement('h2'); h2.id='post-title'; h2.textContent = post.title || '';
-        header.appendChild(h2);
-        const meta = document.createElement('div'); meta.className='meta';
-        const auth = document.createElement('span'); auth.textContent = post.author || 'BlankLabs';
-        meta.appendChild(auth);
-        if (post.date){ const time = document.createElement('time'); time.dateTime = post.date; time.textContent = post.date; meta.appendChild(time); }
-        header.appendChild(meta);
-        article.appendChild(header);
-
-        const content = document.createElement('div'); content.className='content';
-        const blocks = Array.isArray(post.blocks) ? post.blocks : [{type:'text',format:'paragraph', content: post.content || post.description || ''}];
-        blocks.forEach(blk => {
-          try{
-            const node = renderBlock(blk);
-            if (node) content.appendChild(node);
-          }catch(e){ console.error('render block failed',e) }
+        // split into sentences by punctuation or newline
+        const parts = text.split(/(?<=\.|\?|\!|\n)\s+/g).map(s=>s.trim()).filter(Boolean);
+        node.innerHTML = ''; // clear original text and replace with spans
+        parts.forEach(part => {
+          const span = document.createElement('span');
+          span.className = 'segment';
+          span.textContent = part + ' ';
+          node.appendChild(span);
+          segments.push({el: span, text: part});
         });
+      });
+    }
 
-        article.appendChild(content);
-
-        // nav to other posts
-        if (blogs.length > 1){
-          const nav = document.createElement('nav'); nav.style.marginTop='18px'; nav.setAttribute('aria-label','Other posts');
-          const list = document.createElement('div'); list.style.display='flex'; list.style.gap='8px'; list.style.flexWrap='wrap';
-          blogs.forEach(b=>{
-            if (b.id === post.id) return;
-            const a = document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent = b.title || b.id;
-            list.appendChild(a);
-          });
-          nav.appendChild(list); article.appendChild(nav);
-        }
-
-        app.appendChild(article);
-        setDocTitle(post.title || post.id || 'BlankLabs');
-
-        // focus for screen readers
-        setTimeout(()=>{ article.focus(); }, 60);
-
-        // update progress on scroll
-        updateProgress();
+    // TTS voice population on load
+    function populateVoices(selectEl){
+      const vlist = speechSynthesis.getVoices() || [];
+      selectEl.innerHTML = '';
+      vlist.forEach(v=>{
+        const opt = document.createElement('option');
+        opt.value = v.voiceURI || v.name;
+        opt.textContent = `${v.name}${v.lang ? ' • ' + v.lang : ''}`;
+        selectEl.appendChild(opt);
+        voiceMap[v.voiceURI || v.name] = v;
+      });
+      // keep selection
+      if (ttsState.voiceURI && selectEl.querySelector('option[value="'+ttsState.voiceURI+'"]')){
+        selectEl.value = ttsState.voiceURI;
+      } else if (vlist.length){
+        selectEl.value = selectEl.value || (vlist[0].voiceURI || vlist[0].name);
       }
+    }
 
-      function updateProgress(){
-        const article = app.querySelector('article');
-        if (!article) { progressBar.style.width = '0%'; return; }
-        const rect = article.getBoundingClientRect();
-        const full = article.scrollHeight - window.innerHeight;
-        const scrolled = window.scrollY - article.offsetTop + 120;
-        const pct = Math.min(100, Math.max(0, (scrolled / (article.scrollHeight || 1)) * 100));
-        progressBar.style.width = pct + '%';
-        progressBar.setAttribute('aria-valuenow', String(Math.round(pct)));
-      }
+    // update progress bar for reading viewport
+    function updateProgress(){
+      const article = app.querySelector('article');
+      if (!article) { progressBar.style.width = '0%'; return;}
+      const rect = article.getBoundingClientRect();
+      const total = article.scrollHeight - window.innerHeight;
+      const scrolled = window.scrollY - article.offsetTop + 120;
+      const pct = Math.min(100, Math.max(0, (scrolled / (article.scrollHeight || 1)) * 100));
+      progressBar.style.width = pct + '%';
+    }
 
-      /* wire controls */
-      function toggleMenu(open){
-        const already = menu.classList.contains('hidden') === false;
-        const shouldOpen = (typeof open === 'boolean') ? open : !already;
-        if (shouldOpen){
-          menu.classList.remove('hidden'); menu.setAttribute('aria-hidden','false'); hamburger.setAttribute('aria-expanded','true');
+    // Menu toggle and keyboard
+    function toggleMenu(open){
+      const visible = !menu.classList.contains('hidden');
+      const shouldOpen = typeof open === 'boolean' ? open : !visible;
+      if (shouldOpen){ menu.classList.remove('hidden'); menu.setAttribute('aria-hidden','false'); hamburger.setAttribute('aria-expanded','true'); }
+      else { menu.classList.add('hidden'); menu.setAttribute('aria-hidden','true'); hamburger.setAttribute('aria-expanded','false'); }
+    }
+    hamburger.addEventListener('click', ()=> toggleMenu());
+    closeMenu.addEventListener('click', ()=> toggleMenu(false));
+    document.addEventListener('click', (e)=> { if (!menu.contains(e.target) && !hamburger.contains(e.target)) toggleMenu(false); });
+
+    // keyboard shortcuts
+    document.addEventListener('keydown', (e)=>{
+      if (e.key === 'm' || e.key === 'M'){ e.preventDefault(); toggleMenu(); }
+      if (e.key === 'r' || e.key === 'R'){ e.preventDefault(); document.documentElement.classList.toggle('reading-mode'); }
+      if (e.key === 't' || e.key === 'T'){ e.preventDefault(); if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); }
+      if (e.key === '+' || e.key === '='){ e.preventDefault(); adjustText(0.1); }
+      if (e.key === '-') { e.preventDefault(); adjustText(-0.1); }
+      if (e.key === '[') navigatePost(-1);
+      if (e.key === ']') navigatePost(1);
+    });
+
+    // wire top UI
+    playTTS.addEventListener('click', ()=> { if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); });
+    readingModeBtn.addEventListener('click', ()=> { document.documentElement.classList.toggle('reading-mode'); });
+    printBtn.addEventListener('click', ()=> window.print());
+
+    increaseText.addEventListener('click', ()=> adjustText(0.1));
+    decreaseText.addEventListener('click', ()=> adjustText(-0.1));
+    lineSpacing.addEventListener('change', (e)=> { settings.lineSpacing = parseFloat(e.target.value); applySettings(); });
+    fontSelect.addEventListener('change', (e)=> { settings.font = e.target.value; applySettings(); });
+    highContrast.addEventListener('change', (e)=> { settings.highContrast = e.target.checked; applySettings(); });
+    rulerToggle.addEventListener('change', (e)=> { settings.ruler = e.target.checked; applySettings(); });
+    reducedMotionChk.addEventListener('change', (e)=> { settings.reducedMotion = e.target.checked; applySettings(); });
+    resetPrefs.addEventListener('click', ()=> { Object.assign(settings, { textScale:1, lineSpacing:1.6, font:'system', highContrast:false, ruler:false, reducedMotion:false }); applySettings(); });
+
+    function adjustText(delta){
+      settings.textScale = Math.max(0.7, Math.min(1.6, Number((settings.textScale + delta).toFixed(2))));
+      applySettings();
+    }
+
+    function navigatePost(delta){
+      if (currentPostIndex < 0) return;
+      let next = currentPostIndex + delta;
+      if (next < 0) next = blogs.length - 1;
+      if (next >= blogs.length) next = 0;
+      renderPostByIndex(next);
+    }
+
+    // init
+    async function init(){
+      await loadBlogs();
+      // only query param routing
+      const id = getRequestedId();
+      if (!id) { renderIndex(); return; }
+      const idx = blogs.findIndex(b => (b.id || '').toLowerCase() === id.toLowerCase());
+      if (idx === -1) { renderNotFound(id); return; }
+      renderPostByIndex(idx);
+      // load voices for selects globally
+      if ('speechSynthesis' in window) {
+        if (speechSynthesis.getVoices().length) {
+          // populate voiceMap for potential uses
+          speechSynthesis.getVoices().forEach(v => { voiceMap[v.voiceURI || v.name] = v; });
         } else {
-          menu.classList.add('hidden'); menu.setAttribute('aria-hidden','true'); hamburger.setAttribute('aria-expanded','false');
+          speechSynthesis.onvoiceschanged = function(){ speechSynthesis.getVoices().forEach(v => { voiceMap[v.voiceURI || v.name] = v; }); };
         }
       }
+      // apply saved TTS state (some applied in TTS UI when rendered)
+    }
 
-      hamburger.addEventListener('click', ()=> toggleMenu());
-      closeMenu.addEventListener('click', ()=> toggleMenu(false));
-      document.addEventListener('keydown', (e)=>{
-        if (e.key === 'm' || e.key === 'M') { e.preventDefault(); toggleMenu(); }
-        if (e.key === 'r' || e.key === 'R') { e.preventDefault(); toggleReadingMode(); }
-        if (e.key === 't' || e.key === 'T') { e.preventDefault(); triggerTTS(); }
-        if (e.key === ']') navigatePost(1);
-        if (e.key === '[') navigatePost(-1);
-        if (e.key === '+') { e.preventDefault(); adjustText(0.1); }
-        if (e.key === '-') { e.preventDefault(); adjustText(-0.1); }
-      });
+    // small utilities
+    function escapeHtml(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
-      ttsBtn.addEventListener('click', triggerTTS);
-      readingModeBtn.addEventListener('click', toggleReadingMode);
-      printBtn.addEventListener('click', ()=> window.print());
+    // start
+    init();
 
-      increaseText.addEventListener('click', ()=> adjustText(0.1));
-      decreaseText.addEventListener('click', ()=> adjustText(-0.1));
-      lineSpacing.addEventListener('change', (e)=> { settings.lineSpacing = parseFloat(e.target.value); applySettings(); });
-      fontSelect.addEventListener('change', (e)=> { settings.font = e.target.value; applySettings(); });
-      highContrast.addEventListener('change', (e)=> { settings.highContrast = e.target.checked; applySettings(); });
-      rulerToggle.addEventListener('change', (e)=> { settings.ruler = e.target.checked; applySettings(); });
-      reducedMotionChk.addEventListener('change', (e)=> { settings.reducedMotion = e.target.checked; applySettings(); });
+    // expose for debugging
+    window.blanklabs = { reload: init, settings, ttsState, segments };
 
-      resetPrefs.addEventListener('click', ()=> {
-        settings = { textScale: 1, lineSpacing: 1.6, font: 'system', highContrast: false, ruler: false, reducedMotion: false };
-        applySettings();
-      });
-
-      function adjustText(delta){
-        settings.textScale = Math.max(0.7, Math.min(1.6, Number((settings.textScale + delta).toFixed(2))));
-        applySettings();
-      }
-
-      function toggleReadingMode(){
-        const reading = document.documentElement.classList.toggle('reading-mode');
-        readingModeBtn.textContent = reading ? '📰 Reading' : '📰 Reading';
-        // reading mode: increase measure and reduce chrome
-        if (reading){
-          document.documentElement.style.setProperty('--measure', '68ch');
-        } else {
-          document.documentElement.style.setProperty('--measure', '72ch');
-        }
-      }
-
-      function triggerTTS(){
-        const article = app.querySelector('article');
-        if (!article) return;
-        const text = article.innerText;
-        speak(text);
-      }
-
-      function navigatePost(delta){
-        if (currentPostIndex < 0) return;
-        let next = currentPostIndex + delta;
-        if (next < 0) next = blogs.length - 1;
-        if (next >= blogs.length) next = 0;
-        location.href = ensureLinkFor(blogs[next].id);
-      }
-
-      /* click outside menu closes it */
-      document.addEventListener('click', (e)=>{
-        if (!menu.contains(e.target) && !hamburger.contains(e.target)) toggleMenu(false);
-      });
-
-      /* scroll progress */
-      window.addEventListener('scroll', ()=> {
-        updateProgress();
-        // ruler follow: move ruler to center of viewport
-        if (settings.ruler){
-          const top = window.scrollY + (window.innerHeight / 2) - 120;
-          ruler.style.top = (top) + 'px';
-          ruler.style.height = (240) + 'px';
-        }
-      });
-
-      /* initialize */
-      async function init(){
-        await loadBlogs();
-        const id = getRequestedId();
-        if (!id){
-          renderIndex(); setDocTitle('All posts');
-        } else {
-          const idx = findIndexById(id);
-          if (idx === -1) renderNotFound(id);
-          else renderPostByIndex(idx);
-        }
-        applySettings();
-      }
-
-      init();
-
-      // expose some helpers for dev console
-      window.blanklabs = {
-        reload: init,
-        settings
-      };
-    })();
+  })();
   </script>
 </body>
 </html>
