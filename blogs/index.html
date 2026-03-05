@@ -1,120 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hidden Reader</title>
+<title>Blogs</title>
 
 <style>
 
 body{
-background:#050505;
-color:#f2f2f2;
 font-family:system-ui;
-line-height:1.7;
+background:#0e0e0e;
+color:white;
 margin:0;
-padding:40px;
 }
 
-main{
-max-width:800px;
+#container{
+max-width:900px;
 margin:auto;
-}
-
-h1{
-font-size:32px;
-margin-bottom:5px;
-}
-
-.meta{
-opacity:.6;
-margin-bottom:30px;
+padding:40px;
 }
 
 img{
 max-width:100%;
-border-radius:8px;
+height:auto;
+display:block;
 margin:20px 0;
 }
 
-p{
-margin:16px 0;
-}
-
-.segment.highlight{
-background:#ffffff22;
-border-radius:4px;
-padding:2px 4px;
-}
-
-#menuButton{
+#dock{
 position:fixed;
 bottom:20px;
 right:20px;
-background:#111;
-border:1px solid #333;
-padding:12px 16px;
-border-radius:10px;
-cursor:pointer;
-}
-
-#menu{
-position:fixed;
-bottom:70px;
-right:20px;
-width:280px;
-background:#0e0e0e;
-border:1px solid #333;
+background:#1a1a1a;
 border-radius:12px;
-padding:15px;
-display:none;
-}
-
-#ttsBar{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-background:#0a0a0a;
-border-top:1px solid #333;
 padding:10px;
-display:none;
+display:flex;
+flex-direction:column;
+gap:6px;
+box-shadow:0 0 15px rgba(0,0,0,.6);
+z-index:999;
 }
 
-#ruler{
-position:fixed;
-left:0;
-right:0;
-height:40px;
-background:rgba(255,255,255,.08);
-pointer-events:none;
-display:none;
-}
-
-button{
-background:#111;
+#dock button{
+background:#2a2a2a;
+border:none;
 color:white;
-border:1px solid #333;
-padding:6px 10px;
+padding:8px;
 border-radius:6px;
 cursor:pointer;
 }
 
-input[type=range]{
-width:200px;
+#dock button:hover{
+background:#3a3a3a;
+}
+
+#menu{
+position:fixed;
+top:0;
+left:-260px;
+width:260px;
+height:100%;
+background:#111;
+transition:0.3s;
+padding:20px;
+overflow:auto;
+z-index:1000;
+}
+
+#menu.open{
+left:0;
 }
 
 #help{
 position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:#0f0f0f;
-border:1px solid #333;
-padding:25px;
-max-width:600px;
+top:0;
+right:-400px;
+width:400px;
+height:100%;
+background:#111;
+padding:20px;
+transition:0.3s;
+overflow:auto;
+}
+
+#help.open{
+right:0;
+}
+
+#progress{
+position:fixed;
+bottom:0;
+left:0;
+height:6px;
+background:#ff7b00;
+width:0%;
+z-index:9999;
+}
+
+#ttsbar{
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:#111;
+padding:10px;
 display:none;
-border-radius:12px;
+align-items:center;
+gap:10px;
+}
+
+#ruler{
+position:fixed;
+height:30px;
+background:rgba(255,255,255,0.05);
+pointer-events:none;
+width:100%;
+display:none;
 }
 
 </style>
@@ -122,231 +122,195 @@ border-radius:12px;
 
 <body>
 
-<main id="app">
-Loading blog...
-</main>
-
-<div id="ruler"></div>
-
-<div id="menuButton">☰</div>
-
 <div id="menu">
-
-<b>Reader Tools</b>
-<br><br>
-
-<button id="playTTS">Read</button>
-<button id="stopTTS">Stop</button>
-
-<br><br>
-
-<label>Speed</label>
-<br>
-<input type="range" id="speed" min="0.6" max="1.8" step="0.1" value="1">
-
-<br><br>
-
-<button id="toggleRuler">Reading Ruler</button>
-
-<br><br>
-
-<button id="helpBtn">Help</button>
-
-</div>
-
-<div id="ttsBar">
-
-<button id="pauseTTS">Pause</button>
-
-<input id="progress" type="range" min="0" max="0" value="0">
-
-<span id="progressText"></span>
-
+<h3>Menu</h3>
+<button onclick="toggleFocus()">Focus Mode</button>
+<button onclick="increaseFont()">Font +</button>
+<button onclick="decreaseFont()">Font -</button>
+<button onclick="startAutoScroll()">Auto Scroll</button>
+<button onclick="bookmarkArticle()">Bookmark</button>
 </div>
 
 <div id="help">
+<h2>Help</h2>
 
-<h2>Reader Help</h2>
+<h3>Reading Ruler</h3>
+<p>Click the ruler button, then move your mouse. A guide line will follow your reading position.</p>
 
+<h3>TTS</h3>
+<p>Press the speaker button to start text to speech. Controls appear at the bottom.</p>
+
+<h3>Focus Mode</h3>
+<p>Removes distractions.</p>
+
+<h3>Keyboard</h3>
 <p>
-This page is a hidden reader mode.
-If you found it on your own, nice.
+R = reading ruler<br>
+T = text to speech<br>
+F = focus mode<br>
 </p>
+</div>
 
-<p>
-Use ?id=blog003 in the URL to load a blog.
-</p>
+<div id="container">
+<h1>Example Blog</h1>
 
-<p>
-Press Read to activate text to speech.
-The progress bar lets you jump through the article.
-</p>
+<p>This is a demo article so you can test the reader features.</p>
 
-<p>
-Reading ruler highlights one line to make reading easier.
-</p>
+<img src="example.jpg">
 
-<button onclick="document.getElementById('help').style.display='none'">Close</button>
+<p>Lorem ipsum dolor sit amet consectetur adipiscing elit.</p>
+
+<p>More paragraphs so the progress bar works while scrolling.</p>
+
+<p>Keep scrolling to test the progress tracker.</p>
+
+<p>More filler text.</p>
+
+<p>Even more filler text.</p>
+
+<p>Scrolling should move the orange bar.</p>
 
 </div>
 
+<div id="dock">
+
+<button onclick="toggleMenu()">☰</button>
+<button onclick="toggleHelp()">?</button>
+<button onclick="toggleRuler()">📏</button>
+<button onclick="startTTS()">🔊</button>
+
+</div>
+
+<div id="progress"></div>
+
+<div id="ttsbar">
+<button onclick="pauseTTS()">Pause</button>
+<button onclick="resumeTTS()">Resume</button>
+<button onclick="stopTTS()">Stop</button>
+</div>
+
+<div id="ruler"></div>
+
 <script>
 
-const app = document.getElementById("app")
+let speech
+let rulerEnabled=false
+let autoScrollInterval
 
-let segments=[]
-let currentIndex=0
-let speaking=false
-let utterance
-
-const progress=document.getElementById("progress")
-const progressText=document.getElementById("progressText")
-const ttsBar=document.getElementById("ttsBar")
-
-async function loadBlogs(){
-
-const res=await fetch("/blogs.json")
-const data=await res.json()
-
-const params=new URLSearchParams(location.search)
-const id=params.get("id")
-
-let blog=data.find(b=>b.id===id)
-
-if(!blog){
-app.innerHTML="Blog not found"
-return
+function toggleMenu(){
+document.getElementById("menu").classList.toggle("open")
 }
 
-renderBlog(blog)
-
+function toggleHelp(){
+document.getElementById("help").classList.toggle("open")
 }
 
-function renderBlog(blog){
-
-let html=`<h1>${blog.title||""}</h1>`
-
-if(blog.date){
-html+=`<div class="meta">${blog.date}</div>`
+function increaseFont(){
+document.body.style.fontSize =
+(parseFloat(getComputedStyle(document.body).fontSize)+2)+"px"
 }
 
-if(blog.content){
-
-blog.content.forEach(block=>{
-
-if(block.type==="text"){
-
-html+=`<p class="segment">${block.text}</p>`
-
+function decreaseFont(){
+document.body.style.fontSize =
+(parseFloat(getComputedStyle(document.body).fontSize)-2)+"px"
 }
 
-if(block.type==="image"){
-
-html+=`<img src="${block.src}" onerror="this.style.display='none'">`
-
+function toggleFocus(){
+document.body.classList.toggle("focus")
 }
 
-})
+function toggleRuler(){
 
+rulerEnabled=!rulerEnabled
+const r=document.getElementById("ruler")
+
+if(rulerEnabled){
+r.style.display="block"
+}else{
+r.style.display="none"
 }
-
-app.innerHTML=html
-
-segments=[...document.querySelectorAll(".segment")]
-
-progress.max=segments.length-1
-
-}
-
-function speak(){
-
-if(!segments.length)return
-
-ttsBar.style.display="block"
-
-speaking=true
-
-playSegment(currentIndex)
-
-}
-
-function playSegment(i){
-
-if(!speaking)return
-
-currentIndex=i
-
-progress.value=i
-
-progressText.textContent=(i+1)+" / "+segments.length
-
-segments.forEach(s=>s.classList.remove("highlight"))
-segments[i].classList.add("highlight")
-
-utterance=new SpeechSynthesisUtterance(segments[i].innerText)
-
-utterance.rate=document.getElementById("speed").value
-
-utterance.onend=()=>{
-
-if(i+1<segments.length){
-playSegment(i+1)
-}
-
-}
-
-speechSynthesis.speak(utterance)
-
-}
-
-function stop(){
-
-speechSynthesis.cancel()
-
-speaking=false
-
-segments.forEach(s=>s.classList.remove("highlight"))
-
-}
-
-document.getElementById("playTTS").onclick=speak
-document.getElementById("stopTTS").onclick=stop
-
-document.getElementById("pauseTTS").onclick=()=>{
-speechSynthesis.pause()
-}
-
-progress.oninput=()=>{
-speechSynthesis.cancel()
-playSegment(progress.value)
-}
-
-document.getElementById("menuButton").onclick=()=>{
-const m=document.getElementById("menu")
-m.style.display=m.style.display==="block"?"none":"block"
-}
-
-document.getElementById("helpBtn").onclick=()=>{
-document.getElementById("help").style.display="block"
-}
-
-const ruler=document.getElementById("ruler")
-
-document.getElementById("toggleRuler").onclick=()=>{
-
-ruler.style.display=ruler.style.display==="block"?"none":"block"
 
 }
 
 document.addEventListener("mousemove",e=>{
+if(!rulerEnabled)return
+const r=document.getElementById("ruler")
+r.style.top=(e.clientY-15)+"px"
+})
 
-if(ruler.style.display==="block"){
-ruler.style.top=(e.clientY-20)+"px"
+function startTTS(){
+
+const text=document.getElementById("container").innerText
+
+speech=new SpeechSynthesisUtterance(text)
+
+speech.onstart=()=>{
+document.getElementById("ttsbar").style.display="flex"
+}
+
+speech.onend=()=>{
+document.getElementById("ttsbar").style.display="none"
+}
+
+speechSynthesis.speak(speech)
+
+}
+
+function pauseTTS(){
+speechSynthesis.pause()
+}
+
+function resumeTTS(){
+speechSynthesis.resume()
+}
+
+function stopTTS(){
+speechSynthesis.cancel()
+}
+
+function startAutoScroll(){
+
+clearInterval(autoScrollInterval)
+
+autoScrollInterval=setInterval(()=>{
+window.scrollBy(0,1)
+},20)
+
+}
+
+function bookmarkArticle(){
+
+localStorage.setItem("bookmark",window.scrollY)
+
+alert("Bookmark saved")
+
+}
+
+window.addEventListener("load",()=>{
+
+const saved=localStorage.getItem("bookmark")
+
+if(saved){
+window.scrollTo(0,saved)
 }
 
 })
 
-loadBlogs()
+window.addEventListener("scroll",()=>{
+
+const h=document.documentElement
+const scrolled=(h.scrollTop)/(h.scrollHeight-h.clientHeight)*100
+document.getElementById("progress").style.width=scrolled+"%"
+
+})
+
+document.addEventListener("keydown",e=>{
+
+if(e.key==="r")toggleRuler()
+if(e.key==="t")startTTS()
+if(e.key==="f")toggleFocus()
+
+})
 
 </script>
 
