@@ -1,873 +1,766 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>BlankLabs — monochrome reader</title>
-  <meta name="description" content="Monochrome accessible blog reader — open posts with ?id=blog003" />
-  <style>
-    /* condensed but readable monochrome style */
-    :root{
-      --bg:#050506; --panel:#0f0f10; --muted:#9aa0a6; --text:#e9ecef;
-      --accent:#ffffff; --glass:rgba(255,255,255,0.02);
-      --max-width:1000px; --radius:14px; --base-font:17px; --line:1.6;
-      --measure:72ch; --ui-font:system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-      --mono-font: ui-monospace, Menlo, Monaco, "Roboto Mono", monospace;
-      --ruler-opacity:0; --highlight: rgba(255,255,255,0.07);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:var(--ui-font); background:
-      radial-gradient(900px 240px at 10% 8%, rgba(255,255,255,0.02), transparent 6%),
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BlankLabs — monochrome reader (enhanced)</title>
+<meta name="description" content="Monochrome reader — open posts with ?id=blog003" />
+<style>
+  :root{
+    --bg:#050506; --panel:#0f0f10; --muted:#9aa0a6; --text:#e9ecef;
+    --accent:#fff; --glass:rgba(255,255,255,0.02);
+    --max-width:1000px; --radius:12px; --base-font:17px; --line:1.6; --measure:72ch;
+    --ui-font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    --mono-font: ui-monospace, Menlo, Monaco, "Roboto Mono", monospace;
+    --ruler-opacity:0; --highlight: rgba(255,255,255,0.065);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family:var(--ui-font); font-size:var(--base-font); line-height:var(--line);
+    color:var(--text);
+    background:
+      radial-gradient(1100px 260px at 8% 8%, rgba(255,255,255,0.02), transparent 6%),
       linear-gradient(180deg,#040405 0%,var(--bg) 100%);
-      color:var(--text); -webkit-font-smoothing:antialiased;
-      line-height:var(--line); padding:36px 20px; font-size:var(--base-font);
-    }
-    a{color:var(--text); text-decoration:underline dotted}
-    a:focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
-    main{max-width:var(--max-width);margin:0 auto}
-    .skip{position:absolute;left:12px;top:12px;background:#fff;color:#000;padding:6px 10px;border-radius:8px; transform:translateY(-200%);transition:transform 160ms}
-    .skip:focus{transform:translateY(0)}
-    .site-head{display:flex;gap:16px;align-items:center;margin-bottom:22px}
-    .logo{width:60px;height:60px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03)}
-    .logo img{max-width:86%;max-height:86%;filter:grayscale(1) contrast(1.05)}
-    .viewer{background:linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01));border-radius:var(--radius);padding:18px;box-shadow:0 18px 60px rgba(0,0,0,0.6);border:1px solid rgba(255,255,255,0.03);position:relative;overflow:hidden}
-    .controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
-    .left-controls{display:flex;align-items:center;gap:10px}
-    .btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:10px;color:var(--text);cursor:pointer}
-    .btn:focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
-    .badge{color:var(--muted);font-size:13px}
-    .hamburger{width:46px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
-    .hamburger .lines{width:20px;height:2px;background:var(--text);box-shadow:0 6px 0 0 var(--text),0 -6px 0 0 var(--text)}
-    article header{margin-bottom:18px}
-    article h2{margin:0 0 6px 0;font-size:26px;line-height:1.05}
-    article .meta{color:var(--muted);font-size:13px;display:flex;gap:12px;align-items:center}
-    .content{margin-top:10px;font-size:var(--base-font);color:var(--text);max-width:var(--measure)}
-    .content p{margin:0 0 16px}
-    .figure{margin:18px 0;border-radius:10px;overflow:hidden;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
-    .figure img{display:block;width:100%;height:auto;filter:grayscale(1) contrast(1.05);transition:transform 200ms}
-    .figure img:hover{transform:scale(1.02)}
-    .caption{padding:10px;color:var(--muted);font-size:13px}
-    pre{background:rgba(0,0,0,0.35);padding:14px;border-radius:10px;overflow:auto;font-family:var(--mono-font);font-size:13px}
-    .columns{display:grid;gap:12px;grid-template-columns:1fr 1fr;margin:18px 0}
-    @media (max-width:780px){.columns{grid-template-columns:1fr}}
-    .accordion-item{margin:10px 0;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);background:rgba(255,255,255,0.01)}
-    .accordion-btn{width:100%;text-align:left;background:transparent;border:0;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;color:var(--text)}
-    .accordion-panel{padding:12px 16px 18px 16px;display:none}
-    .accordion-btn[aria-expanded="true"] + .accordion-panel{display:block}
-    .post-list{display:flex;flex-direction:column;gap:10px}
-    .post-link{padding:12px 14px;border-radius:10px;background:transparent;color:var(--text);text-decoration:none;border:1px solid rgba(255,255,255,0.03)}
-    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
-    .ruler{position:fixed;left:50%;transform:translateX(-50%);top:0;width:calc(100% - 160px);pointer-events:none;mix-blend-mode:overlay;background:linear-gradient(transparent, rgba(255,255,255,var(--ruler-opacity)), transparent);opacity:var(--ruler-opacity);border-radius:var(--radius);z-index:10}
-    .progress-wrap{height:6px;background:transparent;border-radius:6px;overflow:hidden;border:1px solid rgba(255,255,255,0.02);margin-bottom:10px}
-    .progress{height:6px;background:linear-gradient(90deg,#fff,#cfcfcf);width:0%}
-    .segment{display:inline}
-    .segment.highlight{background:var(--highlight);border-radius:6px;padding:2px 6px}
-    .tts-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
-    .muted{color:var(--muted)}
-    .hidden{display:none}
-    .slider{appearance:none;height:8px;border-radius:6px;background:rgba(255,255,255,0.06);outline:none}
-    .slider::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 4px 8px rgba(0,0,0,0.5)}
-    :focus{outline:3px solid rgba(255,255,255,0.06);outline-offset:3px}
-    @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-  </style>
+    padding:36px 20px;
+  }
+  main{max-width:var(--max-width); margin:0 auto}
+  .site-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .logo{width:56px;height:56px;border-radius:10px;background:var(--glass);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.03)}
+  .logo img{max-width:90%;height:auto;display:block} /* no forced monochrome on images */
+  h1{margin:0;font-size:20px}
+  p.lead{margin:0;color:var(--muted);font-size:13px}
+
+  .viewer{
+    background: linear-gradient(180deg, rgba(255,255,255,0.012), rgba(255,255,255,0.01));
+    border-radius:var(--radius); padding:18px; border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 18px 60px rgba(0,0,0,0.6);
+    position:relative; overflow:hidden;
+  }
+
+  /* always-visible control hub bottom-right */
+  .control-hub {
+    position:fixed; right:18px; bottom:18px; z-index:9999;
+    display:flex; flex-direction:column; gap:10px; align-items:flex-end;
+  }
+  .hub-button {
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.04);
+    color:var(--text); padding:10px 12px; border-radius:12px; cursor:pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    font-size:14px;
+  }
+  .hub-panel{
+    width:380px; max-width:calc(100vw - 48px);
+    background:var(--panel); border-radius:12px; padding:12px; color:var(--text);
+    border:1px solid rgba(255,255,255,0.03);
+    box-shadow: 0 20px 80px rgba(0,0,0,0.7);
+  }
+  .hub-panel .row{display:flex;gap:8px;align-items:center;margin:8px 0}
+  .hub-panel label{min-width:110px;color:var(--muted);font-size:13px}
+
+  .post-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .post-link{display:block;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.03);text-decoration:none;color:var(--text);background:transparent}
+
+  /* article */
+  article header{margin-bottom:16px}
+  article h2{margin:0 0 6px 0;font-size:24px}
+  .meta{color:var(--muted);font-size:13px;display:flex;gap:12px}
+  .content{margin-top:12px;font-size:17px; color:var(--text); max-width:var(--measure)}
+  .content p{margin:0 0 14px}
+  .content h3{margin:18px 0 10px}
+  .content ul{padding-left:20px;margin:0 0 14px}
+  .figure{margin:14px 0;border-radius:10px;overflow:hidden;background:var(--glass);border:1px solid rgba(255,255,255,0.02)}
+  .figure img{display:block;width:100%;height:auto}
+  .caption{padding:10px;color:var(--muted);font-size:13px}
+
+  pre{background:rgba(0,0,0,0.34);padding:12px;border-radius:10px;overflow:auto;font-family:var(--mono-font);font-size:13px}
+  .code-row{display:flex;gap:8px;align-items:center}
+
+  /* reading ruler */
+  .ruler{
+    position:fixed; left:50%; transform:translateX(-50%); width:calc(100% - 120px);
+    pointer-events:none; border-radius:10px; z-index:500; opacity:0; transition:opacity 180ms;
+    background: linear-gradient(transparent, rgba(255,255,255,0.06), transparent);
+  }
+  .ruler.visible{opacity:1}
+
+  /* segment highlight for TTS */
+  .segment{display:inline}
+  .segment.highlight{background:var(--highlight);border-radius:6px;padding:2px 6px}
+
+  /* bottom TTS bar (single source of truth) */
+  .tts-bar{
+    position:fixed; left:0; right:0; bottom:0; z-index:9998; display:flex; justify-content:center; padding:10px;
+    background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6)); backdrop-filter: blur(6px);
+  }
+  .tts-inner{
+    width:100%; max-width:1100px; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:10px; padding:10px; display:flex; gap:10px; align-items:center; border:1px solid rgba(255,255,255,0.03);
+  }
+
+  .btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 10px;border-radius:10px;color:var(--text);cursor:pointer}
+  .btn.small{padding:6px 8px;font-size:13px}
+  .slider{appearance:none;height:8px;border-radius:6px;background:rgba(255,255,255,0.06);outline:none}
+  .muted{color:var(--muted);font-size:13px}
+
+  .hidden{display:none}
+  .help-modal{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:10000;background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);width:92%;max-width:820px;box-shadow:0 20px 80px rgba(0,0,0,0.7)}
+</style>
 </head>
 <body>
-  <a href="#maincontent" class="skip">Skip to content</a>
-  <main id="main" style="max-width:1100px;margin:0 auto">
-    <header class="site-head"><div class="logo"><img src="logo.png" alt="BlankLabs logo"></div><div class="site-title"><h1>BlankLabs</h1><p class="muted">monochrome reader — open posts with ?id=blog003</p></div></header>
-
-    <div class="viewer" role="region" aria-labelledby="viewer-title">
-      <div class="controls">
-        <div class="left-controls">
-          <button id="hamburger" class="hamburger" aria-expanded="false" aria-controls="menu" title="Open menu (m)"><span class="lines" aria-hidden="true"></span></button>
-          <div style="display:flex;flex-direction:column">
-            <div class="badge" id="viewer-title">Monochrome reading room</div>
-            <div class="muted" style="font-size:12px">this part of the site is ment to found by yourself and if your seeing it cool!</div>
-          </div>
-        </div>
-
-        <div class="right-controls">
-          <button id="playTTS" class="btn" title="Play/pause TTS (t)">🔊 Play</button>
-          <button id="readingModeBtn" class="btn" title="Reading mode (r)">📰 Reading</button>
-          <button id="printBtn" class="btn" title="Printable view">🖨 Print</button>
-        </div>
+  <main>
+    <header class="site-head">
+      <div class="logo"><img src="logo.png" alt="BlankLabs logo"></div>
+      <div>
+        <h1>BlankLabs</h1>
+        <p class="lead">this part of the site is ment to found by yourself and if your seeing it cool!</p>
       </div>
+    </header>
 
-      <!-- big menu with extra items and help -->
-      <div id="menu" role="dialog" aria-modal="false" aria-hidden="true" class="hidden" style="position:absolute;left:18px;top:86px;z-index:60;width:420px">
-        <div style="background:var(--panel);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)">
-          <h3 style="margin:0 0 8px 0">Accessibility & Settings</h3>
-
-          <label style="display:flex;gap:8px;align-items:center;margin:8px 0">
-            <span style="min-width:120px;color:var(--muted)">Text size</span>
-            <div style="display:flex;gap:6px">
-              <button id="decreaseText" class="btn" aria-label="Decrease text">-</button>
-              <span id="textSizeLabel" class="muted">Default</span>
-              <button id="increaseText" class="btn" aria-label="Increase text">+</button>
-            </div>
-          </label>
-
-          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
-            <span style="min-width:120px;color:var(--muted)">Line spacing</span>
-            <select id="lineSpacing" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
-              <option value="1.4">Comfort</option>
-              <option value="1.6" selected>Default</option>
-              <option value="1.9">Loose</option>
-            </select>
-          </label>
-
-          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
-            <span style="min-width:120px;color:var(--muted)">Font</span>
-            <select id="fontSelect" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
-              <option value="system">System Sans</option>
-              <option value="serif">Serif (book)</option>
-              <option value="mono">Monospace</option>
-              <option value="dyslexic">Dyslexic-friendly</option>
-            </select>
-          </label>
-
-          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
-            <input id="highContrast" type="checkbox" />
-            <span style="color:var(--muted)">High contrast</span>
-          </label>
-
-          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
-            <input id="rulerToggle" type="checkbox" />
-            <span style="color:var(--muted)">Reading ruler</span>
-          </label>
-
-          <label style="display:flex;gap:8px;align-items:center;margin:6px 0">
-            <input id="reducedMotion" type="checkbox" />
-            <span style="color:var(--muted)">Reduced motion</span>
-          </label>
-
-          <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-            <button id="helpBtn" class="btn">Help</button>
-            <button id="exportMarkdown" class="btn">Export MD</button>
-            <button id="copyPermalink" class="btn">Copy permalink</button>
-            <button id="resetPrefs" class="btn">Reset</button>
-            <button id="closeMenu" class="btn">Close</button>
-          </div>
-
-          <hr style="border:none;border-top:1px solid rgba(255,255,255,0.03);margin:12px 0" />
-          <div style="color:var(--muted);font-size:13px">
-            <strong>Keyboard</strong>
-            <ul style="padding-left:18px;margin:8px 0">
-              <li><code>m</code> toggle menu</li>
-              <li><code>r</code> reading mode</li>
-              <li><code>t</code> text-to-speech play/pause</li>
-              <li><code>[</code> previous, <code>]</code> next post</li>
-              <li><code>+</code> increase text, <code>-</code> decrease</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="progress-wrap" aria-hidden="true" style="margin-bottom:10px">
-        <div class="progress" id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
-      </div>
-
+    <div class="viewer" id="viewer">
       <div id="app" role="main" aria-live="polite" tabindex="-1">
-        <p class="muted">Loading posts (use ?id=blog003)...</p>
+        <p class="muted">Loading posts... (use ?id=blog003)</p>
       </div>
-
-      <div class="ruler" id="ruler" aria-hidden="true"></div>
     </div>
-
-    <footer><div class="muted">Built with care. Accessible reading, reduced-motion friendly.</div></footer>
+    <footer style="margin-top:18px;color:var(--muted);font-size:13px;text-align:center">Built with care. Accessible reading, reduced-motion friendly.</footer>
   </main>
 
-  <!-- Help modal content (hidden) -->
-  <div id="helpModal" class="hidden" role="dialog" aria-modal="true" style="position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:200;background:var(--panel);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);width:90%;max-width:820px;box-shadow:0 20px 80px rgba(0,0,0,0.7)">
-    <h2 style="margin-top:0">How to use this reader</h2>
-    <div style="max-height:60vh;overflow:auto">
-      <h3>Open a post</h3>
-      <p>Use a URL with the query param <code>?id=blog003</code> (replace with the id you want). Example: <code>https://yoursite.example/?id=blog003</code>. This file only uses query routing so links generated by the reader always use <code>?id=</code>.</p>
+  <!-- bottom-right always-visible control hub -->
+  <div class="control-hub" id="controlHub" aria-hidden="false">
+    <div id="hubPanel" class="hub-panel" hidden>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>Reader</strong>
+        <div style="font-size:13px;color:var(--muted)">Controls</div>
+      </div>
 
-      <h3>Images and paths</h3>
-      <p>The reader will try to load images referenced in your JSON in this order:</p>
-      <ol>
-        <li>If the JSON path starts with <code>http</code> or <code>//</code> or a starting slash <code>/</code>, it uses it directly.</li>
-        <li>If the path is relative (like <code>pictures/image.png</code>), it will try resolving relative to the current page's directory (where <code>index.html</code> is located).</li>
-        <li>Then it tries resolving relative to the <code>blogs.json</code> file location (in case your JSON lives beside the blogs).</li>
-        <li>If all of the above fail, it falls back to <code>logo.png</code>.</li>
-      </ol>
+      <div class="row">
+        <label>Text size</label>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button id="decreaseText" class="btn small">-</button>
+          <div id="textSizeLabel" class="muted">Default</div>
+          <button id="increaseText" class="btn small">+</button>
+        </div>
+      </div>
 
-      <h3>Text to Speech (TTS)</h3>
-      <p>Press the top right Play button or use <code>t</code> to toggle play/pause. The reader splits the article into short segments and highlights the sentence currently being read. You can change voice, speed, and volume in the TTS controls that appear above the article. Progress, rate, voice, and last-read segment are saved so you can resume later.</p>
+      <div class="row">
+        <label>Line spacing</label>
+        <select id="lineSpacing" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
+          <option value="1.4">Comfort</option>
+          <option value="1.6" selected>Default</option>
+          <option value="1.9">Loose</option>
+        </select>
+      </div>
 
-      <h3>Reading ruler</h3>
-      <p>Enable the Reading ruler in the menu to get a soft band across the page that helps focus. It tracks your viewport and follows as you scroll.</p>
+      <div class="row">
+        <label>Font</label>
+        <select id="fontSelect" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)">
+          <option value="system">System</option>
+          <option value="serif">Serif</option>
+          <option value="mono">Monospace</option>
+          <option value="dyslexic">Dyslexic-friendly</option>
+        </select>
+      </div>
 
-      <h3>Accessibility & Preferences</h3>
-      <p>Open the menu (hamburger or <code>m</code>) to change text size, spacing, font, contrast, and reduced motion. These preferences persist in localStorage.</p>
+      <div class="row">
+        <label>High contrast</label>
+        <input id="highContrast" type="checkbox" />
+      </div>
 
-      <h3>Other features</h3>
-      <ul>
-        <li>Copy permalink to currently open post (menu).</li>
-        <li>Export the post to Markdown (menu) for quick notes.</li>
-        <li>Printable view with the Print button.</li>
-        <li>Keyboard shortcuts listed in the menu.</li>
-      </ul>
+      <div class="row">
+        <label>Reading ruler</label>
+        <input id="rulerToggle" type="checkbox" />
+      </div>
 
-      <h3>Troubleshooting</h3>
-      <ul>
-        <li>If an image 404s, check filename case sensitivity and whether the path is relative to the blog file or the site root.</li>
-        <li>If TTS fails in some browsers, try selecting a different voice in the TTS controls (some voice engines reject certain characters).</li>
-      </ul>
+      <div class="row">
+        <label>Reduced motion</label>
+        <input id="reducedMotion" type="checkbox" />
+      </div>
+
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+        <button id="openHelp" class="btn">Help</button>
+        <button id="exportMD" class="btn">Export MD</button>
+        <button id="copyLink" class="btn">Copy link</button>
+        <button id="closeHub" class="btn">Close</button>
+      </div>
+
+      <div style="margin-top:10px;color:var(--muted);font-size:13px">
+        <strong>Keyboard</strong>
+        <div style="padding-left:8px;margin-top:6px">
+          <div><code>m</code> toggle hub</div>
+          <div><code>t</code> play/pause TTS</div>
+          <div><code>+</code>/<code>-</code> text size</div>
+          <div><code>[</code>/<code>]</code> prev/next</div>
+        </div>
+      </div>
     </div>
-    <div style="text-align:right;margin-top:10px"><button id="closeHelp" class="btn">Close</button></div>
+
+    <button id="hubToggle" class="hub-button" aria-expanded="false" aria-controls="hubPanel" title="Open reader hub (m)">☰ Reader</button>
   </div>
 
-  <script>
-  (function(){
-    // CONSTANTS
-    const BLOG_PATH = '/blogs.json'; // keep this consistent with your setup
-    const SETTINGS_KEY = 'blanklabs-reader-settings';
-    const TTS_STATE_KEY = 'blanklabs-tts-state';
+  <!-- bottom TTS bar (single) -->
+  <div id="ttsBar" class="tts-bar hidden" aria-hidden="true">
+    <div class="tts-inner" role="region" aria-label="Text to speech controls">
+      <button id="playPause" class="btn">🔊 Play</button>
+      <button id="stopTTS" class="btn small">■ Stop</button>
 
-    // UI references
-    const app = document.getElementById('app');
-    const menu = document.getElementById('menu');
-    const hamburger = document.getElementById('hamburger');
-    const playTTS = document.getElementById('playTTS');
-    const readingModeBtn = document.getElementById('readingModeBtn');
-    const printBtn = document.getElementById('printBtn');
-    const increaseText = document.getElementById('increaseText');
-    const decreaseText = document.getElementById('decreaseText');
-    const textSizeLabel = document.getElementById('textSizeLabel');
-    const lineSpacing = document.getElementById('lineSpacing');
-    const fontSelect = document.getElementById('fontSelect');
-    const highContrast = document.getElementById('highContrast');
-    const rulerToggle = document.getElementById('rulerToggle');
-    const ruler = document.getElementById('ruler');
-    const resetPrefs = document.getElementById('resetPrefs');
-    const closeMenu = document.getElementById('closeMenu');
-    const reducedMotionChk = document.getElementById('reducedMotion');
-    const progressBar = document.getElementById('progressBar');
-    const helpBtn = document.getElementById('helpBtn');
-    const helpModal = document.getElementById('helpModal');
-    const closeHelp = document.getElementById('closeHelp');
-    const exportMDBtn = document.getElementById('exportMarkdown');
-    const copyPermalinkBtn = document.getElementById('copyPermalink');
+      <div style="display:flex;align-items:center;gap:8px;margin-left:8px;">
+        <div class="muted">Progress</div>
+        <input id="segmentRange" type="range" min="0" max="0" value="0" class="slider" style="width:220px">
+        <div id="segInfo" class="muted" style="min-width:110px;text-align:right">0 / 0</div>
+      </div>
 
-    // State
-    let blogs = [];
-    let currentPostIndex = -1;
-    let segments = []; // [{el, text}]
-    let voiceMap = {};
-    let voicesLoaded = false;
+      <div style="flex:1"></div>
 
-    const settings = {
-      textScale: 1,
-      lineSpacing: 1.6,
-      font: 'system',
-      highContrast: false,
-      ruler: false,
-      reducedMotion: false
-    };
+      <div style="display:flex;gap:8px;align-items:center;">
+        <div class="muted">Voice</div>
+        <select id="voiceSelect" style="padding:6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)"></select>
 
-    let ttsState = {
-      index: 0,
-      rate: 1.0,
-      volume: 1.0,
-      voiceURI: null,
-      isPlaying: false
-    };
+        <div class="muted">Speed</div>
+        <input id="rateRange" type="range" min="0.6" max="1.8" step="0.05" value="1" class="slider" style="width:120px">
 
-    // load saved
-    function loadSaved(){
-      try{ const raw = localStorage.getItem(SETTINGS_KEY); if (raw) Object.assign(settings, JSON.parse(raw)); }catch(e){}
-      try{ const raw2 = localStorage.getItem(TTS_STATE_KEY); if (raw2) Object.assign(ttsState, JSON.parse(raw2)); }catch(e){}
-    }
-    loadSaved();
+        <div class="muted">Vol</div>
+        <input id="volRange" type="range" min="0" max="1" step="0.05" value="1" class="slider" style="width:100px">
+      </div>
+    </div>
+  </div>
 
-    function saveSettings(){ localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); }
-    function saveTTSState(){ localStorage.setItem(TTS_STATE_KEY, JSON.stringify(ttsState)); }
+  <!-- help modal (separate) -->
+  <div id="helpModal" class="help-modal hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+    <h2 id="helpTitle">Reader help</h2>
+    <div style="max-height:60vh;overflow:auto">
+      <p><strong>Open a post:</strong> add <code>?id=blog003</code> (or other id) to the URL. Examples: <code>/</code> (index), <code>/?id=blog003</code></p>
+      <p><strong>TTS / bottom bar:</strong> Press <code>t</code> or the Play button to start. The bottom bar is the only TTS control; it shows progress, voice, speed and volume. While TTS plays the currently read sentence is highlighted. Use the progress slider to jump around. The TTS state (voice, speed, last segment) is saved and resumes.</p>
+      <p><strong>Reading ruler:</strong> enable "Reading ruler" from the hub to get a soft band. The first time you enable it you'll see a short overlay showing how to use it; you can dismiss it. It follows the viewport and helps keep your eyes on the current line.</p>
+      <p><strong>Hub (bottom-right):</strong> this is always visible. Click to expand or press <code>m</code>. Hub contains text size, spacing, font, high contrast, ruler, reduced motion, export and copy link.</p>
+      <p><strong>Images:</strong> images are loaded directly as the JSON `src` provides. If an image fails to load the reader will silently fall back to your logo so layout stays intact.</p>
+      <p><strong>Keyboard shortcuts:</strong> <code>m</code> hub, <code>t</code> play/pause, <code>[</code>/<code>]</code> previous/next post, <code>+</code>/<code>-</code> text size.</p>
+    </div>
+    <div style="text-align:right;margin-top:12px"><button id="closeHelp" class="btn">Close</button></div>
+  </div>
 
-    // apply UI preferences
-    function applySettings(){
-      document.documentElement.style.setProperty('--base-font', (17 * settings.textScale) + 'px');
-      document.documentElement.style.setProperty('--line', settings.lineSpacing);
-      document.documentElement.style.setProperty('--ruler-opacity', settings.ruler ? 0.08 : 0);
-      textSizeLabel.textContent = settings.textScale === 1 ? 'Default' : Math.round(settings.textScale * 100) + '%';
-      lineSpacing.value = String(settings.lineSpacing);
-      highContrast.checked = !!settings.highContrast;
-      rulerToggle.checked = !!settings.ruler;
-      reducedMotionChk.checked = !!settings.reducedMotion;
-      fontSelect.value = settings.font || 'system';
+<script>
+(() => {
+  const BLOG_PATH = '/blogs.json'; // keep this in sync with where your blogs.json is
+  const app = document.getElementById('app');
+  const hubToggle = document.getElementById('hubToggle');
+  const hubPanel = document.getElementById('hubPanel');
+  const hub = document.getElementById('controlHub');
+  const openHelpBtn = document.getElementById('openHelp');
+  const helpModal = document.getElementById('helpModal');
+  const closeHelpBtn = document.getElementById('closeHelp');
 
-      if (settings.font === 'system') document.body.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial';
-      else if (settings.font === 'serif') document.body.style.fontFamily = 'Georgia, "Times New Roman", serif';
-      else if (settings.font === 'mono') document.body.style.fontFamily = 'ui-monospace, Menlo, Monaco, "Roboto Mono", monospace';
-      else if (settings.font === 'dyslexic') document.body.style.fontFamily = '"OpenDyslexic", "Lexend", "Trebuchet MS", "Segoe UI", Arial, sans-serif';
+  const increaseTextBtn = document.getElementById('increaseText');
+  const decreaseTextBtn = document.getElementById('decreaseText');
+  const textSizeLabel = document.getElementById('textSizeLabel');
+  const lineSpacing = document.getElementById('lineSpacing');
+  const fontSelect = document.getElementById('fontSelect');
+  const highContrast = document.getElementById('highContrast');
+  const rulerToggle = document.getElementById('rulerToggle');
+  const reducedMotion = document.getElementById('reducedMotion');
+  const closeHubBtn = document.getElementById('closeHub');
+  const exportMD = document.getElementById('exportMD');
+  const copyLink = document.getElementById('copyLink');
 
-      if (settings.highContrast){
-        document.documentElement.style.setProperty('--text', '#ffffff');
-        document.documentElement.style.setProperty('--muted', '#cfcfcf');
-      } else {
-        document.documentElement.style.setProperty('--text', '#e9ecef');
-        document.documentElement.style.setProperty('--muted', '#9aa0a6');
-      }
+  // TTS elements (single bar)
+  const ttsBar = document.getElementById('ttsBar');
+  const playPauseBtn = document.getElementById('playPause');
+  const stopBtn = document.getElementById('stopTTS');
+  const segmentRange = document.getElementById('segmentRange');
+  const segInfo = document.getElementById('segInfo');
+  const voiceSelect = document.getElementById('voiceSelect');
+  const rateRange = document.getElementById('rateRange');
+  const volRange = document.getElementById('volRange');
+  const progressBar = document.getElementById('progressBar'); // maybe not present, guard
 
-      if (settings.reducedMotion) document.documentElement.style.transition = 'none';
-      else document.documentElement.style.removeProperty('transition');
+  const ruler = document.getElementById('ruler');
 
-      saveSettings();
-    }
-    applySettings();
+  // state
+  let blogs = [];
+  let currentIndex = -1;
+  let segments = []; // {el, text}
+  let ttsState = { index:0, rate:1, vol:1, voiceURI:null, playing:false };
+  let voiceMap = {};
 
-    // --------------------------
-    // Image resolution helper
-    // tries multiple fallbacks:
-    // 1) absolute: http(s) or starting /
-    // 2) relative to current page (window.location)
-    // 3) relative to BLOG_PATH location (where blogs.json lives)
-    // 4) same directory as blogs.json with /pictures/ prefix
-    // 5) fallback logo.png
-    // --------------------------
-    function resolveImageUrl(src){
-      if (!src) return 'logo.png';
-      const s = String(src).trim();
+  // prefs
+  const PREFS_KEY = 'blanklabs-reader-prefs-v1';
+  let prefs = { textScale:1, lineSpacing:1.6, font:'system', highContrast:false, ruler:false, reducedMotion:false };
+  try{ const raw = localStorage.getItem(PREFS_KEY); if (raw) Object.assign(prefs, JSON.parse(raw)); }catch(e){}
 
-      // absolute http(s) or protocol-relative or starting slash
-      if (/^(https?:)?\/\//i.test(s) || s.startsWith('/')) return s;
+  function savePrefs(){ localStorage.setItem(PREFS_KEY, JSON.stringify(prefs)); }
 
-      // try relative to current page
-      try{
-        const pageBase = new URL(window.location.href);
-        const try1 = new URL(s, pageBase).href;
-        // quick check via creating element won't tell if 404, but it's an ok candidate
-        return try1;
-      }catch(e){ /* ignore */ }
+  function applyPrefs(){
+    document.documentElement.style.setProperty('--base-font', (17 * prefs.textScale) + 'px');
+    document.documentElement.style.setProperty('--line', prefs.lineSpacing);
+    textSizeLabel.textContent = prefs.textScale === 1 ? 'Default' : Math.round(prefs.textScale * 100) + '%';
+    lineSpacing.value = String(prefs.lineSpacing);
+    fontSelect.value = prefs.font;
+    highContrast.checked = prefs.highContrast;
+    rulerToggle.checked = prefs.ruler;
+    reducedMotion.checked = prefs.reducedMotion;
 
-      // try relative to blogs.json location
-      try{
-        const blogJsonUrl = new URL(BLOG_PATH, window.location.origin + window.location.pathname);
-        const blogBase = new URL('.', blogJsonUrl).href;
-        const try2 = new URL(s, blogBase).href;
-        return try2;
-      }catch(e){ /* ignore */ }
+    if (prefs.font === 'system') document.body.style.fontFamily = 'system-ui, -apple-system, "Segoe UI", Roboto, Arial';
+    else if (prefs.font === 'serif') document.body.style.fontFamily = 'Georgia, "Times New Roman", serif';
+    else if (prefs.font === 'mono') document.body.style.fontFamily = 'ui-monospace, Menlo, Monaco, "Roboto Mono", monospace';
+    else if (prefs.font === 'dyslexic') document.body.style.fontFamily = '"OpenDyslexic", "Lexend", "Trebuchet MS", "Segoe UI", Arial, sans-serif';
 
-      // finally try root/pictures/...
-      if (!s.startsWith('pictures/') && !s.startsWith('./') && !s.startsWith('../')){
-        return '/pictures/' + s;
-      }
-
-      return 'logo.png';
+    if (prefs.highContrast) {
+      document.documentElement.style.setProperty('--text', '#ffffff');
+      document.documentElement.style.setProperty('--muted', '#cfcfcf');
+    } else {
+      document.documentElement.style.setProperty('--text', '#e9ecef');
+      document.documentElement.style.setProperty('--muted', '#9aa0a6');
     }
 
-    function makeImageElement(src, caption){
-      const fig = document.createElement('figure'); fig.className = 'figure';
-      const img = document.createElement('img');
-      img.src = resolveImageUrl(src);
-      img.alt = caption || '';
-      img.loading = 'lazy';
-      // fallback if 404
-      img.onerror = function(){
-        if (!img.dataset.fallbacked){
-          img.dataset.fallbacked = '1';
-          img.src = 'logo.png';
-        }
-      };
-      fig.appendChild(img);
-      if (caption){
-        const cap = document.createElement('figcaption'); cap.className = 'caption'; cap.textContent = caption;
-        fig.appendChild(cap);
-      }
+    if (prefs.ruler) {
+      showRuler(true);
+    } else {
+      showRuler(false);
+    }
+
+    if (prefs.reducedMotion) document.documentElement.style.transition = 'none';
+    else document.documentElement.style.removeProperty('transition');
+
+    savePrefs();
+  }
+  applyPrefs();
+
+  // small helpers
+  function setInnerHTMLSafe(el, text){ el.textContent = text; }
+
+  // fetch blogs.json
+  async function loadBlogs(){
+    try{
+      const res = await fetch(BLOG_PATH, {cache:'no-store'});
+      if (!res.ok) throw new Error('blogs.json fetch ' + res.status);
+      const data = await res.json();
+      if (!Array.isArray(data)) throw new Error('blogs.json must be array');
+      blogs = data;
+    }catch(err){
+      console.error(err);
+      app.innerHTML = '<h2>Error</h2><p class="muted">Could not load /blogs.json — check console.</p>';
+    }
+  }
+
+  function getRequestedId(){
+    const qp = new URLSearchParams(location.search).get('id');
+    if (qp && /^blog\d+$/i.test(qp)) return qp.toLowerCase();
+    return null;
+  }
+
+  // single canonical image loader: use src as-is; fallback to logo.png when error
+  function makeImage(src, caption){
+    const fig = document.createElement('figure'); fig.className = 'figure';
+    const img = document.createElement('img');
+    img.src = String(src || '').trim() || 'logo.png';
+    img.alt = caption || '';
+    img.loading = 'lazy';
+    img.onerror = () => { if (!img.dataset.failed){ img.dataset.failed = '1'; img.src = 'logo.png'; } };
+    fig.appendChild(img);
+    if (caption){ const cap = document.createElement('figcaption'); cap.className = 'caption'; cap.textContent = caption; fig.appendChild(cap); }
+    return fig;
+  }
+
+  function renderBlock(b){
+    if (!b) return null;
+    const type = (b.type || 'text').toLowerCase();
+    if (type === 'text'){
+      const fmt = (b.format || 'paragraph').toLowerCase();
+      if (fmt === 'header'){ const h = document.createElement('h3'); h.textContent = b.content || ''; return h; }
+      if (fmt === 'list'){ const ul = document.createElement('ul'); (b.items||[]).forEach(i=>{ const li=document.createElement('li'); li.textContent=i; ul.appendChild(li); }); return ul; }
+      const p = document.createElement('p'); p.textContent = b.content || ''; return p;
+    }
+    if (type === 'image') return makeImage(b.src || 'logo.png', b.caption || '');
+    if (type === 'code'){
+      const wrapper = document.createElement('div'); wrapper.className = 'code-row';
+      const pre = document.createElement('pre'); const code = document.createElement('code'); code.textContent = b.content || ''; pre.appendChild(code);
+      const btn = document.createElement('button'); btn.className='btn small'; btn.textContent='Copy'; btn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(b.content||''); btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',800); }catch(e){ btn.textContent='Err'; setTimeout(()=>btn.textContent='Copy',800); }});
+      wrapper.appendChild(pre); wrapper.appendChild(btn); return wrapper;
+    }
+    if (type === 'video'){
+      const fig = document.createElement('figure'); fig.className='figure';
+      const v = document.createElement('video'); v.controls = true; v.src = b.src || ''; v.style.width='100%'; fig.appendChild(v);
+      if (b.caption){ const cap=document.createElement('figcaption'); cap.className='caption'; cap.textContent=b.caption; fig.appendChild(cap) }
       return fig;
     }
-
-    // --------------------------
-    // Fetch blogs.json
-    // --------------------------
-    async function loadBlogs(){
-      try{
-        const res = await fetch(BLOG_PATH, {cache:'no-store'});
-        if (!res.ok) throw new Error('Fetch ' + BLOG_PATH + ' returned ' + res.status);
-        const data = await res.json();
-        if (!Array.isArray(data)) throw new Error('blogs.json must be an array');
-        blogs = data;
-      }catch(e){
-        console.error(e);
-        app.innerHTML = '<h2>Error</h2><p class="muted">Failed to load blogs.json. Check path and console.</p>';
-      }
+    if (type === 'columns'){
+      const wrap = document.createElement('div'); wrap.className='columns';
+      (b.columns||[]).forEach(col=>{ const d=document.createElement('div'); const node = renderBlock(col) || (function(){const p=document.createElement('p'); p.textContent = col.content || ''; return p; })(); d.appendChild(node); wrap.appendChild(d); });
+      return wrap;
     }
-
-    // --------------------------
-    // Simple rendering helpers
-    // --------------------------
-    function ensureLinkFor(id){ return (location.pathname || '/') + '?id=' + encodeURIComponent(id); }
-    function setDocTitle(t){ document.title = t ? t + ' — BlankLabs' : 'BlankLabs'; }
-
-    function renderIndex(){
-      app.innerHTML = '';
-      const h = document.createElement('h2'); h.textContent = 'Posts';
-      app.appendChild(h);
-      const list = document.createElement('div'); list.className = 'post-list';
-      blogs.forEach(b=>{
-        const a = document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id);
-        a.textContent = (b.title || b.id) + (b.subtitle ? ' — ' + b.subtitle : '');
-        list.appendChild(a);
-      });
-      app.appendChild(list);
-      setDocTitle('All posts');
+    if (type === 'accordion'){
+      const item = document.createElement('div'); item.className='accordion-item';
+      const btn = document.createElement('button'); btn.className='accordion-btn'; btn.type='button'; btn.setAttribute('aria-expanded','false'); btn.textContent = b.title || 'More';
+      const che = document.createElement('span'); che.textContent='+';
+      btn.appendChild(che);
+      const panel = document.createElement('div'); panel.className='accordion-panel';
+      (b.blocks||[]).forEach(sub=>{ const n = renderBlock(sub); if (n) panel.appendChild(n); });
+      btn.addEventListener('click', ()=> { const exp = btn.getAttribute('aria-expanded') === 'true'; btn.setAttribute('aria-expanded', String(!exp)); che.textContent = exp ? '+' : '-'; });
+      item.appendChild(btn); item.appendChild(panel); return item;
     }
+    const pre = document.createElement('pre'); pre.textContent = JSON.stringify(b, null, 2); return pre;
+  }
 
-    function renderNotFound(id){
-      app.innerHTML = ''; const h = document.createElement('h2'); h.textContent = 'Post not found: ' + id; app.appendChild(h);
-      const p = document.createElement('p'); p.className='muted'; p.textContent = 'Available posts:'; app.appendChild(p);
-      const list = document.createElement('div'); list.className='post-list'; blogs.forEach(b=>{ const a=document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent=b.title || b.id; list.appendChild(a) });
-      app.appendChild(list); setDocTitle('Not found');
-    }
-
-    // --------------------------
-    // Render a post
-    // --------------------------
-    function renderBlock(blk){
-      if (!blk || typeof blk !== 'object') return null;
-      const type = (blk.type || 'text').toLowerCase();
-      if (type === 'text'){
-        const fmt = (blk.format || 'paragraph').toLowerCase();
-        if (fmt === 'header'){ const h3 = document.createElement('h3'); h3.textContent = blk.content || ''; return h3; }
-        if (fmt === 'list'){ const ul = document.createElement('ul'); (blk.items || []).forEach(it=>{ const li=document.createElement('li'); li.textContent=it; ul.appendChild(li); }); return ul; }
-        const p = document.createElement('p'); p.textContent = blk.content || ''; return p;
-      }
-      if (type === 'image') return makeImageElement(blk.src || 'logo.png', blk.caption || '');
-      if (type === 'code'){ const cwrap=document.createElement('div'); cwrap.className='code-row'; const pre=document.createElement('pre'); const code=document.createElement('code'); code.textContent = blk.content || ''; pre.appendChild(code); const btn=document.createElement('button'); btn.className='btn'; btn.textContent='Copy'; btn.addEventListener('click', async ()=>{ try{ await navigator.clipboard.writeText(blk.content || ''); btn.textContent='Copied'; setTimeout(()=>btn.textContent='Copy',900)}catch(e){btn.textContent='Err';setTimeout(()=>btn.textContent='Copy',900)} }); cwrap.appendChild(pre); cwrap.appendChild(btn); return cwrap; }
-      if (type === 'video'){ const fig=document.createElement('figure'); fig.className='figure'; const v=document.createElement('video'); v.controls=true; v.src=blk.src||''; v.style.width='100%'; fig.appendChild(v); if (blk.caption){ const cap=document.createElement('figcaption'); cap.className='caption'; cap.textContent = blk.caption; fig.appendChild(cap);} return fig; }
-      if (type === 'columns'){ const wrap=document.createElement('div'); wrap.className='columns'; (blk.columns||[]).forEach(col=>{ const inner=document.createElement('div'); const node = renderBlock(col) || (function(){const p=document.createElement('p'); p.textContent=col.content||''; return p; })(); inner.appendChild(node); wrap.appendChild(inner); }); return wrap; }
-      if (type === 'accordion'){ const item=document.createElement('div'); item.className='accordion-item'; const btn=document.createElement('button'); btn.className='accordion-btn'; btn.type='button'; btn.setAttribute('aria-expanded','false'); btn.textContent = blk.title || 'More'; const che=document.createElement('span'); che.setAttribute('aria-hidden','true'); che.textContent='+'; btn.appendChild(che); const panel=document.createElement('div'); panel.className='accordion-panel'; panel.setAttribute('role','region'); (blk.blocks||[]).forEach(b=>{ const n=renderBlock(b); if (n) panel.appendChild(n); }); btn.addEventListener('click', ()=>{ const exp = btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded', String(!exp)); che.textContent = exp ? '+' : '-'; }); item.appendChild(btn); item.appendChild(panel); return item; }
-      const pre = document.createElement('pre'); pre.textContent = JSON.stringify(blk, null, 2); return pre;
-    }
-
-    // Build segments for TTS: split each paragraph/list item/header/pre into sentence-like segments.
-    function gatherSegments(articleEl){
-      segments = [];
-      const content = articleEl.querySelector('.content');
-      if (!content) return;
-      const nodes = content.querySelectorAll('p, h3, li, blockquote, pre');
-      nodes.forEach(node=>{
-        const tag = node.tagName.toLowerCase();
-        const raw = (node.innerText || node.textContent || '').trim();
-        if (!raw) return;
-        // for pre, treat as single
-        if (tag === 'pre'){
-          node.innerHTML = ''; const span=document.createElement('span'); span.className='segment'; span.textContent = raw + ' '; node.appendChild(span); segments.push({el:span, text:raw}); return;
-        }
-        // split by sentences, but keep segments under ~220 chars
-        const parts = raw.split(/(?<=\.|\?|!|\n)\s+/g).map(s=>s.trim()).filter(Boolean);
-        const output = [];
-        parts.forEach(p=>{
-          if (p.length <= 240) output.push(p);
-          else {
-            // break long segment into ~200-char chunks on commas/spaces
-            let remain = p;
-            while (remain.length > 240){
-              let idx = remain.lastIndexOf(',', 240);
-              if (idx < 0) idx = remain.lastIndexOf(' ', 240);
-              if (idx < 0) idx = 240;
-              output.push(remain.slice(0, idx).trim());
-              remain = remain.slice(idx).trim();
-            }
-            if (remain) output.push(remain);
-          }
-        });
+  // Build TTS segments (replaces paragraph text with spans for highlight)
+  function buildSegments(article){
+    segments = [];
+    const content = article.querySelector('.content');
+    if (!content) return;
+    content.querySelectorAll('p, h3, li, pre, blockquote').forEach(node=>{
+      const tag = node.tagName.toLowerCase();
+      const raw = (node.innerText || node.textContent || '').trim();
+      if (!raw) return;
+      if (tag === 'pre'){
         node.innerHTML = '';
-        output.forEach(part=>{
-          const span = document.createElement('span');
-          span.className = 'segment';
-          span.textContent = part + ' ';
-          node.appendChild(span);
-          segments.push({el:span, text:part});
-        });
-      });
-    }
-
-    // TTS playback (robust)
-    let ttsPlaying = false;
-    let ttsUtterance = null;
-
-    function populateVoiceMap(){
-      const vlist = speechSynthesis.getVoices() || [];
-      vlist.forEach(v => { voiceMap[v.voiceURI || v.name] = v; });
-      voicesLoaded = true;
-    }
-    if ('speechSynthesis' in window){
-      populateVoiceMap();
-      if (speechSynthesis.onvoiceschanged !== undefined){
-        speechSynthesis.onvoiceschanged = populateVoiceMap;
+        const span = document.createElement('span'); span.className='segment'; span.textContent = raw + ' ';
+        node.appendChild(span);
+        segments.push({el:span, text:raw});
+        return;
       }
-    }
-
-    // speak one segment and return promise
-    function speakOne(text){
-      return new Promise((resolve, reject)=>{
-        if (!('speechSynthesis' in window)) return reject(new Error('TTS not supported in this browser'));
-        try{
-          const u = new SpeechSynthesisUtterance(text);
-          u.rate = ttsState.rate || 1.0;
-          u.volume = ttsState.volume || 1.0;
-          if (ttsState.voiceURI && voiceMap[ttsState.voiceURI]) u.voice = voiceMap[ttsState.voiceURI];
-          u.onend = ()=> resolve();
-          u.onerror = (e)=> { console.warn('utterance error', e); resolve(); /* resolve to skip gracefully */ };
-          speechSynthesis.speak(u);
-          ttsUtterance = u;
-        }catch(err){
-          console.error('speakOne error', err);
-          resolve(); // skip on error
+      // split into sentence-like chunks and cap length
+      const parts = raw.split(/(?<=\.|\?|!|\n)\s+/g).map(s=>s.trim()).filter(Boolean);
+      const out = [];
+      parts.forEach(p=>{
+        if (p.length <= 220) out.push(p);
+        else {
+          let remain = p;
+          while (remain.length > 220){
+            let idx = remain.lastIndexOf(',', 200);
+            if (idx < 0) idx = remain.lastIndexOf(' ', 200);
+            if (idx < 0) idx = 200;
+            out.push(remain.slice(0, idx).trim());
+            remain = remain.slice(idx).trim();
+          }
+          if (remain) out.push(remain);
         }
       });
+      node.innerHTML = '';
+      out.forEach(piece=>{
+        const span = document.createElement('span'); span.className='segment'; span.textContent = piece + ' ';
+        node.appendChild(span);
+        segments.push({el:span, text:piece});
+      });
+    });
+  }
+
+  // TTS playback helpers
+  function populateVoices(){
+    const v = speechSynthesis.getVoices() || [];
+    voiceSelect.innerHTML = '';
+    v.forEach(voice=>{
+      const opt = document.createElement('option');
+      opt.value = voice.voiceURI || voice.name;
+      opt.textContent = `${voice.name}${voice.lang ? ' • ' + voice.lang : ''}`;
+      voiceSelect.appendChild(opt);
+      voiceMap[voice.voiceURI || voice.name] = voice;
+    });
+    if (Object.keys(voiceMap).length && ttsState.voiceURI && voiceSelect.querySelector('option[value="'+ttsState.voiceURI+'"]')){
+      voiceSelect.value = ttsState.voiceURI;
     }
+  }
+  if ('speechSynthesis' in window){
+    populateVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
+  }
 
-    async function startTTS(fromIndex){
-      if (!('speechSynthesis' in window)){
-        alert('Text to speech not supported in this browser.');
-        return;
-      }
-      if (!segments || segments.length === 0){
-        // nothing to read
-        return;
-      }
-      if (typeof fromIndex === 'number') ttsState.index = fromIndex;
-      ttsState.isPlaying = true; saveTTSState(); updatePlayUI();
-      ttsPlaying = true;
+  function showTTSBar(show){
+    if (show){
+      ttsBar.classList.remove('hidden'); ttsBar.setAttribute('aria-hidden','false');
+    } else {
+      ttsBar.classList.add('hidden'); ttsBar.setAttribute('aria-hidden','true');
+    }
+  }
 
-      while (ttsState.isPlaying && ttsState.index < segments.length){
-        const seg = segments[ttsState.index];
-        if (!seg) break;
-        highlightSegment(ttsState.index);
-        // scroll into view gently
-        try{ seg.el.scrollIntoView({behavior:'smooth', block:'center'}); }catch(e){}
-        await speakOne(seg.text);
-        if (!ttsState.isPlaying) break; // paused/stopped during utterance
-        ttsState.index++;
-        saveTTSState();
-        refreshTTSControlsUI();
-      }
+  function highlight(i){
+    segments.forEach((s, idx)=> { if (s && s.el) s.el.classList.toggle('highlight', idx === i); });
+    // update segment range UI
+    segmentRange.max = Math.max(0, segments.length-1);
+    segmentRange.value = Math.min(i, Math.max(0, segments.length-1));
+    segInfo.textContent = (segments.length ? (i+1) + ' / ' + segments.length : '0 / 0');
+  }
 
-      // finished
-      if (ttsState.index >= segments.length){
-        ttsState.isPlaying = false; ttsState.index = Math.max(0, segments.length-1);
-        saveTTSState();
-      }
-      ttsPlaying = false;
+  function speakSegment(text){
+    return new Promise(resolve => {
+      if (!('speechSynthesis' in window)) { resolve(); return; }
+      try{
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = ttsState.rate || 1;
+        u.volume = ttsState.vol || 1;
+        if (ttsState.voiceURI && voiceMap[ttsState.voiceURI]) u.voice = voiceMap[ttsState.voiceURI];
+        u.onend = () => resolve();
+        u.onerror = () => resolve();
+        speechSynthesis.speak(u);
+      }catch(e){ console.error('TTS speak error', e); resolve(); }
+    });
+  }
+
+  let ttsLoopRunning = false;
+  async function startTTS(fromIndex){
+    if (!('speechSynthesis' in window)) { alert('TTS not available in this browser'); return; }
+    if (!segments.length) return;
+    if (typeof fromIndex === 'number') ttsState.index = fromIndex;
+    ttsState.playing = true;
+    showTTSBar(true);
+    updatePlayUI();
+    if (ttsLoopRunning) return;
+    ttsLoopRunning = true;
+    while (ttsState.playing && ttsState.index < segments.length){
+      highlight(ttsState.index);
+      try{ await speakSegment(segments[ttsState.index].text); }catch(e){ console.warn(e); }
+      if (!ttsState.playing) break;
+      ttsState.index++;
+      saveTTSState();
+    }
+    // finished
+    if (ttsState.index >= segments.length) {
+      ttsState.playing = false;
+      ttsState.index = segments.length - 1;
+      saveTTSState();
       updatePlayUI();
-      refreshTTSControlsUI();
     }
+    ttsLoopRunning = false;
+  }
 
-    function pauseTTS(){
-      if ('speechSynthesis' in window){
-        speechSynthesis.cancel();
-      }
-      ttsState.isPlaying = false; saveTTSState(); updatePlayUI();
-    }
+  function pauseTTS(){
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    ttsState.playing = false;
+    updatePlayUI();
+    saveTTSState();
+  }
 
-    function stopTTS(){
-      if ('speechSynthesis' in window) speechSynthesis.cancel();
-      ttsState.isPlaying = false; ttsState.index = 0; saveTTSState(); updatePlayUI(); refreshTTSControlsUI();
-    }
+  function stopTTS(){
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+    ttsState.playing = false;
+    ttsState.index = 0;
+    highlight(0);
+    updatePlayUI();
+    saveTTSState();
+  }
 
-    function highlightSegment(idx){
-      segments.forEach((s,i)=> s.el.classList.toggle('highlight', i===idx) );
-    }
+  function updatePlayUI(){
+    playPauseBtn.textContent = ttsState.playing ? '⏸ Pause' : '🔊 Play';
+  }
 
-    // UI sync helpers (update top play button, progress bar)
-    function updatePlayUI(){
-      playTTS.textContent = ttsState.isPlaying ? '⏸ Pause' : '🔊 Play';
-    }
-    function refreshTTSControlsUI(){
-      // If article has tts controls, update its range/label
-      const localRange = document.querySelector('.tts-controls input[type="range"].segment-range');
-      const idxInfo = document.querySelector('.tts-controls .idx-info');
-      if (localRange){
-        localRange.max = Math.max(0, segments.length-1);
-        localRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
-      }
-      if (idxInfo) idxInfo.textContent = 'Segment ' + (ttsState.index+1) + ' / ' + Math.max(segments.length,1);
-      updateProgress();
-    }
+  function saveTTSState(){ try{ localStorage.setItem('blanklabs-tts-v1', JSON.stringify(ttsState)); }catch(e){} }
+  function loadTTSState(){ try{ const raw = localStorage.getItem('blanklabs-tts-v1'); if (raw) Object.assign(ttsState, JSON.parse(raw)); }catch(e){} }
+  loadTTSState();
 
-    // create TTS controls and inject above content; returns object with elements
-    function createTTSControls(container){
-      const wrapper = document.createElement('div'); wrapper.className = 'tts-controls'; wrapper.setAttribute('aria-label','Text to speech controls');
+  // wiring TTS controls
+  playPauseBtn.addEventListener('click', ()=> {
+    if (ttsState.playing) pauseTTS(); else startTTS(ttsState.index);
+  });
+  stopBtn.addEventListener('click', ()=> stopTTS());
+  segmentRange.addEventListener('input', (e)=>{ ttsState.index = Number(e.target.value); highlight(ttsState.index); saveTTSState(); });
+  voiceSelect.addEventListener('change', (e)=>{ ttsState.voiceURI = e.target.value; saveTTSState(); });
+  rateRange.addEventListener('input', (e)=>{ ttsState.rate = Number(e.target.value); saveTTSState(); });
+  volRange.addEventListener('input', (e)=>{ ttsState.vol = Number(e.target.value); saveTTSState(); });
 
-      const localPlay = document.createElement('button'); localPlay.className='btn'; localPlay.textContent = ttsState.isPlaying ? '⏸ Pause' : '▶ Play';
-      wrapper.appendChild(localPlay);
+  // hub wiring
+  hubToggle.addEventListener('click', ()=> {
+    const open = hubPanel.hidden;
+    hubPanel.hidden = !open;
+    hubToggle.setAttribute('aria-expanded', String(open));
+  });
+  closeHubBtn.addEventListener('click', ()=> { hubPanel.hidden = true; hubToggle.setAttribute('aria-expanded','false'); });
 
-      const segRange = document.createElement('input'); segRange.type='range'; segRange.className='slider segment-range';
-      segRange.min = 0; segRange.max = Math.max(0, segments.length-1); segRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
-      segRange.style.width = '260px'; wrapper.appendChild(segRange);
+  increaseTextBtn.addEventListener('click', ()=> { prefs.textScale = Math.min(1.6, parseFloat((prefs.textScale + 0.1).toFixed(2))); applyPrefs(); savePrefs(); });
+  decreaseTextBtn.addEventListener('click', ()=> { prefs.textScale = Math.max(0.7, parseFloat((prefs.textScale - 0.1).toFixed(2))); applyPrefs(); savePrefs(); });
+  lineSpacing.addEventListener('change', (e)=> { prefs.lineSpacing = parseFloat(e.target.value); applyPrefs(); savePrefs(); });
+  fontSelect.addEventListener('change', (e)=> { prefs.font = e.target.value; applyPrefs(); savePrefs(); });
+  highContrast.addEventListener('change', (e)=> { prefs.highContrast = e.target.checked; applyPrefs(); savePrefs(); });
+  rulerToggle.addEventListener('change', (e)=> { prefs.ruler = e.target.checked; applyPrefs(); savePrefs(); if (prefs.ruler) showRulerTutorial(); });
+  reducedMotion.addEventListener('change', (e)=> { prefs.reducedMotion = e.target.checked; applyPrefs(); savePrefs(); });
 
-      const idxInfo = document.createElement('div'); idxInfo.className='muted idx-info'; idxInfo.style.minWidth='120px'; idxInfo.textContent = 'Segment ' + (ttsState.index+1) + ' / ' + Math.max(segments.length,1);
-      wrapper.appendChild(idxInfo);
+  openHelpBtn.addEventListener('click', ()=> { helpModal.classList.remove('hidden'); helpModal.style.display='block'; });
+  closeHelpBtn.addEventListener('click', ()=> { helpModal.classList.add('hidden'); helpModal.style.display='none'; });
 
-      // voice select
-      const voiceSelect = document.createElement('select'); voiceSelect.style.padding='6px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);color:var(--text)';
-      voiceSelect.title = 'Select voice';
-      wrapper.appendChild(voiceSelect);
+  exportMD.addEventListener('click', ()=> { exportCurrentToMarkdown(); });
+  copyLink.addEventListener('click', ()=> {
+    const url = new URL(window.location.href);
+    if (currentIndex >= 0 && blogs[currentIndex]) url.searchParams.set('id', blogs[currentIndex].id);
+    navigator.clipboard.writeText(url.toString()).then(()=> alert('Link copied'));
+  });
 
-      // rate
-      const rateRange = document.createElement('input'); rateRange.type='range'; rateRange.min=0.5; rateRange.max=2.0; rateRange.step=0.05; rateRange.value = ttsState.rate || 1.0; rateRange.className='slider'; rateRange.style.width='140px'; wrapper.appendChild(rateRange);
-      const rateLabel = document.createElement('div'); rateLabel.className='muted'; rateLabel.textContent = 'Speed ' + (rateRange.value); rateLabel.style.marginLeft='6px'; wrapper.appendChild(rateLabel);
+  // keyboard
+  document.addEventListener('keydown', (e)=>{
+    if (e.key === 'm' || e.key === 'M'){ e.preventDefault(); hubPanel.hidden = !hubPanel.hidden; hubToggle.setAttribute('aria-expanded', String(!hubPanel.hidden)); }
+    if (e.key === 't' || e.key === 'T'){ e.preventDefault(); if (ttsState.playing) pauseTTS(); else startTTS(ttsState.index); }
+    if (e.key === '+') { e.preventDefault(); prefs.textScale = Math.min(1.6, parseFloat((prefs.textScale + 0.1).toFixed(2))); applyPrefs(); savePrefs(); }
+    if (e.key === '-') { e.preventDefault(); prefs.textScale = Math.max(0.7, parseFloat((prefs.textScale - 0.1).toFixed(2))); applyPrefs(); savePrefs(); }
+    if (e.key === '[') navigatePost(-1);
+    if (e.key === ']') navigatePost(1);
+  });
 
-      // volume
-      const volRange = document.createElement('input'); volRange.type='range'; volRange.min=0; volRange.max=1; volRange.step=0.05; volRange.value = ttsState.volume || 1.0; volRange.className='slider'; volRange.style.width='120px'; wrapper.appendChild(volRange);
-      const volLabel = document.createElement('div'); volLabel.className='muted'; volLabel.textContent = 'Vol ' + (volRange.value); volLabel.style.marginLeft='6px'; wrapper.appendChild(volLabel);
-
-      // event wiring
-      localPlay.addEventListener('click', ()=> {
-        if (ttsState.isPlaying) pauseTTS();
-        else startTTS(ttsState.index);
-      });
-      segRange.addEventListener('input', (e)=> { ttsState.index = Number(e.target.value); saveTTSState(); highlightSegment(ttsState.index); refreshTTSControlsUI(); });
-      rateRange.addEventListener('input', (e)=> { ttsState.rate = Number(e.target.value); rateLabel.textContent = 'Speed ' + ttsState.rate; saveTTSState(); });
-      volRange.addEventListener('input', (e)=> { ttsState.volume = Number(e.target.value); volLabel.textContent = 'Vol ' + ttsState.volume; saveTTSState(); });
-
-      // populate voices
-      function fillVoices(){
-        const vlist = speechSynthesis.getVoices() || [];
-        voiceSelect.innerHTML = '';
-        vlist.forEach(v => {
-          const opt = document.createElement('option'); opt.value = v.voiceURI || v.name; opt.textContent = v.name + (v.lang ? ' • ' + v.lang : '');
-          voiceSelect.appendChild(opt);
-          voiceMap[v.voiceURI || v.name] = v;
-        });
-        if (ttsState.voiceURI && voiceSelect.querySelector('option[value="'+ttsState.voiceURI+'"]')){
-          voiceSelect.value = ttsState.voiceURI;
-        } else if (vlist.length){
-          voiceSelect.value = voiceSelect.value || (vlist[0].voiceURI || vlist[0].name);
-        }
-      }
-      if ('speechSynthesis' in window){
-        fillVoices();
-        if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = fillVoices;
-      } else {
-        // hide voice select if unsupported
-        voiceSelect.style.display = 'none';
-      }
-
-      voiceSelect.addEventListener('change', (e)=> { ttsState.voiceURI = e.target.value; saveTTSState(); });
-
-      return { wrapper, segRange, rateRange, volRange, voiceSelect, localPlay, idxInfo, rateLabel, volLabel };
-    }
-
-    // --------------------------
-    // Render a post by index
-    // --------------------------
-    function renderPostByIndex(idx){
-      if (idx < 0 || idx >= blogs.length) return;
-      currentPostIndex = idx;
-      const post = blogs[idx];
-      renderPost(post);
-      // update URL query without reload
-      const url = new URL(window.location.href);
-      url.searchParams.set('id', post.id);
-      history.replaceState({}, '', url.toString());
-    }
-
-    function renderPost(post){
-      app.innerHTML = '';
-      const article = document.createElement('article'); article.setAttribute('role','article'); article.setAttribute('aria-labelledby','post-title'); article.tabIndex = -1;
-
-      const header = document.createElement('header');
-      const h2 = document.createElement('h2'); h2.id='post-title'; h2.textContent = post.title || '';
-      header.appendChild(h2);
-      const meta = document.createElement('div'); meta.className='meta';
-      const auth = document.createElement('span'); auth.textContent = post.author || 'BlankLabs';
-      meta.appendChild(auth);
-      if (post.date){ const time = document.createElement('time'); time.dateTime = post.date; time.textContent = post.date; meta.appendChild(time); }
-      header.appendChild(meta);
-      article.appendChild(header);
-
-      const content = document.createElement('div'); content.className='content';
-      const blocks = Array.isArray(post.blocks) ? post.blocks : [{type:'text',format:'paragraph', content: post.content || post.description || ''}];
-      blocks.forEach(blk=>{
-        try{
-          const node = renderBlock(blk);
-          if (node) content.appendChild(node);
-        }catch(e){ console.error('render block failed', e); }
-      });
-
-      article.appendChild(content);
-
-      // segmentize for TTS and create controls
-      gatherSegments(article);
-      const ttsUI = createTTSControls(article);
-      article.insertBefore(ttsUI.wrapper, article.firstChild.nextSibling.nextSibling || article.firstChild);
-
-      // set segRange limits and initial values
-      ttsUI.segRange.max = Math.max(0, segments.length-1);
-      ttsUI.segRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
-      ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index+1) + ' / ' + Math.max(segments.length,1);
-      ttsUI.rateRange.value = ttsState.rate || 1.0;
-      ttsUI.volRange.value = ttsState.volume || 1.0;
-
-      // wire top-level play button to behave same as local control
-      playTTS.onclick = ()=> { if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); };
-
-      // nav to other posts
-      if (blogs.length > 1){
-        const nav = document.createElement('nav'); nav.style.marginTop='18px'; nav.setAttribute('aria-label','Other posts');
-        const list = document.createElement('div'); list.style.display='flex'; list.style.gap='8px'; list.style.flexWrap='wrap';
-        blogs.forEach(b=>{
-          if (b.id === post.id) return;
-          const a = document.createElement('a'); a.className='post-link'; a.href = ensureLinkFor(b.id); a.textContent = b.title || b.id;
-          list.appendChild(a);
-        });
-        nav.appendChild(list); article.appendChild(nav);
-      }
-
-      app.appendChild(article);
-      setDocTitle(post.title || post.id || 'BlankLabs');
-
-      // focus article for screen readers
-      setTimeout(()=> article.focus(), 40);
-
-      // Update TTS UI periodically
-      const interval = setInterval(()=> {
-        if (!document.body.contains(ttsUI.wrapper)) { clearInterval(interval); return; }
-        ttsUI.segRange.value = Math.min(ttsState.index, Math.max(0, segments.length-1));
-        ttsUI.idxInfo.textContent = 'Segment ' + (ttsState.index+1) + ' / ' + Math.max(segments.length,1);
-      }, 200);
-
-      // refresh progress
-      updateProgress();
-    }
-
-    // --------------------------
-    // Scrolling progress & ruler
-    // --------------------------
-    function updateProgress(){
-      const article = app.querySelector('article');
-      if (!article){ progressBar.style.width = '0%'; return; }
-      const top = article.getBoundingClientRect().top + window.scrollY;
-      const totalHeight = article.scrollHeight;
-      const scrolled = Math.min(Math.max(window.scrollY - top + window.innerHeight*0.2, 0), totalHeight);
-      const pct = Math.round( (scrolled / Math.max(1, totalHeight)) * 100 );
-      progressBar.style.width = pct + '%';
-      progressBar.setAttribute('aria-valuenow', String(pct));
-      // ruler follow
-      if (settings.ruler){
-        const centerY = window.scrollY + (window.innerHeight / 2);
-        const rulerHeight = Math.min(300, window.innerHeight * 0.5);
-        ruler.style.top = (centerY - rulerHeight/2) + 'px';
-        ruler.style.height = rulerHeight + 'px';
-        ruler.style.setProperty('--ruler-opacity', '0.08');
-        ruler.setAttribute('aria-hidden','false');
-      } else {
-        ruler.style.setProperty('--ruler-opacity', '0');
-        ruler.setAttribute('aria-hidden','true');
-      }
-    }
-
-    // --------------------------
-    // Menu and controls wiring
-    // --------------------------
-    function toggleMenu(open){
-      const vis = !menu.classList.contains('hidden');
-      const should = typeof open === 'boolean' ? open : !vis;
-      if (should){ menu.classList.remove('hidden'); menu.setAttribute('aria-hidden','false'); hamburger.setAttribute('aria-expanded','true'); }
-      else { menu.classList.add('hidden'); menu.setAttribute('aria-hidden','true'); hamburger.setAttribute('aria-expanded','false'); }
-    }
-    hamburger.addEventListener('click', ()=> toggleMenu());
-    closeMenu.addEventListener('click', ()=> toggleMenu(false));
-    document.addEventListener('click', (e)=> { if (!menu.contains(e.target) && !hamburger.contains(e.target)) toggleMenu(false); });
-
-    document.addEventListener('keydown', (e)=>{
-      if (e.key === 'm' || e.key === 'M'){ e.preventDefault(); toggleMenu(); }
-      if (e.key === 'r' || e.key === 'R'){ e.preventDefault(); document.documentElement.classList.toggle('reading-mode'); }
-      if (e.key === 't' || e.key === 'T'){ e.preventDefault(); if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); }
-      if (e.key === '+' || e.key === '='){ e.preventDefault(); adjustText(0.1); }
-      if (e.key === '-') { e.preventDefault(); adjustText(-0.1); }
-      if (e.key === '[') navigatePost(-1);
-      if (e.key === ']') navigatePost(1);
+  // export
+  function exportCurrentToMarkdown(){
+    if (currentIndex < 0) return alert('No post open');
+    const p = blogs[currentIndex];
+    let md = `# ${p.title || ''}\n\n`;
+    if (p.subtitle) md += `_${p.subtitle}_\n\n`;
+    if (p.description) md += `${p.description}\n\n`;
+    (p.blocks || []).forEach(b=>{
+      if (b.type === 'text'){
+        if (b.format === 'header') md += `### ${b.content}\n\n`;
+        else if (b.format === 'list') md += (b.items||[]).map(i=>`- ${i}`).join('\n') + '\n\n';
+        else md += `${b.content}\n\n`;
+      } else if (b.type === 'image') md += `![${b.caption||''}](${b.src||''})\n\n`;
+      else if (b.type === 'code') md += `\`\`\`${b.language||''}\n${b.content}\n\`\`\`\n\n`;
     });
+    const blob = new Blob([md], {type:'text/markdown'}); const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = (p.id||'post') + '.md'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+  }
 
-    playTTS.addEventListener('click', ()=> { if (ttsState.isPlaying) pauseTTS(); else startTTS(ttsState.index); });
-    readingModeBtn.addEventListener('click', ()=> { document.documentElement.classList.toggle('reading-mode'); });
-    printBtn.addEventListener('click', ()=> window.print());
-    increaseText.addEventListener('click', ()=> adjustText(0.1));
-    decreaseText.addEventListener('click', ()=> adjustText(-0.1));
-    lineSpacing.addEventListener('change', (e)=> { settings.lineSpacing = parseFloat(e.target.value); applySettings(); });
-    fontSelect.addEventListener('change', (e)=> { settings.font = e.target.value; applySettings(); });
-    highContrast.addEventListener('change', (e)=> { settings.highContrast = e.target.checked; applySettings(); });
-    rulerToggle.addEventListener('change', (e)=> { settings.ruler = e.target.checked; applySettings(); });
-    reducedMotionChk.addEventListener('change', (e)=> { settings.reducedMotion = e.target.checked; applySettings(); });
-    resetPrefs.addEventListener('click', ()=> { Object.assign(settings, { textScale:1, lineSpacing:1.6, font:'system', highContrast:false, ruler:false, reducedMotion:false }); applySettings(); });
-    helpBtn.addEventListener('click', ()=> { helpModal.classList.remove('hidden'); });
-    closeHelp.addEventListener('click', ()=> { helpModal.classList.add('hidden'); });
-    exportMDBtn.addEventListener('click', ()=> exportCurrentPostToMarkdown());
-    copyPermalinkBtn.addEventListener('click', ()=> {
-      const url = new URL(window.location.href);
-      if (currentPostIndex >= 0 && blogs[currentPostIndex]) url.searchParams.set('id', blogs[currentPostIndex].id);
-      navigator.clipboard.writeText(url.toString()).then(()=> alert('Permalink copied.'));
+  // navigate posts
+  function navigatePost(delta){
+    if (currentIndex < 0) return;
+    let next = currentIndex + delta;
+    if (next < 0) next = blogs.length - 1;
+    if (next >= blogs.length) next = 0;
+    renderPostByIndex(next);
+  }
+
+  // show/hide ruler + tutorial overlay
+  function showRuler(show){
+    if (!ruler) return;
+    if (show){
+      ruler.classList.add('visible');
+      ruler.style.top = (window.scrollY + (window.innerHeight/2) - 120) + 'px';
+      ruler.style.height = '240px';
+      ruler.setAttribute('aria-hidden','false');
+    } else {
+      ruler.classList.remove('visible');
+      ruler.setAttribute('aria-hidden','true');
+    }
+  }
+
+  // tutorial overlay for ruler
+  function showRulerTutorial(){
+    if (localStorage.getItem('blanklabs-ruler-shown')) return;
+    localStorage.setItem('blanklabs-ruler-shown', '1');
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed'; overlay.style.left = '50%'; overlay.style.top = '50%';
+    overlay.style.transform = 'translate(-50%,-50%)'; overlay.style.zIndex = '10001';
+    overlay.style.background = 'var(--panel)'; overlay.style.padding = '14px'; overlay.style.borderRadius = '10px';
+    overlay.style.boxShadow = '0 20px 80px rgba(0,0,0,0.7)'; overlay.style.border = '1px solid rgba(255,255,255,0.03)';
+    overlay.innerHTML = '<strong>Reading ruler</strong><p style="color:var(--muted)">The ruler is a soft band that helps you focus while reading. It follows your viewport. Click anywhere to dismiss this tip.</p>';
+    document.body.appendChild(overlay);
+    overlay.addEventListener('click', ()=> overlay.remove());
+  }
+
+  // render index or post
+  function renderIndex(){
+    app.innerHTML = '';
+    const h = document.createElement('h2'); h.textContent = 'Posts';
+    app.appendChild(h);
+    const list = document.createElement('div'); list.className = 'post-list';
+    blogs.forEach(b=>{
+      const a = document.createElement('a'); a.className = 'post-link'; a.href = location.pathname + '?id=' + encodeURIComponent(b.id);
+      a.textContent = (b.title || b.id) + (b.subtitle ? ' — ' + b.subtitle : '');
+      list.appendChild(a);
     });
+    app.appendChild(list);
+    document.title = 'BlankLabs — All posts';
+  }
 
-    function adjustText(delta){
-      settings.textScale = Math.max(0.7, Math.min(1.6, Number((settings.textScale + delta).toFixed(2))));
-      applySettings();
-    }
-    function navigatePost(delta){
-      if (currentPostIndex < 0) return;
-      let next = currentPostIndex + delta;
-      if (next < 0) next = blogs.length - 1;
-      if (next >= blogs.length) next = 0;
-      renderPostByIndex(next);
-    }
+  function renderPostByIndex(idx){
+    if (idx < 0 || idx >= blogs.length) return;
+    currentIndex = idx;
+    const post = blogs[idx];
+    renderPost(post);
+    const url = new URL(window.location.href); url.searchParams.set('id', post.id); history.replaceState({}, '', url.toString());
+  }
 
-    // --------------------------
-    // Export current post to markdown (simple)
-    // --------------------------
-    function exportCurrentPostToMarkdown(){
-      if (currentPostIndex < 0) return alert('No post open');
-      const p = blogs[currentPostIndex];
-      let md = `# ${p.title || ''}\n\n`;
-      if (p.subtitle) md += `_${p.subtitle}_\n\n`;
-      if (p.description) md += `${p.description}\n\n`;
-      (p.blocks || []).forEach(b=>{
-        if (b.type === 'text'){
-          if (b.format === 'header') md += `### ${b.content}\n\n`;
-          else if (b.format === 'list') md += (b.items || []).map(i=>`- ${i}`).join('\n') + '\n\n';
-          else md += `${b.content}\n\n`;
-        } else if (b.type === 'image'){
-          md += `![${b.caption || ''}](${resolveImageUrl(b.src)})\n\n`;
-        } else if (b.type === 'code'){
-          md += `\`\`\`${b.language || ''}\n${b.content}\n\`\`\`\n\n`;
-        }
+  function renderPost(post){
+    app.innerHTML = '';
+    const article = document.createElement('article');
+    article.setAttribute('role','article'); article.setAttribute('aria-labelledby','post-title'); article.tabIndex = -1;
+
+    const header = document.createElement('header');
+    const h2 = document.createElement('h2'); h2.id='post-title'; h2.textContent = post.title || '';
+    header.appendChild(h2);
+    const meta = document.createElement('div'); meta.className='meta';
+    const a = document.createElement('span'); a.textContent = post.author || 'BlankLabs';
+    meta.appendChild(a);
+    if (post.date){ const t = document.createElement('time'); t.dateTime = post.date; t.textContent = post.date; meta.appendChild(t); }
+    header.appendChild(meta);
+    article.appendChild(header);
+
+    const content = document.createElement('div'); content.className = 'content';
+    const blocks = Array.isArray(post.blocks) ? post.blocks : [{type:'text',format:'paragraph', content: post.content || post.description || ''}];
+    blocks.forEach(b => { const node = renderBlock(b); if (node) content.appendChild(node); });
+
+    article.appendChild(content);
+
+    // build segments and inject TTS UI (bottom bar only: we won't duplicate controls)
+    buildSegments(article);
+    // populate voice select
+    if ('speechSynthesis' in window) populateVoices();
+
+    // update tts UI state visuals
+    segmentRange.max = Math.max(0, segments.length - 1);
+    segmentRange.value = Math.min(ttsState.index, segmentRange.max);
+    segInfo.textContent = (segments.length ? (ttsState.index + 1) + ' / ' + segments.length : '0 / 0');
+    rateRange.value = ttsState.rate || 1;
+    volRange.value = ttsState.vol || 1;
+    // if user has a stored voice, set it
+    if (ttsState.voiceURI && voiceSelect.querySelector('option[value="'+ttsState.voiceURI+'"]')) voiceSelect.value = ttsState.voiceURI;
+
+    // append navigation to other posts
+    if (blogs.length > 1){
+      const nav = document.createElement('nav'); nav.style.marginTop = '14px'; nav.setAttribute('aria-label','Other posts');
+      const list = document.createElement('div'); list.style.display='flex'; list.style.gap='8px'; list.style.flexWrap='wrap';
+      blogs.forEach(b=>{
+        if (b.id === post.id) return;
+        const l = document.createElement('a'); l.className='post-link'; l.href = location.pathname + '?id=' + encodeURIComponent(b.id); l.textContent = b.title || b.id;
+        list.appendChild(l);
       });
-      const blob = new Blob([md], {type:'text/markdown'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = (p.id || 'post') + '.md'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+      nav.appendChild(list); article.appendChild(nav);
     }
 
-    // --------------------------
-    // Init and routing
-    // --------------------------
-    async function init(){
-      await loadBlogs();
-      const id = new URLSearchParams(location.search).get('id');
-      if (!id){
-        renderIndex();
-        return;
-      }
-      const idx = blogs.findIndex(b => (b.id || '').toLowerCase() === id.toLowerCase());
-      if (idx === -1){ renderNotFound(id); return; }
-      renderPostByIndex(idx);
+    app.appendChild(article);
+    document.title = (post.title || post.id) + ' — BlankLabs';
+    article.focus();
 
-      // wire global scrolling updates
-      window.addEventListener('scroll', ()=> updateProgress());
-      window.addEventListener('resize', ()=> updateProgress());
+    // show TTS bar but keep it hidden until user hits play (still visible area)
+    showTTSBar(true);
+
+    // update progress and ruler
+    updateScrollProgress();
+  }
+
+  // progress + ruler updates
+  function updateScrollProgress(){
+    const article = app.querySelector('article');
+    if (!article) return;
+    // update ruler position if enabled
+    if (prefs.ruler){
+      const centerY = window.scrollY + (window.innerHeight/2);
+      const h = Math.min(320, window.innerHeight * 0.55);
+      ruler.style.top = (centerY - h/2) + 'px';
+      ruler.style.height = h + 'px';
+      ruler.classList.add('visible');
+    } else {
+      ruler.classList.remove('visible');
     }
+  }
 
-    init();
+  window.addEventListener('scroll', updateScrollProgress);
+  window.addEventListener('resize', updateScrollProgress);
 
-    // expose debug
-    window.blanklabs = { reload: init, settings, ttsState, segments };
-
+  // init loader
+  (async function init(){
+    await loadBlogs();
+    const id = getRequestedId();
+    if (!id) { renderIndex(); return; }
+    const idx = blogs.findIndex(b => (b.id || '').toLowerCase() === id.toLowerCase());
+    if (idx === -1) { app.innerHTML = '<h2>Post not found</h2>'; return; }
+    renderPostByIndex(idx);
   })();
-  </script>
+
+  // expose for testing
+  window.blanklabs = { reload: ()=>location.reload(), prefs, ttsState, segments };
+
+})();
+</script>
 </body>
 </html>
