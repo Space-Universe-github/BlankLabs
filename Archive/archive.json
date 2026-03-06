@@ -441,12 +441,12 @@
       "trojan"
     ],
     "status": "archived",
-    "tldr": "Triage sandbox report for sample s.zip (SHA256 f0cdbf80dd053a997a0fab11077d904ad2a6a99bc157332680eeff611322f322): Threat Level 'Shows suspicious behavior' with score 7/10. Behavioral indicators include location/geofence checks, dropped DLLs and EXEs, component object model hijacking, Volume Shadow Copy API usage, registry and Program Files modifications, and suspicious API usage consistent with reconnaissance and potential ransomware-like activity.",
+    "tldr": "Triage sandbox report for sample s.zip (SHA256 f0cdbf80dd053a997a0fab11077d904ad2a6a99bc157332680eeff611322f322): Threat Level 'Shows suspicious behavior' with score 7/10. Behavioral indicators include environment/geofence checks, dropped DLLs/EXEs, COM hijack persistence, Volume Shadow Copy manipulation, registry and Program Files modifications, and suspicious API usage consistent with reconnaissance and potential ransomware-like impact.",
     "blocks": [
       {
         "type": "callout",
         "level": "info",
-        "content": "This entry is sourced from the Recorded Future Triage sandbox PDF you uploaded (sample ID 260306-t1e31aat7k)."
+        "content": "I uploaded this PDF; this entry is an analysis of the sample and explains how the file can be harmful, plus recommended remediation steps if it was installed."
       },
       {
         "type": "text",
@@ -461,64 +461,53 @@
       {
         "type": "text",
         "format": "header",
-        "content": "Notable Findings"
-      },
-      {
-        "type": "text",
-        "format": "list",
-        "items": [
-          "Malicious activity summary includes: adware, defense_evasion, discovery, persistence, privilege_escalation, ransomware, spyware, trojan.",
-          "Environment discovery: queries user locale/Geo (Control Panel\\\\International\\\\Geo\\\\Nation) and system language entries; likely geofencing or environment checks.",
-          "Loads dropped DLLs and executes multiple dropped EXEs from Temp folders (many setup.exe / ISBEW64.exe / CSP_403w_setup.exe instances).",
-          "Event-triggered execution via Component Object Model hijacking (ATT&CK T1546.015).",
-          "Uses Volume Shadow Copy Service COM API and writes SCSI/Partmgr registry snapshot keys — behavior consistent with tampering with VSS (ransomware-like).",
-          "Creates and modifies files under Program Files\\\\CELSYS\\\\CLIP STUDIO 1.5 (multiple resource and updater files touched or created).",
-          "Modifies Internet Explorer 'FeatureControl' registry keys for multiple executables under HKEY_USERS.",
-          "Modifies HKEY_USERS entries (TPM telemetry keys noted) and other registry class entries.",
-          "Suspicious API/behavioral calls observed: SetClipboardViewer, SetWindowsHookEx, SendNotifyMessage, AdjustTokenPrivileges, WriteProcessMemory, FindShellTrayWindow.",
-          "Unsigned PE indicators and multiple file hashes reported for dropped artifacts and resource files."
-        ]
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "MITRE ATT&CK Mapping"
-      },
-      {
-        "type": "text",
-        "format": "list",
-        "items": [
-          "Persistence / Event Triggered Execution: T1546 (COM Hijacking, T1546.015)",
-          "Defense Evasion: Modify Registry T1112; use of unsigned binaries and environment checks",
-          "Discovery: Network Share Discovery T1135; Peripheral Device Discovery T1120; Query Registry T1012; System Information Discovery T1082",
-          "System Location Discovery / Language checks: T1614 / T1614.001",
-          "Collection / Exfiltration / Impact related tactics also enumerated in report"
-        ]
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "Why this is concerning"
+        "content": "How this file can be bad"
       },
       {
         "type": "text",
         "format": "paragraph",
-        "content": "The combined indicators — environment/geofence checks, COM hijack persistence technique, VSS manipulation, registry modifications, dropped unsigned executables, and suspicious API usage — point to a sample that performs reconnaissance, persists via COM hijack, and contains behavior consistent with ransomware/spyware toolkits. The sandbox classifies it as 'Shows suspicious behavior' rather than a clear high-confidence detection, but the range of telemetry merits manual follow-up."
+        "content": "Based on the sandbox telemetry, this sample performs environment checks, drops and executes unsigned binaries, modifies registry keys for persistence, and interacts with Volume Shadow Copy APIs. Those behaviors let malware determine whether it is running in a real target environment, persist across reboots, tamper with system backups/snapshots, and execute additional payloads. That combination is commonly used by ransomware, spyware, and trojanized updaters."
+      },
+      {
+        "type": "text",
+        "format": "paragraph",
+        "content": "Specific risky behaviors observed include geofencing checks (querying locale/region), Component Object Model hijack persistence, creation/modification of files under Program Files (report notes multiple CELSYS related paths), and VSS-related registry operations that could indicate snapshot tampering or attempted backup removal."
       },
       {
         "type": "text",
         "format": "header",
-        "content": "Suggested next steps"
+        "content": "Recommended steps if you installed this file"
       },
       {
         "type": "text",
         "format": "list",
         "items": [
-          "Run manual dynamic analysis in an isolated lab, capturing full network traffic and process memory dumps.",
-          "Collect and triage dropped files from Temp and Program Files paths, extract their hashes and PE metadata for further threat intel checks.",
-          "Compare behavioral differences across platforms / images (Win10 vs Win11) to confirm environment checks and geofencing.",
-          "Search for COM hijack registry keys and undo changes where safe; review VSS and SCSI registry keys for snapshot tampering.",
-          "Apply endpoint detection signatures for observed file hashes and IOC patterns, and treat affected systems as suspicious pending manual review."
+          "Isolate the machine immediately: disconnect network access (unplug Ethernet, disable Wi-Fi) to stop potential exfiltration or command and control.",
+          "Do not log in to sensitive accounts from the affected machine. Use a different trusted device to change critical passwords (email, banking, work accounts) and enable multi factor authentication where available.",
+          "Capture forensic evidence if you can safely do so: save relevant logs, list of running processes, recent network connections, and file hashes. If you are not trained in forensics, avoid actions that might overwrite logs and consult an incident response (IR) professional.",
+          "Run a full scan with reputable endpoint protection/antivirus. Note that sandbox classification was 'suspicious' rather than definitive, so AV may or may not detect every dropped artifact.",
+          "Collect and quarantine any dropped artifacts from Temp and Program Files paths and extract their hashes for threat intel checks. Do this from an isolated analysis workstation where possible.",
+          "Check for persistence mechanisms described in the report: search registry COM hijack keys, HKEY_USERS changes, and changes to Internet Explorer FeatureControl keys. Revert only if you know the safe way to do so or let IR handle it.",
+          "Inspect Volume Shadow Copy / backup snapshots: if VSS was tampered with, snapshots may have been removed or modified. Restore from known-good backups that were created before the infection.",
+          "If the machine is on a corporate network, notify your security team or service desk immediately and follow your org's incident response process. Treat connected systems as potentially impacted and scan them as well.",
+          "If you cannot confirm full cleanup, perform a clean OS reinstall from known-good media and restore data from verified clean backups. Rebuild is the safest path for high-confidence remediation.",
+          "After remediation, rotate credentials that may have been used from the machine and monitor accounts and systems for suspicious activity."
+        ]
+      },
+      {
+        "type": "text",
+        "format": "header",
+        "content": "Next analysis steps (for analysts)"
+      },
+      {
+        "type": "text",
+        "format": "list",
+        "items": [
+          "Perform manual dynamic analysis in an isolated lab with full packet capture and memory dumps to confirm C2 behavior and payload retrieval.",
+          "Extract all dropped files, compute hashes, and query threat intelligence sources for matches.",
+          "Compare runs across different images (Win7/Win10/Win11) to map environment checks and geofencing behavior.",
+          "Search for COM hijack keys and other persistence artifacts in the registry and document exact keys/values for remediation playbooks.",
+          "Share confirmed IOCs with detection teams and update endpoint signatures and EDR detection rules."
         ]
       },
       {
