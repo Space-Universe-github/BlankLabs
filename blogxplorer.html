@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #100d08;
+      --surface: #1c1710;
+      --surface2:#28200f;
+      --border:  #3a2c18;
+      --accent:  #d97c2a;
+      --accent2: #b85e18;
+      --text:    #efe3ca;
+      --text2:   #b8996a;
+      --text3:   #7a6040;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Crimson Pro',Georgia,serif;min-height:100vh}
+    a{text-decoration:none;color:inherit}
+
+    /* HEADER */
+    header{
+      border-bottom:1px solid var(--border);
+      background:color-mix(in srgb,var(--bg) 90%,transparent);
+      backdrop-filter:blur(10px);
+      position:sticky;top:0;z-index:100;
+    }
+    .hdr{max-width:960px;margin:0 auto;padding:1.1rem 2rem;display:flex;align-items:baseline;gap:1.5rem}
+    .logo{font-family:'Playfair Display',Georgia,serif;font-size:1.5rem;font-weight:700;color:var(--accent);letter-spacing:.04em}
+    .tagline{font-size:.85rem;color:var(--text3);font-family:'DM Mono',monospace;letter-spacing:.04em}
+    .hdr-space{flex:1}
+    .hdr-count{font-family:'DM Mono',monospace;font-size:.7rem;color:var(--text3)}
+
+    /* HERO */
+    .hero{
+      max-width:960px;margin:0 auto;padding:5rem 2rem 3.5rem;
+      border-bottom:1px solid var(--border);position:relative;overflow:hidden
+    }
+    .hero::before{
+      content:'';position:absolute;top:-40%;right:-10%;width:500px;height:500px;
+      background:radial-gradient(ellipse,color-mix(in srgb,var(--accent) 8%,transparent),transparent 70%);
+      pointer-events:none
+    }
+    .hero-label{font-family:'DM Mono',monospace;font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem}
+    .hero-title{font-family:'Playfair Display',Georgia,serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:700;line-height:1.1;letter-spacing:-.03em;margin-bottom:1rem}
+    .hero-sub{font-size:1.05rem;color:var(--text2);max-width:480px;line-height:1.65}
+
+    /* POSTS GRID */
+    .posts-wrap{max-width:960px;margin:0 auto;padding:3.5rem 2rem 6rem}
+    .posts-label{font-family:'DM Mono',monospace;font-size:.65rem;letter-spacing:.16em;text-transform:uppercase;color:var(--text3);margin-bottom:2rem;padding-bottom:.75rem;border-bottom:1px solid var(--border)}
+    .posts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+
+    /* CARD */
+    .card{
+      display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--border);
+      border-radius:8px;padding:1.5rem;transition:all .2s;position:relative;overflow:hidden
+    }
+    .card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform .3s ease
+    }
+    .card:hover{border-color:color-mix(in srgb,var(--accent) 50%,transparent);background:var(--surface2)}
+    .card:hover::before{transform:scaleX(1)}
+    .card-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+    .card-date{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text3);letter-spacing:.04em}
+    .card-author{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text3)}
+    .card-title{font-family:'Playfair Display',Georgia,serif;font-size:1.2rem;font-weight:600;line-height:1.3;margin-bottom:.6rem;color:var(--text);transition:color .2s}
+    .card:hover .card-title{color:var(--accent)}
+    .card-sub{font-size:.88rem;color:var(--text2);font-style:italic;line-height:1.5;margin-bottom:.75rem}
+    .card-desc{font-size:.88rem;color:var(--text3);line-height:1.55;flex:1;margin-bottom:1.1rem}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+    .card-read{
+      font-family:'DM Mono',monospace;font-size:.68rem;color:var(--accent);letter-spacing:.06em;
+      border:1px solid var(--accent);padding:.25rem .65rem;border-radius:3px;transition:all .2s
+    }
+    .card:hover .card-read{background:var(--accent);color:#000}
+    .card-idx{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--border)}
+
+    /* EMPTY / ERROR */
+    .msg{text-align:center;padding:5rem 2rem;color:var(--text3);font-family:'DM Mono',monospace;font-size:.85rem}
+    .msg h2{font-family:'Playfair Display',Georgia,serif;font-size:1.5rem;color:var(--text2);margin-bottom:.75rem}
+
+    /* FOOTER */
+    footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;font-family:'DM Mono',monospace;font-size:.68rem;color:var(--text3)}
+
+    /* REVEAL */
+    .card{opacity:0;transform:translateY(12px);animation:up .45s ease forwards}
+    @keyframes up{to{opacity:1;transform:none}}
+
+    @media(max-width:600px){
+      .hdr{padding:.9rem 1.25rem}
+      .hero{padding:3rem 1.25rem 2.5rem}
+      .posts-wrap{padding:2.5rem 1.25rem 5rem}
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="hdr">
+    <span class="logo">◈ BLOG</span>
+    <span class="tagline">// words &amp; ideas</span>
+    <div class="hdr-space"></div>
+    <span class="hdr-count" id="hdr-count"></span>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-label">All Posts</div>
+  <h1 class="hero-title">Ideas worth<br><em>writing down.</em></h1>
+  <p class="hero-sub">A collection of posts on development, design, and whatever else seemed worth exploring.</p>
+</section>
+
+<div class="posts-wrap">
+  <div class="posts-label" id="posts-label">Loading…</div>
+  <div class="posts-grid" id="posts-grid">
+    <div class="msg">
+      <div style="font-size:.85rem;color:var(--text3)">Loading posts…</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  Built with a custom JSON-driven blog engine. All posts rendered client-side.
+</footer>
+
+<script>
+async function loadPosts() {
+  const grid = document.getElementById('posts-grid');
+  const label = document.getElementById('posts-label');
+  const hdrCount = document.getElementById('hdr-count');
+
+  let blogs;
+  try {
+    const res = await fetch('./blogs.json');
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    blogs = await res.json();
+  } catch (err) {
+    grid.innerHTML = '<div class="msg"><h2>Couldn\'t load posts</h2><p>Make sure you\'re running from a web server and blogs.json exists.</p></div>';
+    label.textContent = 'Error';
+    return;
+  }
+
+  if (!blogs.length) {
+    grid.innerHTML = '<div class="msg"><h2>No posts yet</h2><p>Add entries to blogs.json to get started.</p></div>';
+    label.textContent = '0 posts';
+    return;
+  }
+
+  label.textContent = blogs.length + (blogs.length === 1 ? ' post' : ' posts');
+  hdrCount.textContent = blogs.length + ' posts';
+  grid.innerHTML = '';
+
+  blogs.forEach((blog, i) => {
+    const a = document.createElement('a');
+    a.href = './blogs/?id=' + blog.id;
+    a.className = 'card';
+    a.style.animationDelay = (i * 60) + 'ms';
+
+    const date = blog.date ? new Date(blog.date + 'T12:00:00').toLocaleDateString('en-US', { year:'numeric', month:'short', day:'numeric' }) : '';
+
+    a.innerHTML = `
+      <div class="card-meta">
+        <span class="card-date">${date}</span>
+        <span class="card-author">${blog.author || ''}</span>
+      </div>
+      <div class="card-title">${blog.title}</div>
+      ${blog.subtitle ? `<div class="card-sub">${blog.subtitle}</div>` : ''}
+      ${blog.description ? `<div class="card-desc">${blog.description}</div>` : ''}
+      <div class="card-footer">
+        <span class="card-read">Read post →</span>
+        <span class="card-idx">#${String(i + 1).padStart(3, '0')}</span>
+      </div>
+    `;
+    grid.appendChild(a);
+  });
+}
+
+loadPosts();
+</script>
+</body>
+</html>
