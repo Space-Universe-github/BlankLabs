@@ -1,163 +1,273 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>404 — BlankLabs</title>
-<meta name="robots" content="noindex">
-<link rel="icon" href="/favicon.ico" />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#071018; --glass:rgba(18,20,22,0.84); --card:#0e1416;
-    --muted:#9aa3ad; --text:#e6eef3; --accent:#6cf2c2;
-    --radius:16px; --maxw:980px; --shadow:0 14px 48px rgba(0,0,0,0.65);
-    --ease:cubic-bezier(.2,.9,.3,1);
-  }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 — BlankLabs</title>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:wght@400;600&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #100d08;
+      --surface: #1c1710;
+      --border:  #3a2c18;
+      --accent:  #d97c2a;
+      --text:    #efe3ca;
+      --text2:   #b8996a;
+      --text3:   #7a6040;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html, body { height: 100% }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Pro', Georgia, serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
 
-  *{box-sizing:border-box}
-  html,body{height:100%; margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial; overflow:hidden;}
-  body{
-    background:#071018;
-    color:var(--text);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:28px;
-  }
+    /* noise */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 180px 180px;
+    }
 
-  /* Particle canvas fills entire background */
-  #particles-bg{
-    position:fixed;
-    top:0; left:0; width:100%; height:100%;
-    z-index:0;
-  }
+    canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .5;
+    }
 
-  .wrap{
-    position:relative;
-    z-index:1;
-    width:100%;
-    max-width:var(--maxw);
-  }
+    /* big background 404 */
+    .bg-num {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(18rem, 38vw, 32rem);
+      font-weight: 700;
+      color: transparent;
+      -webkit-text-stroke: 1px color-mix(in srgb, var(--accent) 12%, transparent);
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -.04em;
+      animation: bgpulse 6s ease-in-out infinite;
+    }
+    @keyframes bgpulse {
+      0%, 100% { opacity: .6 }
+      50% { opacity: 1 }
+    }
 
-  .card{
-    background:var(--glass);
-    border-radius:var(--radius);
-    padding:28px;
-    box-shadow:var(--shadow);
-    border:1px solid rgba(255,255,255,0.05);
-    backdrop-filter:blur(12px);
-    animation:fadeIn 0.6s var(--ease);
-  }
+    /* content */
+    .wrap {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      text-align: center;
+      padding: 2rem;
+      animation: enterup .7s cubic-bezier(.2,.9,.3,1) both;
+    }
+    @keyframes enterup {
+      from { opacity: 0; transform: translateY(18px) }
+      to   { opacity: 1; transform: none }
+    }
 
-  @keyframes fadeIn{
-    from{opacity:0; transform:translateY(20px);}
-    to{opacity:1; transform:translateY(0);}
-  }
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: .65rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      animation: enterup .7s .1s cubic-bezier(.2,.9,.3,1) both;
+    }
 
-  .brand-row{ display:flex; gap:14px; align-items:center; margin-bottom:12px; }
-  .brand-mark{ width:56px;height:56px;border-radius:12px;display:grid;place-items:center; overflow:hidden; background:linear-gradient(180deg,#fff,#f2f6f9); }
-  .brand-mark img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .headline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      animation: enterup .7s .18s cubic-bezier(.2,.9,.3,1) both;
+    }
+    .headline em { font-style: italic; color: var(--text2) }
 
-  .muted-small{ color:var(--muted); font-size:0.95rem; }
-  h1{ margin:0; font-size:clamp(1.2rem,2.8vw,2rem); }
-  .big{ font-size:clamp(2rem,6vw,3.6rem); font-weight:700; margin:8px 0; }
-  .lead{ margin:12px 0 0; color:var(--muted); line-height:1.5; }
-  .details{ margin-top:14px; color:var(--muted); line-height:1.5; max-width:72ch; }
-  .actions{ display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
-  .btn{ padding:10px 14px; border-radius:10px; background:var(--card); border:1px solid rgba(255,255,255,0.05); cursor:pointer; font-weight:700; color:var(--text); text-decoration:none; display:inline-flex; align-items:center; gap:8px; }
+    .sub {
+      font-size: 1.05rem;
+      color: var(--text2);
+      line-height: 1.65;
+      max-width: 380px;
+      animation: enterup .7s .26s cubic-bezier(.2,.9,.3,1) both;
+    }
 
-  footer{ text-align:center; margin-top:18px; color:var(--muted); font-size:0.9rem; }
+    .actions {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: .5rem;
+      animation: enterup .7s .34s cubic-bezier(.2,.9,.3,1) both;
+    }
 
-  @media (max-width:680px){
-    .card{ padding:18px; }
-    .brand-mark{ width:48px; height:48px; }
-  }
-</style>
+    .btn-home {
+      background: var(--accent);
+      border: none;
+      color: #000;
+      font-family: 'DM Mono', monospace;
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      padding: .65rem 1.3rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background .18s, transform .18s;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .btn-home:hover { background: #b85e18; transform: translateY(-2px); text-decoration: none }
+
+    .btn-back {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      font-family: 'DM Mono', monospace;
+      font-size: .72rem;
+      letter-spacing: .08em;
+      padding: .65rem 1.3rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: all .18s;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .btn-back:hover { border-color: var(--accent); color: var(--accent); text-decoration: none }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--border);
+      animation: enterup .7s .4s cubic-bezier(.2,.9,.3,1) both;
+    }
+
+    .path-display {
+      font-family: 'DM Mono', monospace;
+      font-size: .68rem;
+      color: var(--text3);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: .35rem .8rem;
+      border-radius: 4px;
+      letter-spacing: .04em;
+      animation: enterup .7s .44s cubic-bezier(.2,.9,.3,1) both;
+    }
+    .path-display span { color: var(--accent) }
+
+    /* wordmark top-left */
+    .wordmark {
+      position: fixed;
+      top: 1.4rem;
+      left: 1.6rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: .05em;
+      text-decoration: none;
+      z-index: 10;
+      opacity: .7;
+      transition: opacity .18s;
+    }
+    .wordmark:hover { opacity: 1; text-decoration: none }
+  </style>
 </head>
 <body>
-<canvas id="particles-bg"></canvas>
 
-<div class="wrap" role="main" aria-labelledby="title">
-  <div class="card" id="card404">
-    <div class="brand-row">
-      <div class="brand-mark" aria-hidden="true">
-        <img src="/logo.png" alt="BlankLabs logo" onerror="this.src='/placeholder.png'">
-      </div>
-      <div>
-        <div class="muted-small" style="font-weight:700">BlankLabs</div>
-        <h1 id="title">Page not found</h1>
-      </div>
-    </div>
+<canvas id="c" aria-hidden="true"></canvas>
+<div class="bg-num" aria-hidden="true">404</div>
 
-    <div class="big">404</div>
+<a href="/" class="wordmark">◈ BlankLabs</a>
 
-    <p class="lead">Looks like you wandered into the wrong place. No biggie — you can head back home or keep exploring below.</p>
-
-    <div class="details">
-      <p>This website is mostly finished, but I haven’t finished checking everything yet. Right now most content — posts, projects, and photo stories — shows up on the main page instead of separate pages. If a link brought you here, it’s probably because I haven’t turned that link into its own page yet. Sorry about the confusion.</p>
-
-      <p>If you’re curious: the main page has the full site, and I’m still tidying up a few bits. Thanks for stopping by and for the patience while I clean things up.</p>
-
-      <p style="margin-top:10px">If you need help or want to say something about a missing page, hit contact and I’ll try to fix it.</p>
-    </div>
-
-    <div class="actions">
-      <a class="btn" href="/" title="Back to home">← Back to BlankLabs</a>
-      <a class="btn" href="mailto:blank@blanklabs.site" title="Email">Contact</a>
-    </div>
-
-    <div class="muted-small" style="margin-top:12px">Thanks for checking the site — I’ll get the rest working soon.</div>
-
-    <footer>© <span id="yr404"></span> BlankLabs</footer>
+<div class="wrap">
+  <div class="eyebrow">Error 404</div>
+  <h1 class="headline">Nothing here<br><em>but static.</em></h1>
+  <p class="sub">That page doesn't exist, got moved, or maybe never made it out of drafts.</p>
+  <div class="path-display">
+    <span id="path-text">/</span>
+  </div>
+  <div class="actions">
+    <a href="/" class="btn-home">← Home</a>
+    <a href="/blogs/" class="btn-home" style="background:var(--surface);border:1px solid var(--border);color:var(--text2)">Blog</a>
+    <button class="btn-back" onclick="history.length>1?history.back():window.location='/'">Go back</button>
   </div>
 </div>
 
 <script>
-  // Year + dark mode
-  document.getElementById('yr404').textContent = new Date().getFullYear();
-  if(window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches){
-    document.documentElement.setAttribute('data-theme','dark');
-  }
+  // Show the bad path
+  const p = window.location.pathname;
+  document.getElementById('path-text').textContent = p.length > 48 ? p.slice(0, 48) + '…' : p;
 
-  // Particles background
-  const canvas = document.getElementById('particles-bg');
+  // Particles
+  const canvas = document.getElementById('c');
   const ctx = canvas.getContext('2d');
-  let w, h;
-  function resize(){ w=canvas.width=window.innerWidth; h=canvas.height=window.innerHeight; }
-  window.addEventListener('resize',resize);
-  resize();
+  let pts = [];
 
-  const particles = [];
-  const particleCount = 80;
-  for(let i=0;i<particleCount;i++){
-    particles.push({
-      x:Math.random()*w,
-      y:Math.random()*h,
-      r:Math.random()*2+1,
-      alpha:Math.random()*0.5+0.3,
-      dx:(Math.random()-0.5)*0.3,
-      dy:(Math.random()-0.5)*0.3,
-      blink:Math.random()*0.05+0.01
-    });
+  function init() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    pts = [];
+    const n = Math.round(canvas.width / 24);
+    for (let i = 0; i < n; i++) {
+      pts.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        s: 2 + Math.random() * 12,
+        v: 0.07 + Math.random() * 0.18,
+        d: (Math.random() - .5) * .05,
+        o: .025 + Math.random() * .055,
+        c: Math.random() > .5 ? `rgba(217,124,42,` : `rgba(90,60,20,`
+      });
+    }
   }
 
-  function draw(){
-    ctx.clearRect(0,0,w,h);
-    for(let p of particles){
-      p.alpha += p.blink;
-      if(p.alpha > 1 || p.alpha < 0.3) p.blink *= -1;
-      p.x += p.dx; p.y += p.dy;
-      if(p.x> w) p.x=0; if(p.x<0) p.x=w;
-      if(p.y> h) p.y=0; if(p.y<0) p.y=h;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (const p of pts) {
+      ctx.save();
+      ctx.globalAlpha = p.o;
+      ctx.fillStyle = p.c + p.o + ')';
       ctx.beginPath();
-      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(108,242,194,${p.alpha})`;
+      ctx.roundRect(p.x, p.y, p.s, p.s, p.s * .22);
       ctx.fill();
+      ctx.restore();
+      p.y -= p.v;
+      p.x += p.d;
+      if (p.y + p.s < 0) { p.y = canvas.height + p.s; p.x = Math.random() * canvas.width; }
     }
     requestAnimationFrame(draw);
   }
+
+  init();
   draw();
+  window.addEventListener('resize', () => { clearTimeout(window._rz); window._rz = setTimeout(init, 200); });
 </script>
 </body>
 </html>
