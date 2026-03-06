@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[-_-] NANOPOSTS // THE ARCHIVE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:      #080a0d;
+      --bg2:     #050608;
+      --surface: #0d1117;
+      --surface2:#131a24;
+      --border:  #1a2535;
+      --border2: #223040;
+      --text:    #b0c8e0;
+      --text2:   #5a7898;
+      --text3:   #2e4560;
+      --cyan:    #00c8e8;
+      --cyan2:   #008aaa;
+      --green:   #2de08a;
+      --orange:  #ffaa44;
+      --red:     #ff3b4e;
+      --yellow:  #f0d060;
+      --mono:    'IBM Plex Mono', 'Courier New', monospace;
+      --vt:      'VT323', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+    html { font-size: 15px; scroll-behavior: smooth }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* scanlines */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent, transparent 3px,
+        rgba(0,0,0,.07) 3px, rgba(0,0,0,.07) 4px
+      );
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 8999;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,.55) 100%);
+    }
+
+    a { color: var(--cyan); text-decoration: none }
+    a:hover { text-decoration: underline }
+
+    ::-webkit-scrollbar { width: 4px }
+    ::-webkit-scrollbar-track { background: var(--bg2) }
+    ::-webkit-scrollbar-thumb { background: var(--border2) }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text3) }
+
+    /* ── HEADER ──────────────────────────────── */
+    #hdr {
+      position: sticky;
+      top: 0;
+      z-index: 500;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+    }
+    .hdr-top {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: .6rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: var(--vt);
+      font-size: 2rem;
+      color: var(--cyan);
+      line-height: 1;
+      text-shadow: 0 0 12px rgba(0,200,232,.4);
+      flex-shrink: 0;
+    }
+    .logo-sep { font-size: .65rem; color: var(--text3) }
+    .site-name { font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; color: var(--text2) }
+    .sub-name  { font-size: .65rem; letter-spacing: .18em; text-transform: uppercase; color: var(--text3) }
+    .hdr-space { flex: 1 }
+    .hdr-link {
+      font-size: .62rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      border: 1px solid var(--border);
+      padding: .25rem .6rem;
+      transition: all .15s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .hdr-link:hover { color: var(--cyan); border-color: var(--cyan2); text-decoration: none }
+
+    .hdr-controls {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      padding: .5rem 1.5rem;
+    }
+    #search {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: .75rem;
+      padding: .28rem .5rem;
+      outline: none;
+      width: 220px;
+      transition: border-color .15s;
+    }
+    #search::placeholder { color: var(--text3) }
+    #search:focus { border-color: var(--cyan2) }
+    .tag-filters { display: flex; gap: .3rem; flex-wrap: wrap }
+    .tag-filt {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text3);
+      font-family: var(--mono);
+      font-size: .58rem;
+      letter-spacing: .1em;
+      padding: .18rem .5rem;
+      cursor: pointer;
+      transition: all .15s;
+      text-transform: uppercase;
+    }
+    .tag-filt:hover { color: var(--text2); border-color: var(--border2) }
+    .tag-filt.on { color: var(--bg); border-color: var(--cyan); background: var(--cyan) }
+    #post-count { margin-left: auto; font-size: .6rem; color: var(--text3); letter-spacing: .06em; white-space: nowrap }
+
+    /* ── LAYOUT ──────────────────────────────── */
+    #app {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 2rem;
+      align-items: start;
+    }
+    @media(max-width: 700px) { #app { grid-template-columns: 1fr; padding: 1rem 1rem 4rem } }
+
+    /* ── FEED ────────────────────────────────── */
+    #feed {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .nano-post {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 0;
+      transition: background .12s;
+      position: relative;
+    }
+    .nano-post:last-child { border-bottom: none }
+
+    .np-meta {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: .6rem;
+      flex-wrap: wrap;
+    }
+    .np-id {
+      font-size: .58rem;
+      letter-spacing: .1em;
+      color: var(--text3);
+    }
+    .np-date {
+      font-size: .62rem;
+      color: var(--text3);
+    }
+    .np-tag {
+      font-size: .55rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text3);
+      border: 1px solid var(--border);
+      padding: .1rem .35rem;
+      cursor: pointer;
+      transition: all .12s;
+    }
+    .np-tag:hover { color: var(--cyan); border-color: var(--cyan2) }
+
+    .np-body {
+      font-size: .82rem;
+      line-height: 1.75;
+      color: var(--text);
+      max-width: 680px;
+    }
+
+    .np-footer {
+      margin-top: .7rem;
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .np-ref {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .65rem;
+      color: var(--text3);
+      border: 1px solid var(--border);
+      padding: .25rem .6rem;
+      transition: all .15s;
+      cursor: pointer;
+    }
+    .np-ref::before { content: '↗'; color: var(--cyan2); font-size: .7em }
+    .np-ref:hover { color: var(--cyan); border-color: var(--cyan2) }
+
+    .np-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .65rem;
+      color: var(--cyan);
+      border: 1px solid var(--border);
+      padding: .25rem .6rem;
+      transition: all .15s;
+    }
+    .np-link::before { content: '//'; color: var(--text3); font-size: .7em }
+    .np-link:hover { border-color: var(--cyan2); text-decoration: none }
+
+    /* ── SIDEBAR ─────────────────────────────── */
+    #sidebar {
+      position: sticky;
+      top: 88px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    @media(max-width: 700px) { #sidebar { position: static } }
+
+    .side-block { display: flex; flex-direction: column; gap: .35rem }
+    .side-label {
+      font-size: .58rem;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--text3);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: .4rem;
+      margin-bottom: .1rem;
+    }
+    .side-stat {
+      display: flex;
+      justify-content: space-between;
+      font-size: .7rem;
+      color: var(--text2);
+      padding: .15rem 0;
+    }
+    .side-stat span:last-child { color: var(--text3) }
+
+    .top-tag {
+      font-size: .65rem;
+      color: var(--text2);
+      padding: .2rem 0;
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: color .12s;
+      border-bottom: 1px solid color-mix(in srgb, var(--border) 50%, transparent);
+    }
+    .top-tag:hover { color: var(--cyan) }
+    .top-tag:last-child { border-bottom: none }
+    .top-tag-count { color: var(--text3) }
+
+    .side-rss {
+      font-size: .62rem;
+      color: var(--text3);
+      line-height: 1.55;
+      padding: .5rem;
+      border: 1px solid var(--border);
+    }
+    .side-rss-label { color: var(--orange); letter-spacing: .1em; text-transform: uppercase; font-size: .58rem; margin-bottom: .25rem }
+
+    /* ── EMPTY ───────────────────────────────── */
+    #state-msg {
+      font-size: .75rem;
+      color: var(--text3);
+      padding: 3rem 0;
+      text-align: center;
+      letter-spacing: .06em;
+    }
+    .blinking::after { content: '_'; animation: cur .8s step-end infinite }
+    @keyframes cur { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    /* ── LOAD MORE ───────────────────────────── */
+    #load-more-wrap { text-align: center; padding: 1.5rem 0 }
+    #load-more {
+      background: none;
+      border: 1px solid var(--border2);
+      color: var(--text3);
+      font-family: var(--mono);
+      font-size: .65rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .4rem 1.2rem;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    #load-more:hover { color: var(--cyan); border-color: var(--cyan2) }
+
+    /* ── FOOTER ──────────────────────────────── */
+    #foot {
+      text-align: center;
+      padding: 2rem;
+      font-size: .6rem;
+      color: var(--text3);
+      letter-spacing: .08em;
+      border-top: 1px solid var(--border);
+    }
+    #foot a { color: var(--text3) }
+    #foot a:hover { color: var(--cyan) }
+  </style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="hdr-top">
+    <a href="/Archive/" style="text-decoration:none"><span class="logo">[-_-]</span></a>
+    <span class="logo-sep">//</span>
+    <span class="site-name">The Archive</span>
+    <span class="logo-sep">/</span>
+    <span class="sub-name">Nanoposts</span>
+    <div class="hdr-space"></div>
+    <a href="/Archive/" class="hdr-link">← Archive</a>
+    <a href="/" class="hdr-link">BlankLabs</a>
+  </div>
+  <div class="hdr-controls">
+    <input type="search" id="search" placeholder="filter posts_" spellcheck="false" autocomplete="off">
+    <div class="tag-filters" id="tag-filters"></div>
+    <span id="post-count"></span>
+  </div>
+</header>
+
+<div id="app">
+  <main>
+    <div id="feed">
+      <div id="state-msg"><span class="blinking">LOADING</span></div>
+    </div>
+    <div id="load-more-wrap" style="display:none">
+      <button id="load-more">[ LOAD MORE ]</button>
+    </div>
+  </main>
+
+  <aside id="sidebar">
+    <div class="side-block">
+      <div class="side-label">Stats</div>
+      <div class="side-stat"><span>TOTAL</span><span id="stat-total">—</span></div>
+      <div class="side-stat"><span>WITH REFS</span><span id="stat-refs">—</span></div>
+      <div class="side-stat"><span>WITH LINKS</span><span id="stat-links">—</span></div>
+    </div>
+    <div class="side-block">
+      <div class="side-label">Top Tags</div>
+      <div id="top-tags"></div>
+    </div>
+    <div class="side-block">
+      <div class="side-rss">
+        <div class="side-rss-label">// NOTE</div>
+        Nanoposts are short observations, notes, and meta-commentary. For full entries visit the main Archive.
+      </div>
+    </div>
+  </aside>
+</div>
+
+<footer id="foot">
+  [-_-] THE ARCHIVE // NANOPOSTS &nbsp;·&nbsp;
+  <a href="/Archive/">MAIN ARCHIVE</a> &nbsp;·&nbsp;
+  <a href="/">BLANKLABS</a>
+  <br><br>
+  <span id="foot-year"></span>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+const NANOPOSTS_URL = '/Archive/nanoposts.json';
+const PAGE_SIZE = 12;
+
+let allPosts    = [];
+let filtered    = [];
+let displayed   = 0;
+let activeQuery = '';
+let activeTag   = '';
+
+async function fetchJSON(url) {
+  try {
+    const r = await fetch(url, { cache: 'no-cache' });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch { return null; }
+}
+
+function fmtTS(s) {
+  if (!s) return '';
+  try {
+    return new Date(s).toLocaleString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  } catch { return s; }
+}
+
+function makePost(p) {
+  const el = document.createElement('div');
+  el.className = 'nano-post';
+
+  // meta row
+  const meta = document.createElement('div'); meta.className = 'np-meta';
+  const id = document.createElement('span'); id.className = 'np-id'; id.textContent = p.id;
+  const dt = document.createElement('span'); dt.className = 'np-date'; dt.textContent = fmtTS(p.date);
+  meta.appendChild(id);
+  meta.appendChild(dt);
+  (p.tags || []).forEach(t => {
+    const tg = document.createElement('span'); tg.className = 'np-tag'; tg.textContent = t;
+    tg.addEventListener('click', () => setTagFilter(t));
+    meta.appendChild(tg);
+  });
+
+  // body
+  const body = document.createElement('div'); body.className = 'np-body';
+  body.textContent = p.content || '';
+
+  el.appendChild(meta);
+  el.appendChild(body);
+
+  // footer — ref + link
+  if (p.ref || p.link) {
+    const foot = document.createElement('div'); foot.className = 'np-footer';
+    if (p.ref) {
+      const ref = document.createElement('span'); ref.className = 'np-ref';
+      ref.textContent = p.ref.label || p.ref.id;
+      ref.title = 'Open in Archive';
+      ref.addEventListener('click', () => {
+        window.location.href = '/Archive/?ref=' + p.ref.id;
+      });
+      foot.appendChild(ref);
+    }
+    if (p.link) {
+      const lnk = document.createElement('a'); lnk.className = 'np-link';
+      lnk.href = p.link.url; lnk.textContent = p.link.label || p.link.url;
+      lnk.target = '_blank'; lnk.rel = 'noopener noreferrer';
+      foot.appendChild(lnk);
+    }
+    el.appendChild(foot);
+  }
+
+  return el;
+}
+
+function renderFeed(reset) {
+  const feed = document.getElementById('feed');
+  if (reset) {
+    feed.innerHTML = '';
+    displayed = 0;
+  }
+
+  if (!filtered.length) {
+    feed.innerHTML = '<div id="state-msg">NO POSTS MATCH.</div>';
+    document.getElementById('load-more-wrap').style.display = 'none';
+    document.getElementById('post-count').textContent = '0 posts';
+    return;
+  }
+
+  const slice = filtered.slice(displayed, displayed + PAGE_SIZE);
+  slice.forEach(p => feed.appendChild(makePost(p)));
+  displayed += slice.length;
+
+  const lmw = document.getElementById('load-more-wrap');
+  lmw.style.display = displayed < filtered.length ? 'block' : 'none';
+  document.getElementById('post-count').textContent = displayed + ' / ' + filtered.length;
+}
+
+function applyFilter() {
+  let result = allPosts.slice();
+  if (activeQuery) {
+    const q = activeQuery.toLowerCase();
+    result = result.filter(p =>
+      ((p.content||'') + ' ' + (p.tags||[]).join(' ') + ' ' + (p.ref&&p.ref.label||'')).toLowerCase().includes(q)
+    );
+  }
+  if (activeTag) {
+    result = result.filter(p => (p.tags||[]).includes(activeTag));
+  }
+  filtered = result;
+  renderFeed(true);
+}
+
+function setTagFilter(tag) {
+  activeTag = activeTag === tag ? '' : tag;
+  document.querySelectorAll('.tag-filt').forEach(b => {
+    b.classList.toggle('on', b.dataset.tag === activeTag);
+  });
+  applyFilter();
+}
+
+function buildTagFilters(posts) {
+  const freq = {};
+  posts.forEach(p => (p.tags||[]).forEach(t => { freq[t] = (freq[t]||0)+1; }));
+  const sorted = Object.entries(freq).sort((a,b) => b[1]-a[1]);
+
+  // header filters (top 6)
+  const wrap = document.getElementById('tag-filters');
+  wrap.innerHTML = '';
+  sorted.slice(0, 6).forEach(([tag]) => {
+    const b = document.createElement('button'); b.className = 'tag-filt'; b.dataset.tag = tag; b.textContent = tag;
+    b.addEventListener('click', () => setTagFilter(tag));
+    wrap.appendChild(b);
+  });
+
+  // sidebar top tags
+  const tt = document.getElementById('top-tags');
+  tt.innerHTML = '';
+  sorted.slice(0, 8).forEach(([tag, count]) => {
+    const row = document.createElement('div'); row.className = 'top-tag'; row.dataset.tag = tag;
+    const name = document.createElement('span'); name.textContent = tag;
+    const cnt = document.createElement('span'); cnt.className = 'top-tag-count'; cnt.textContent = count;
+    row.appendChild(name); row.appendChild(cnt);
+    row.addEventListener('click', () => setTagFilter(tag));
+    tt.appendChild(row);
+  });
+}
+
+function updateStats(posts) {
+  document.getElementById('stat-total').textContent  = posts.length;
+  document.getElementById('stat-refs').textContent   = posts.filter(p => p.ref).length;
+  document.getElementById('stat-links').textContent  = posts.filter(p => p.link).length;
+}
+
+document.getElementById('search').addEventListener('input', e => {
+  activeQuery = e.target.value.trim(); applyFilter();
+});
+document.getElementById('load-more').addEventListener('click', () => renderFeed(false));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    activeTag = ''; activeQuery = '';
+    document.getElementById('search').value = '';
+    document.querySelectorAll('.tag-filt').forEach(b => b.classList.remove('on'));
+    applyFilter();
+  }
+});
+
+async function init() {
+  document.getElementById('foot-year').textContent = new Date().getFullYear();
+
+  const data = await fetchJSON(NANOPOSTS_URL);
+  if (!data || !data.length) {
+    document.getElementById('state-msg').textContent = 'ERROR: COULD NOT LOAD nanoposts.json';
+    return;
+  }
+
+  // sort newest first
+  allPosts = data.slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
+  filtered = allPosts.slice();
+
+  updateStats(allPosts);
+  buildTagFilters(allPosts);
+  renderFeed(true);
+}
+
+init();
+})();
+</script>
+</body>
+</html>
