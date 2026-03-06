@@ -431,19 +431,24 @@
     }
     #modal-close:hover { color: var(--red); border-color: var(--red) }
 
-    /* modal scroll progress bar */
+    /* modal scroll progress bar — fixed at very top of viewport */
     #modal-progress {
+      position: fixed;
+      top: 0; left: 0; right: 0;
       height: 2px;
-      background: var(--border);
-      position: sticky;
-      top: 0;
-      z-index: 5;
+      background: transparent;
+      z-index: 9100;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity .15s;
     }
+    body.modal-open #modal-progress { opacity: 1 }
     #modal-progress-bar {
       height: 100%;
       background: var(--cyan);
       width: 0%;
-      transition: width .1s linear;
+      transition: width .08s linear;
+      box-shadow: 0 0 6px rgba(0,200,232,.5);
     }
 
     .modal-hdr {
@@ -1155,10 +1160,12 @@
   </div>
 </div>
 
+<!-- Progress bar — fixed at very top of viewport when modal is open -->
+<div id="modal-progress"><div id="modal-progress-bar"></div></div>
+
 <!-- Main modal -->
 <div id="modal-bg">
   <div id="modal-box">
-    <!-- toolbar: nav + utils + close all in one flex row, no overlap possible -->
     <div class="modal-toolbar">
       <div class="modal-toolbar-left">
         <button class="modal-nav-btn" id="modal-prev" title="Previous entry">← PREV</button>
@@ -1171,8 +1178,6 @@
         <button id="modal-close">✕ CLOSE</button>
       </div>
     </div>
-    <!-- scroll progress bar -->
-    <div id="modal-progress"><div id="modal-progress-bar"></div></div>
     <div class="modal-hdr" id="modal-hdr"></div>
     <div class="modal-body" id="modal-body"></div>
   </div>
@@ -1634,7 +1639,6 @@ let currentEntryList  = []; // the active filtered list at the time modal opens
 
 // progress bar on modal scroll
 modalBg.addEventListener('scroll', () => {
-  if (!modalBox) return;
   const scrolled = modalBg.scrollTop;
   const total = modalBg.scrollHeight - modalBg.clientHeight;
   modalProgBar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
@@ -1747,11 +1751,13 @@ function openModal(entry, pushState = true, entryList) {
   }
 
   modalBg.classList.add('open');
+  document.body.classList.add('modal-open');
   document.body.style.overflow = 'hidden';
 }
 
 function closeModal() {
   modalBg.classList.remove('open');
+  document.body.classList.remove('modal-open');
   document.body.style.overflow = '';
   currentEntryId = null;
   currentEntryIndex = -1;
@@ -1799,6 +1805,7 @@ window.addEventListener('popstate', () => {
     if (entry) openModal(entry, false);
   } else {
     modalBg.classList.remove('open');
+    document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
     currentEntryId = null;
     document.title = '[-_-] THE ARCHIVE';
