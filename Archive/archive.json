@@ -51,7 +51,7 @@
         { "date": "2023-06", "label": "Status: stalled", "detail": "No US federal legislation passes. ESA lobbying spending exceeds $10M over the period. The issue moves out of news cycle." }
       ]},
       { "type": "text", "format": "header", "content": "The Lobbying Record" },
-      { "type": "text", "format": "paragraph", "content": "The Entertainment Software Association filed comments with the FTC arguing loot boxes are 'a modern-day version of purchasing collectible physical trading cards.' This comparison was repeated verbatim in at least four subsequent Congressional testimonies. The 'surprise mechanics' framing originated in EA's testimony and was treated as a legitimate framing by multiple legislators." },
+      { "type": "text", "format": "paragraph", "content": "The Entertainment Software Association filed comments with the FTC arguing loot boxes are 'a modern-day version of purchasing collectible physical trading cards.' This comparison was repeated verbatim in at least four subsequent Congressional testimonies. The 'surprise mechanics' framing originated in EA's testimony and was treated as a legitimate framing by multiple politicians in follow-up hearings." },
       { "type": "callout", "level": "critical", "content": "The phrase 'surprise mechanics' was coined by EA VP Kerry Hopkins in May 2019 testimony. It appeared in sympathetic media coverage within 48 hours and was used without irony by multiple politicians in follow-up hearings." },
       { "type": "text", "format": "header", "content": "Why Nothing Passed" },
       { "type": "text", "format": "list", "items": [
@@ -127,6 +127,52 @@
       { "type": "callout", "level": "critical", "content": "The most personal pages — someone's quiet hobby site with no external links, updated rarely, visited only by people who knew the URL — were exactly the ones least likely to be preserved. The archive captured the popular parts of the web. It missed the private ones." },
       { "type": "source", "label": "Archive Team: GeoCities", "url": "https://archiveteam.org/index.php?title=GeoCities", "archived": "https://web.archive.org/web/2024/https://archiveteam.org/index.php?title=GeoCities", "date": "2009-10-26", "note": "Archive Team documentation of the save effort including methodology and coverage estimates." },
       { "type": "source", "label": "Internet Archive Wayback: GeoCities", "url": "https://web.archive.org/web/*/geocities.com/*", "date": "2009-10-27", "note": "Browse preserved pages via Wayback Machine." }
+  },
+  {
+    "id": "arc005",
+    "type": "analysis",
+    "title": "behavioral1: Triage sandbox behavioral analysis",
+    "author": "Recorded Future Triage",
+    "date": "2026-03-06",
+    "tags": ["adware","defense_evasion","discovery","persistence","privilege_escalation","ransomware","spyware","trojan"],
+    "status": "archived",
+    "tldr": "Triage sandbox report for sample s.zip (SHA256 f0cdbf80...): Threat Level 'Shows suspicious behavior' with score 7/10. Behavioral indicators include location/geofence checks, dropped DLLs and EXEs, component object model hijacking, Volume Shadow Copy API usage, registry and Program Files modifications, and suspicious API usage consistent with reconnaissance and potential ransomware-like activity.",
+    "blocks": [
+      { "type": "callout", "level": "info", "content": "This entry is sourced from the Recorded Future Triage sandbox PDF you uploaded (sample ID 260306-t1e31aat7k)."},
+      { "type": "text", "format": "header", "content": "General" },
+      { "type": "text", "format": "paragraph", "content": "Target: s.zip. SHA256: f0cdbf80dd053a997a0fab11077d904ad2a6a99bc157332680eeff611322f322. Filesize: 472.6MB. Submitted: 2026-03-06 16:31. Reported: 2026-03-06 16:42. Platform: win10v2004-20260130-en. Threat Level: Shows suspicious behavior. Score: 7/10." },
+      { "type": "text", "format": "header", "content": "Notable Findings" },
+      { "type": "text", "format": "list", "items": [
+        "Malicious activity summary includes: adware, defense_evasion, discovery, persistence, privilege_escalation, ransomware, spyware, trojan.",
+        "Environment discovery: queries user locale/Geo (Control Panel\\International\\Geo\\Nation) and system language entries; likely geofencing or environment checks.",
+        "Loads dropped DLLs and executes multiple dropped EXEs from Temp folders (many setup.exe / ISBEW64.exe / CSP_403w_setup.exe instances).",
+        "Event-triggered execution via Component Object Model hijacking (ATT&CK T1546.015).",
+        "Uses Volume Shadow Copy Service COM API and writes SCSI/Partmgr registry snapshot keys — behavior consistent with tampering with VSS (ransomware-like).",
+        "Creates and modifies files under Program Files\\CELSYS\\CLIP STUDIO 1.5 (multiple resource and updater files touched or created).",
+        "Modifies Internet Explorer 'FeatureControl' registry keys for multiple executables under HKEY_USERS.",
+        "Modifies HKEY_USERS entries (TPM telemetry keys noted) and other registry class entries.",
+        "Suspicious API/behavioral calls observed: SetClipboardViewer, SetWindowsHookEx, SendNotifyMessage, AdjustTokenPrivileges, WriteProcessMemory, FindShellTrayWindow.",
+        "Unsigned PE indicators and multiple file hashes reported for dropped artifacts and resource files."
+      ]},
+      { "type": "text", "format": "header", "content": "MITRE ATT&CK Mapping" },
+      { "type": "text", "format": "list", "items": [
+        "Persistence / Event Triggered Execution: T1546 (COM Hijacking, T1546.015)",
+        "Defense Evasion: Modify Registry T1112; use of unsigned binaries and environment checks",
+        "Discovery: Network Share Discovery T1135; Peripheral Device Discovery T1120; Query Registry T1012; System Information Discovery T1082",
+        "System Location Discovery / Language checks: T1614 / T1614.001",
+        "Collection / Exfiltration / Impact related tactics also enumerated in report"
+      ]},
+      { "type": "text", "format": "header", "content": "Why this is concerning" },
+      { "type": "text", "format": "paragraph", "content": "The combined indicators — environment/geofence checks, COM hijack persistence technique, VSS manipulation, registry modifications, dropped unsigned executables, and suspicious API usage — point to a sample that performs reconnaissance, persists via COM hijack, and contains behavior consistent with ransomware/spyware toolkits. The sandbox classifies it as 'Shows suspicious behavior' rather than a clear high-confidence detection, but the range of telemetry merits manual follow-up." },
+      { "type": "text", "format": "header", "content": "Suggested next steps" },
+      { "type": "text", "format": "list", "items": [
+        "Run manual dynamic analysis in an isolated lab, capturing full network traffic and process memory dumps.",
+        "Collect and triage dropped files from Temp and Program Files paths, extract their hashes and PE metadata for further threat intel checks.",
+        "Compare behavioral differences across platforms / images (Win10 vs Win11) to confirm environment checks and geofencing.",
+        "Search for COM hijack registry keys and undo changes where safe; review VSS and SCSI registry keys for snapshot tampering.",
+        "Apply endpoint detection signatures for observed file hashes and IOC patterns, and treat affected systems as suspicious pending manual review."
+      ]},
+      { "type": "source", "label": "Recorded Future Triage PDF (behavioral1)", "url": "https://tria.ge/260306-t1e31aat7k/behavioral1", "date": "2026-03-06", "note": "Full sandbox report PDF (uploaded)." }
     ]
   }
 ]
