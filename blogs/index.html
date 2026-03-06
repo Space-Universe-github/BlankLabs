@@ -322,7 +322,7 @@
 <!-- Header -->
 <header id="site-header">
   <div class="header-inner">
-    <a href="../index.html" class="wordmark">◈ BLOG</a>
+    <a href="../index.html" class="wordmark">◈ BlankLabs Blogs</a>
     <div class="hdr-spacer"></div>
     <span id="hdr-pct"></span>
   </div>
@@ -540,6 +540,13 @@ const loader = {
 const renderer = {
   images: [],
 
+  resolveSrc(src) {
+    // Already absolute or root-relative — leave it alone
+    if (!src || src.startsWith('http') || src.startsWith('/') || src.startsWith('data:')) return src;
+    // Bare relative path — resolve from site root
+    return '/' + src;
+  },
+
   render(blog) {
     this.images = [];
 
@@ -632,11 +639,12 @@ const renderer = {
     const shell = document.createElement('div');
     shell.className = 'img-wrap loading';
 
+    const src = this.resolveSrc(b.src || '');
     const idx = this.images.length;
-    this.images.push({ src: b.src || '', caption: b.caption || '' });
+    this.images.push({ src, caption: b.caption || '' });
 
     const img = document.createElement('img');
-    img.src = b.src || '';
+    img.src = src;
     img.alt = b.caption || 'Blog image';
     img.loading = 'lazy';
     img.addEventListener('load',  () => shell.classList.remove('loading'));
@@ -690,7 +698,7 @@ const renderer = {
     wrap.className += ' b-video';
     const fig = document.createElement('figure');
     const vid = document.createElement('video');
-    vid.src = b.src || '';
+    vid.src = this.resolveSrc(b.src || '');
     vid.controls = true;
     vid.preload = 'metadata';
     fig.appendChild(vid);
