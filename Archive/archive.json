@@ -441,81 +441,83 @@
       "trojan"
     ],
     "status": "archived",
-    "tldr": "Triage sandbox report for sample s.zip (SHA256 f0cdbf80dd053a997a0fab11077d904ad2a6a99bc157332680eeff611322f322): Threat Level 'Shows suspicious behavior' with score 7/10. Behavioral indicators include environment/geofence checks, dropped DLLs/EXEs, COM hijack persistence, Volume Shadow Copy manipulation, registry and Program Files modifications, and suspicious API usage consistent with reconnaissance and potential ransomware-like impact.",
+    "tldr": "Short version: the sample you uploaded showed suspicious behavior. It dropped and ran unsigned programs, checked where the computer is set to, changed registry keys for staying installed, and touched Windows snapshot APIs. That mix can be used by ransomware or spyware.",
     "blocks": [
       {
         "type": "callout",
         "level": "info",
-        "content": "I uploaded this PDF; this entry is an analysis of the sample and explains how the file can be harmful, plus recommended remediation steps if it was installed."
+        "content": "I uploaded this PDF. This is a plain English analysis and simple steps you can take if you installed the file."
       },
       {
         "type": "text",
         "format": "header",
-        "content": "General"
+        "content": "Quick facts"
       },
       {
         "type": "text",
         "format": "paragraph",
-        "content": "Target: s.zip. SHA256: f0cdbf80dd053a997a0fab11077d904ad2a6a99bc157332680eeff611322f322. Filesize: 472.6MB. Submitted: 2026-03-06 16:31. Reported: 2026-03-06 16:42. Platform: win10v2004-20260130-en. Threat Level: Shows suspicious behavior. Score: 7/10."
+        "content": "File: s.zip. SHA256: f0cdbf80dd053a997a0fab11077d904ad2a6a99bc157332680eeff611322f322. Size: about 472.6 MB. Reported: 2026-03-06. Platform used for testing: Windows 10. Score in the sandbox: 7 out of 10, meaning it did things that looked risky."
       },
       {
         "type": "text",
         "format": "header",
-        "content": "How this file can be bad"
+        "content": "What the file did, in plain words"
       },
       {
         "type": "text",
         "format": "paragraph",
-        "content": "Based on the sandbox telemetry, this sample performs environment checks, drops and executes unsigned binaries, modifies registry keys for persistence, and interacts with Volume Shadow Copy APIs. Those behaviors let malware determine whether it is running in a real target environment, persist across reboots, tamper with system backups/snapshots, and execute additional payloads. That combination is commonly used by ransomware, spyware, and trojanized updaters."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Specific risky behaviors observed include geofencing checks (querying locale/region), Component Object Model hijack persistence, creation/modification of files under Program Files (report notes multiple CELSYS related paths), and VSS-related registry operations that could indicate snapshot tampering or attempted backup removal."
+        "content": "The report shows the file checks your computer settings, like country and language. It dropped other programs into temporary folders and ran them. It changed registry entries so it can come back after a restart. It also touched Windows backup snapshot stuff, which some ransomware uses to stop you from restoring files."
       },
       {
         "type": "text",
         "format": "header",
-        "content": "Recommended steps if you installed this file"
+        "content": "How that could hurt you"
       },
       {
         "type": "text",
         "format": "list",
         "items": [
-          "Isolate the machine immediately: disconnect network access (unplug Ethernet, disable Wi-Fi) to stop potential exfiltration or command and control.",
-          "Do not log in to sensitive accounts from the affected machine. Use a different trusted device to change critical passwords (email, banking, work accounts) and enable multi factor authentication where available.",
-          "Capture forensic evidence if you can safely do so: save relevant logs, list of running processes, recent network connections, and file hashes. If you are not trained in forensics, avoid actions that might overwrite logs and consult an incident response (IR) professional.",
-          "Run a full scan with reputable endpoint protection/antivirus. Note that sandbox classification was 'suspicious' rather than definitive, so AV may or may not detect every dropped artifact.",
-          "Collect and quarantine any dropped artifacts from Temp and Program Files paths and extract their hashes for threat intel checks. Do this from an isolated analysis workstation where possible.",
-          "Check for persistence mechanisms described in the report: search registry COM hijack keys, HKEY_USERS changes, and changes to Internet Explorer FeatureControl keys. Revert only if you know the safe way to do so or let IR handle it.",
-          "Inspect Volume Shadow Copy / backup snapshots: if VSS was tampered with, snapshots may have been removed or modified. Restore from known-good backups that were created before the infection.",
-          "If the machine is on a corporate network, notify your security team or service desk immediately and follow your org's incident response process. Treat connected systems as potentially impacted and scan them as well.",
-          "If you cannot confirm full cleanup, perform a clean OS reinstall from known-good media and restore data from verified clean backups. Rebuild is the safest path for high-confidence remediation.",
-          "After remediation, rotate credentials that may have been used from the machine and monitor accounts and systems for suspicious activity."
+          "It could try to steal stuff or watch what you do.",
+          "It could delete or break backup snapshots so you can't easily restore files.",
+          "It could install more malware later, depending on what the dropped programs do.",
+          "It might hide itself and restart after you reboot."
         ]
       },
       {
         "type": "text",
         "format": "header",
-        "content": "Next analysis steps (for analysts)"
+        "content": "Simple steps to take right now if you think you installed it"
       },
       {
         "type": "text",
         "format": "list",
         "items": [
-          "Perform manual dynamic analysis in an isolated lab with full packet capture and memory dumps to confirm C2 behavior and payload retrieval.",
-          "Extract all dropped files, compute hashes, and query threat intelligence sources for matches.",
-          "Compare runs across different images (Win7/Win10/Win11) to map environment checks and geofencing behavior.",
-          "Search for COM hijack keys and other persistence artifacts in the registry and document exact keys/values for remediation playbooks.",
-          "Share confirmed IOCs with detection teams and update endpoint signatures and EDR detection rules."
+          "Unplug the internet from that computer, or turn off Wi Fi. This stops talking to any bad servers.",
+          "Don't use that computer for banking or email until it is cleaned. Use a different device you trust to change important passwords.",
+          "Run a full scan with your antivirus or a trusted scanner like Malwarebytes. Let it quarantine anything it finds.",
+          "Look in Task Manager for weird programs using a lot of CPU or network. If you see something obviously bad, write its name down and end the process.",
+          "Check your Downloads and Temp folders for recent files with weird names, and move them to quarantine if your scanner did not already catch them.",
+          "If you have backups from before the date you installed the file, don't restore from backups on the infected machine. Instead, restore after you clean or reinstall.",
+          "If you are not sure how to clean it safely, back up your personal files to an external drive, wipe the computer, and reinstall Windows from a clean source.",
+          "After cleanup, change passwords for your important accounts and turn on multi factor authentication where possible."
         ]
+      },
+      {
+        "type": "text",
+        "format": "header",
+        "content": "If you want me to do more"
+      },
+      {
+        "type": "text",
+        "format": "paragraph",
+        "content": "I can make a shorter one page checklist you can print, or I can split the technical bits into a separate file for someone who knows how to do forensics. Tell me which and I will make it."
       },
       {
         "type": "source",
         "label": "Recorded Future Triage PDF (behavioral1)",
         "url": "https://tria.ge/260306-t1e31aat7k/behavioral1",
         "date": "2026-03-06",
-        "note": "Full sandbox report PDF (uploaded)."
+        "note": "Sandbox report PDF."
       }
     ]
   }
