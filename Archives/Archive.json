@@ -1,0 +1,132 @@
+[
+  {
+    "id": "arc001",
+    "type": "research",
+    "title": "DNS Rebinding: How Attackers Weaponize Your Browser Against Your Network",
+    "author": "anon_researcher",
+    "date": "2025-11-14",
+    "tags": ["dns", "browser-security", "lan", "network"],
+    "status": "archived",
+    "tldr": "DNS rebinding lets an attacker's external website talk to services on your private LAN by manipulating DNS TTLs to reassign their domain to your internal IP. Most browsers still don't block this reliably.",
+    "blocks": [
+      { "type": "callout", "level": "info", "content": "This entry documents a class of attack that has existed since 2007 and remains largely unaddressed in consumer environments." },
+      { "type": "text", "format": "paragraph", "content": "DNS rebinding is one of those vulnerabilities that gets rediscovered every few years, gets a CVE filed against some smart home device, and then disappears from the news cycle before anything structural changes. The attack is simple in concept but brutal in reach." },
+      { "type": "text", "format": "header", "content": "How It Works" },
+      { "type": "text", "format": "paragraph", "content": "An attacker registers a domain and points it at their own server. They serve you a page with JavaScript. The page loads. Now they change the DNS record for that domain — with a very short TTL, say 1 second — to point to an internal IP like 192.168.1.1. Your browser, which has already executed the script, now makes a second request to the same origin. But the same origin is now your router." },
+      { "type": "text", "format": "list", "items": ["Attacker controls the DNS record for evil.com", "Victim visits evil.com — legitimate server responds", "JavaScript starts polling. DNS TTL expires.", "Attacker updates DNS to 192.168.1.1 or any LAN target", "Browser's same-origin policy doesn't stop this — the origin (evil.com) hasn't changed", "JavaScript now has read/write access to your router admin panel, local IoT devices, internal dev servers"] },
+      { "type": "text", "format": "header", "content": "What Can Actually Be Attacked" },
+      { "type": "text", "format": "paragraph", "content": "The attack surface on a typical home or small office network is enormous. Almost nothing running on localhost or LAN expects to receive requests from a remote origin." },
+      { "type": "text", "format": "list", "items": ["Router admin interfaces (Netgear, TP-Link, ASUS, all default to no auth on LAN)", "Localhost dev servers (Django, Node, Vite — all commonly run on :8080 or :3000)", "Smart home hubs (Home Assistant, Phillips Hue bridge — REST APIs, often no auth)", "NAS devices (Synology, QNAP — web UIs on :5000)", "Media servers (Plex, Jellyfin)", "Any service bound to 0.0.0.0 instead of 127.0.0.1"] },
+      { "type": "callout", "level": "warning", "content": "Running a local dev server with --host or 0.0.0.0 binding while browsing makes you exploitable via this attack. This is extremely common." },
+      { "type": "text", "format": "header", "content": "Defenses" },
+      { "type": "text", "format": "paragraph", "content": "Proper mitigation requires action at multiple layers. No single fix closes every vector." },
+      { "type": "text", "format": "list", "items": ["DNS-over-HTTPS with a resolver that blocks private IP responses (Cloudflare 1.1.1.1 does this)", "Router: disable remote management, enable DNS rebinding protection if available (pfSense has this)", "Browser: Chrome added some partial mitigations in 2022 but they're incomplete", "Dev servers: always bind to 127.0.0.1 explicitly, never 0.0.0.0 in dev", "Services: require Host header validation"] },
+      { "type": "source", "label": "Original Paper", "url": "https://crypto.stanford.edu/dns/dns-rebinding.pdf", "date": "2007-05-23", "note": "Bindshell by Collin Jackson, Adam Barth, Andrew Bortz, Weidong Shao, Dan Boneh — Stanford. Still the foundational read." },
+      { "type": "source", "label": "Singularity of Origin Tool", "url": "https://github.com/nccgroup/singularity", "date": "2019-08-01", "note": "NCC Group's DNS rebinding toolkit for testing your own environment." },
+      { "type": "text", "format": "paragraph", "content": "This attack doesn't make headlines because it requires the victim to visit a page, and the payoff isn't immediately spectacular. But in a world where everyone runs local dev servers and smart home devices, the attack surface has never been larger." }
+    ]
+  },
+  {
+    "id": "arc002",
+    "type": "drama",
+    "title": "The Loot Box Hearing That Changed Nothing: FTC vs. Game Publishers 2019-2022",
+    "author": "archivist",
+    "date": "2025-09-03",
+    "tags": ["gaming", "regulation", "lootboxes", "ftc", "consumer-protection"],
+    "status": "archived",
+    "tldr": "Three years of FTC hearings, a WHO classification of loot boxes as gambling-adjacent, and multiple Congressional bills later — nothing passed in the US. Europe moved. The US didn't. This is a timeline of what happened and why.",
+    "blocks": [
+      { "type": "callout", "level": "warning", "content": "This entry covers a regulatory failure. The content is factual and sourced. The conclusion is that institutional capture won." },
+      { "type": "text", "format": "paragraph", "content": "In August 2019, the FTC held a workshop titled 'Inside the Game: Unlocking the Consumer Issues Surrounding Loot Boxes.' Forty people testified. The commission heard from consumer advocates, pediatric psychologists, game industry lobbyists, and economists. The transcript runs 287 pages." },
+      { "type": "text", "format": "paragraph", "content": "Nothing happened." },
+      { "type": "text", "format": "header", "content": "Timeline" },
+      { "type": "timeline", "events": [
+        { "date": "2017-11", "label": "Star Wars Battlefront II", "detail": "EA's loot box system for a $60 AAA game triggers mass backlash. Belgium and Netherlands begin investigations." },
+        { "date": "2018-04", "label": "Belgium ruling", "detail": "Belgian Gaming Commission rules loot boxes constitute gambling under Belgian law. EA, Blizzard, 2K comply and remove paid loot boxes for Belgian users." },
+        { "date": "2018-10", "label": "Netherlands ruling", "detail": "Dutch Gaming Authority rules some loot boxes illegal. Imposes fines." },
+        { "date": "2019-08", "label": "FTC Workshop", "detail": "Federal Trade Commission holds public workshop on loot boxes and youth. No binding action follows." },
+        { "date": "2020-05", "label": "WHO classification", "detail": "World Health Organization adds 'gaming disorder' to ICD-11. Loot boxes cited in multiple national health discussions." },
+        { "date": "2021-03", "label": "INFORM Consumers Act introduced", "detail": "Not about loot boxes specifically but signals some Congressional interest in digital marketplace regulation." },
+        { "date": "2022-11", "label": "UK Gambling Commission", "detail": "UK declines to classify loot boxes as gambling after review, but recommends age verification and spending limits. Industry voluntary agreement follows." },
+        { "date": "2023-06", "label": "Status: stalled", "detail": "No US federal legislation passes. ESA lobbying spending exceeds $10M over the period. The issue moves out of news cycle." }
+      ]},
+      { "type": "text", "format": "header", "content": "The Lobbying Record" },
+      { "type": "text", "format": "paragraph", "content": "The Entertainment Software Association filed comments with the FTC arguing loot boxes are 'a modern-day version of purchasing collectible physical trading cards.' This comparison was repeated verbatim in at least four subsequent Congressional testimonies. The 'surprise mechanics' framing originated in EA's testimony and was treated as a legitimate framing by multiple legislators." },
+      { "type": "callout", "level": "critical", "content": "The phrase 'surprise mechanics' was coined by EA VP Kerry Hopkins in May 2019 testimony. It appeared in sympathetic media coverage within 48 hours and was used without irony by multiple politicians in follow-up hearings." },
+      { "type": "text", "format": "header", "content": "Why Nothing Passed" },
+      { "type": "text", "format": "list", "items": [
+        "Bipartisan consensus on 'not regulating video games' dating to the 1990s ESRB compromise",
+        "ESA and individual publisher lobbying totaling estimated $28M 2019-2022",
+        "No unified consumer coalition with equivalent funding or access",
+        "COVID-19 displaced legislative bandwidth in 2020-2021",
+        "The issue was framed as 'parental responsibility' rather than predatory design",
+        "Congressional members who pushed bills (Hassan, Hawley, Markey) had no committee chairmanships to force markup"
+      ]},
+      { "type": "source", "label": "FTC Workshop Transcript", "url": "https://www.ftc.gov/news-events/events/2019/08/inside-game-unlocking-consumer-issues-surrounding-loot-boxes", "date": "2019-08-07", "note": "Full transcript and submitted comments available on FTC.gov." },
+      { "type": "text", "format": "paragraph", "content": "This is being archived because the news cycle moved on to other things. The structural conditions that allowed this outcome — underfunded consumer agencies, effective industry lobbying, and legislators who don't play games — have not changed." }
+    ]
+  },
+  {
+    "id": "arc003",
+    "type": "analysis",
+    "title": "How Engagement Metrics Rotted the Open Web: A Post-Mortem",
+    "author": "archivist",
+    "date": "2026-01-22",
+    "tags": ["web", "social-media", "metrics", "attention-economy", "enshittification"],
+    "status": "active",
+    "tldr": "The transition from 'time on site' to engagement metrics in the early 2010s fundamentally rewired what content gets made online. This documents the mechanism, the players, and what was lost.",
+    "blocks": [
+      { "type": "text", "format": "paragraph", "content": "In 2012, Facebook changed its feed algorithm to optimize for 'meaningful social interactions.' What it actually optimized for was any interaction — including rage, fear, and grief. The distinction between meaningful and maximal was never resolved. It wasn't meant to be." },
+      { "type": "text", "format": "header", "content": "The Metric Transition" },
+      { "type": "text", "format": "paragraph", "content": "Before engagement metrics dominated, the primary success metric for content was page views. This was bad — it incentivized headlines designed to trick people into clicking. But page views had a ceiling. You could only reload so many times." },
+      { "type": "text", "format": "paragraph", "content": "Engagement metrics — likes, shares, comments, time spent, return visits — were supposed to be better because they measured whether people actually cared about content. They were worse because they measured whether content produced a strong enough emotional response to trigger a reflexive action." },
+      { "type": "columns", "columns": [
+        { "type": "text", "format": "paragraph", "content": "Content optimized for page views: sensational headlines, listicles, slideshow abuse. Bad but navigable. You could filter by domain quality." },
+        { "type": "text", "format": "paragraph", "content": "Content optimized for engagement: outrage, tribalism, fear, grief. Harder to filter because the emotional signal overrides domain judgement." }
+      ]},
+      { "type": "text", "format": "header", "content": "What Actually Died" },
+      { "type": "text", "format": "list", "items": [
+        "Long-form investigative journalism (time-consuming, low engagement spike, high production cost)",
+        "Nuanced opinion pieces that acknowledged complexity (both sides = half the shares)",
+        "Community-run forums organized by topic rather than person (Usenet, phpBB, niche wikis)",
+        "Static personal websites as primary publishing medium",
+        "RSS as a discovery mechanism — killed by Google Reader shutdown 2013",
+        "Comment sections moderated by humans with institutional knowledge"
+      ]},
+      { "type": "callout", "level": "info", "content": "Google Reader had 30 million users when it was shut down in 2013. The RSS ecosystem never recovered. The stated reason was low usage growth. The actual reason was it didn't generate ad revenue or lock-in." },
+      { "type": "text", "format": "paragraph", "content": "The people who study this are not absent. Shoshana Zuboff's 2019 book catalogued the mechanism in detail. Tristan Harris testified before Congress multiple times. The research exists. The problem was never that nobody noticed." },
+      { "type": "text", "format": "paragraph", "content": "The problem is that the people who run these systems are not optimizing for what they say they're optimizing for. 'Connecting the world' is not a goal that produces the current outcome. Maximizing advertising revenue against a finite attention supply does." },
+      { "type": "source", "label": "The Age of Surveillance Capitalism", "url": "https://www.publicaffairsbooks.com/titles/shoshana-zuboff/the-age-of-surveillance-capitalism/9781610395694/", "date": "2019-01-15", "note": "Zuboff. Dense but thorough. The first three chapters are the core argument." },
+      { "type": "source", "label": "Cory Doctorow on Enshittification", "url": "https://pluralistic.net/2023/01/21/potemkin-ai/", "date": "2023-01-21", "note": "The best short summary of how platform value gets extracted from users over time." }
+    ]
+  },
+  {
+    "id": "arc004",
+    "type": "artifact",
+    "title": "Preserved: The Geocities Backup Project — What Was Saved and What Wasn't",
+    "author": "archivist",
+    "date": "2025-12-01",
+    "tags": ["geocities", "internet-history", "preservation", "archive-org"],
+    "status": "archived",
+    "tldr": "Yahoo shut down Geocities in 2009 after 15 years. Archive Team saved roughly 640GB of it. An estimated 30-50% was lost. This documents what was preserved, what was missed, and why it matters.",
+    "blocks": [
+      { "type": "callout", "level": "warning", "content": "This entry contains links to Web Archive mirrors. Some may be slow or unavailable depending on Wayback Machine load." },
+      { "type": "text", "format": "paragraph", "content": "GeoCities launched in 1994 and was for a decade the primary way ordinary people published on the web. At its peak it was the third most visited website on the internet. It wasn't polished. It was personal." },
+      { "type": "text", "format": "paragraph", "content": "Yahoo acquired it in 1999 for $3.57 billion. Ten years later, on October 26, 2009, they turned it off." },
+      { "type": "text", "format": "header", "content": "The Rescue" },
+      { "type": "text", "format": "paragraph", "content": "Archive Team, a loose group of digital preservationists, started scraping GeoCities in the months before shutdown. The result was a 640GB torrent released in 2010, often called the GeoCities Torrent or geocities-20091027.torrent. It contains approximately 38 million files." },
+      { "type": "text", "format": "list", "items": [
+        "Archive Team capture: ~640GB, ~38M files",
+        "Internet Archive's own crawl: partial, focused on linked pages",
+        "Japanese mirror sites (GeoCities JP stayed alive until 2019): separately archived by users",
+        "Reocities.com: browsable mirror, preserved layout and neighborhood structure",
+        "OoCities.org: alternative browser-friendly mirror"
+      ]},
+      { "type": "text", "format": "header", "content": "What Was Lost" },
+      { "type": "text", "format": "paragraph", "content": "The 640GB figure sounds large. It isn't. GeoCities at its peak had approximately 38 million user pages. Archive Team estimates the capture rate was 40-65% depending on neighborhood. Pages that were unlinked from anywhere — no external links, no Yahoo directory listing — were effectively invisible to crawlers." },
+      { "type": "callout", "level": "critical", "content": "The most personal pages — someone's quiet hobby site with no external links, updated rarely, visited only by people who knew the URL — were exactly the ones least likely to be preserved. The archive captured the popular parts of the web. It missed the private ones." },
+      { "type": "source", "label": "Archive Team: GeoCities", "url": "https://archiveteam.org/index.php?title=GeoCities", "archived": "https://web.archive.org/web/2024/https://archiveteam.org/index.php?title=GeoCities", "date": "2009-10-26", "note": "Archive Team documentation of the save effort including methodology and coverage estimates." },
+      { "type": "source", "label": "Internet Archive Wayback: GeoCities", "url": "https://web.archive.org/web/*/geocities.com/*", "date": "2009-10-27", "note": "Browse preserved pages via Wayback Machine." }
+    ]
+  }
+]
