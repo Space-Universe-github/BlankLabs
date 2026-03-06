@@ -360,7 +360,6 @@
       inset: 0;
       z-index: 2000;
       background: rgba(4,6,10,.94);
-      backdrop-filter: blur(2px);
       overflow-y: auto;
       padding: 2rem 1rem 4rem;
     }
@@ -371,7 +370,8 @@
       background: var(--surface);
       border: 1px solid var(--border2);
       position: relative;
-      animation: mopen .2s ease both;
+      will-change: transform;
+      animation: mopen .18s ease both;
     }
     @keyframes mopen { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:none } }
 
@@ -1647,7 +1647,6 @@ modalBg.addEventListener('scroll', () => {
 function openModal(entry, pushState = true, entryList) {
   if (!entry) return;
   currentEntryId = entry.id;
-  // use provided list (filtered) or fall back to all
   currentEntryList = entryList || allEntries;
   currentEntryIndex = currentEntryList.findIndex(e => e.id === entry.id);
 
@@ -1656,103 +1655,102 @@ function openModal(entry, pushState = true, entryList) {
   modalBg.scrollTop = 0;
   modalProgBar.style.width = '0%';
 
-  // prev/next state
-  modalPrevBtn.disabled = currentEntryIndex <= 0;
-  modalNextBtn.disabled = currentEntryIndex >= currentEntryList.length - 1;
+  // open the shell immediately so the animation starts before any DOM work
+  modalBg.classList.add('open');
+  document.body.classList.add('modal-open');
+  document.body.style.overflow = 'hidden';
 
-  // reading time
-  const rt = document.getElementById('modal-read-time');
-  rt.textContent = calcReadTime(entry.blocks);
-
-  // jump to sources — only show if entry has any source blocks
-  const hasSources = (entry.blocks || []).some(b => b.type === 'source');
-  const jmpSrc = document.getElementById('modal-jump-src');
-  jmpSrc.style.display = hasSources ? '' : 'none';
-
-  // push URL
+  // push URL & title before the frame so back/share is correct
   if (pushState) {
     const url = new URL(window.location.href);
     url.searchParams.set('ref', entry.id);
     history.pushState({ ref: entry.id }, '', url.toString());
   }
-
   document.title = `[-_-] ${entry.title || entry.id} // THE ARCHIVE`;
 
-  // badges row
-  const badges = document.createElement('div'); badges.className = 'modal-badges';
-  const tb = document.createElement('span'); tb.className = 'type-badge badge-' + entry.type; tb.textContent = entry.type.toUpperCase(); badges.appendChild(tb);
-  if (entry.status) {
-    const sb = document.createElement('span'); sb.className = 'type-badge';
-    sb.style.color = entry.status === 'active' ? 'var(--green)' : entry.status === 'developing' ? 'var(--orange)' : 'var(--text3)';
-    sb.style.borderColor = 'currentColor'; sb.textContent = entry.status.toUpperCase(); badges.appendChild(sb);
-  }
-  const idb = document.createElement('span'); idb.className = 'entry-id'; idb.textContent = entry.id; badges.appendChild(idb);
-  modalHdr.appendChild(badges);
+  // build all DOM content in the next frame — browser paints the open animation first
+  requestAnimationFrame(() => {
 
-  const title = document.createElement('div'); title.className = 'modal-title'; title.textContent = entry.title || 'Untitled'; modalHdr.appendChild(title);
+  // prev/next state
+    modalPrevBtn.disabled = currentEntryIndex <= 0;
+    modalNextBtn.disabled = currentEntryIndex >= currentEntryList.length - 1;
 
-  const meta = document.createElement('div'); meta.className = 'modal-meta';
-  meta.innerHTML = `BY <span>${entry.author || 'anon'}</span> &nbsp;·&nbsp; <span>${fmtDate(entry.date)}</span>`;
-  modalHdr.appendChild(meta);
+    // reading time
+    document.getElementById('modal-read-time').textContent = calcReadTime(entry.blocks);
 
-  // tags — clicking one closes modal and filters list by that tag
-  if (entry.tags && entry.tags.length) {
-    const tw = document.createElement('div'); tw.className = 'modal-tags-row';
-    entry.tags.forEach(t => {
-      const s = document.createElement('span'); s.className = 'modal-tag-clickable'; s.textContent = t;
-      s.title = 'Filter by: ' + t;
-      s.addEventListener('click', () => {
-        closeModal();
-        document.getElementById('search').value = t;
-        activeQuery = t;
-        applyFilter();
-        document.getElementById('search').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      });
-      tw.appendChild(s);
-    });
-    modalHdr.appendChild(tw);
-  }
+    // jump to sources
+    const hasSources = (entry.blocks || []).some(b => b.type === 'source');
+    const jmpSrc = document.getElementById('modal-jump-src');
+    jmpSrc.style.display = hasSources ? '' : 'none';
 
-  // render blocks — wrap code blocks with copy button
-  (entry.blocks || []).forEach(b => {
-    if (b.type === 'code') {
-      const codeWrap = document.createElement('div'); codeWrap.className = 'b-code-wrap block';
-      const node = renderBlock(b);
-      if (node) {
-        // strip the outer .block wrapper since we're adding our own
-        const inner = node.firstChild;
-        if (inner) codeWrap.appendChild(inner);
-      }
-      // copy button
-      const copyBtn = document.createElement('button'); copyBtn.className = 'code-copy-btn'; copyBtn.textContent = 'COPY';
-      copyBtn.addEventListener('click', () => {
-        navigator.clipboard.writeText(b.content || '').then(() => {
-          copyBtn.textContent = 'COPIED'; copyBtn.classList.add('copied');
-          setTimeout(() => { copyBtn.textContent = 'COPY'; copyBtn.classList.remove('copied'); }, 1800);
-        }).catch(() => {
-          copyBtn.textContent = 'ERR'; setTimeout(() => { copyBtn.textContent = 'COPY'; }, 1200);
-        });
-      });
-      codeWrap.appendChild(copyBtn);
-      modalBody.appendChild(codeWrap);
-    } else {
-      const node = renderBlock(b);
-      if (node) modalBody.appendChild(node);
+    // badges
+    const badges = document.createElement('div'); badges.className = 'modal-badges';
+    const tb = document.createElement('span'); tb.className = 'type-badge badge-' + entry.type; tb.textContent = entry.type.toUpperCase(); badges.appendChild(tb);
+    if (entry.status) {
+      const sb = document.createElement('span'); sb.className = 'type-badge';
+      sb.style.color = entry.status === 'active' ? 'var(--green)' : entry.status === 'developing' ? 'var(--orange)' : 'var(--text3)';
+      sb.style.borderColor = 'currentColor'; sb.textContent = entry.status.toUpperCase(); badges.appendChild(sb);
     }
-  });
+    const idb = document.createElement('span'); idb.className = 'entry-id'; idb.textContent = entry.id; badges.appendChild(idb);
+    modalHdr.appendChild(badges);
+
+    const title = document.createElement('div'); title.className = 'modal-title'; title.textContent = entry.title || 'Untitled'; modalHdr.appendChild(title);
+
+    const meta = document.createElement('div'); meta.className = 'modal-meta';
+    meta.innerHTML = `BY <span>${entry.author || 'anon'}</span> &nbsp;·&nbsp; <span>${fmtDate(entry.date)}</span>`;
+    modalHdr.appendChild(meta);
+
+    // tags — clicking closes modal and filters by that tag
+    if (entry.tags && entry.tags.length) {
+      const tw = document.createElement('div'); tw.className = 'modal-tags-row';
+      entry.tags.forEach(t => {
+        const s = document.createElement('span'); s.className = 'modal-tag-clickable'; s.textContent = t;
+        s.title = 'Filter by: ' + t;
+        s.addEventListener('click', () => {
+          closeModal();
+          document.getElementById('search').value = t;
+          activeQuery = t;
+          applyFilter();
+          document.getElementById('search').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+        tw.appendChild(s);
+      });
+      modalHdr.appendChild(tw);
+    }
+
+    // render blocks into a fragment — single DOM insertion
+    const frag = document.createDocumentFragment();
+    (entry.blocks || []).forEach(b => {
+      if (b.type === 'code') {
+        const codeWrap = document.createElement('div'); codeWrap.className = 'b-code-wrap block';
+        const node = renderBlock(b);
+        if (node && node.firstChild) codeWrap.appendChild(node.firstChild);
+        const copyBtn = document.createElement('button'); copyBtn.className = 'code-copy-btn'; copyBtn.textContent = 'COPY';
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText(b.content || '').then(() => {
+            copyBtn.textContent = 'COPIED'; copyBtn.classList.add('copied');
+            setTimeout(() => { copyBtn.textContent = 'COPY'; copyBtn.classList.remove('copied'); }, 1800);
+          }).catch(() => {
+            copyBtn.textContent = 'ERR'; setTimeout(() => { copyBtn.textContent = 'COPY'; }, 1200);
+          });
+        });
+        codeWrap.appendChild(copyBtn);
+        frag.appendChild(codeWrap);
+      } else {
+        const node = renderBlock(b);
+        if (node) frag.appendChild(node);
+      }
+    });
+    modalBody.appendChild(frag);
 
   // if jump-to-sources, wire it up after body is built
-  if (hasSources) {
-    jmpSrc.onclick = () => {
-      // find first source block in the modal body
-      const sources = modalBody.querySelectorAll('.b-source');
-      if (sources.length) sources[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
-    };
-  }
-
-  modalBg.classList.add('open');
-  document.body.classList.add('modal-open');
-  document.body.style.overflow = 'hidden';
+    if (hasSources) {
+      jmpSrc.onclick = () => {
+        const sources = modalBody.querySelectorAll('.b-source');
+        if (sources.length) sources[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+      };
+    }
+  }); // end requestAnimationFrame
 }
 
 function closeModal() {
