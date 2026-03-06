@@ -7,46 +7,14 @@
     "author": "BlankLabs",
     "date": "2026-02-05",
     "blocks": [
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I’ve been sitting on the idea of making a real website for a while now. Not just a landing page or something that says under construction, but an actual place where I can put thoughts, projects, and progress. This is me finally committing to that."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "This blog is part experiment, part journal, and part archive. I like learning how things work behind the scenes, especially with tech and cybersecurity, and I wanted a space where I can document that without worrying about making everything perfect."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "A lot of what I do starts with curiosity. I’ll see something online and think how does that actually work, and then I’ll dig into it until I either understand it or accidentally break something. Most of the time it’s both."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "BlankLabs is basically the result of that mindset. It’s a place for experiments, half formed ideas, small wins, mistakes, and things I find interesting. Some posts might be technical, some more reflective, and some just me rambling about whatever I’m working on."
-      },
-      {
-        "type": "image",
-        "src": "logo.png",
-        "caption": "Starting simple"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I’m also using this site as motivation to actually finish things. When projects only live on my computer, it’s easy to abandon them. Putting them here makes them feel more real."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "This isn’t meant to be polished or corporate. I want it to feel honest. If something doesn’t work, I’ll probably write about that too. Learning in public is uncomfortable, but it works."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "For now, this first post is just a marker. Proof that I started. Everything after this is progress, even if it’s messy."
-      }
+      { "type": "text", "format": "paragraph", "content": "I've been sitting on the idea of making a real website for a while now. Not just a landing page or something that says under construction, but an actual place where I can put thoughts, projects, and progress. This is me finally committing to that." },
+      { "type": "text", "format": "paragraph", "content": "This blog is part experiment, part journal, and part archive. I like learning how things work behind the scenes, especially with tech and cybersecurity, and I wanted a space where I can document that without worrying about making everything perfect." },
+      { "type": "text", "format": "paragraph", "content": "A lot of what I do starts with curiosity. I'll see something online and think how does that actually work, and then I'll dig into it until I either understand it or accidentally break something. Most of the time it's both." },
+      { "type": "text", "format": "paragraph", "content": "BlankLabs is basically the result of that mindset. It's a place for experiments, half formed ideas, small wins, mistakes, and things I find interesting. Some posts might be technical, some more reflective, and some just me rambling about whatever I'm working on." },
+      { "type": "image", "src": "logo.png", "caption": "Starting simple" },
+      { "type": "text", "format": "paragraph", "content": "I'm also using this site as motivation to actually finish things. When projects only live on my computer, it's easy to abandon them. Putting them here makes them feel more real." },
+      { "type": "text", "format": "paragraph", "content": "This isn't meant to be polished or corporate. I want it to feel honest. If something doesn't work, I'll probably write about that too. Learning in public is uncomfortable, but it works." },
+      { "type": "text", "format": "paragraph", "content": "For now, this first post is just a marker. Proof that I started. Everything after this is progress, even if it's messy." }
     ]
   },
   {
@@ -57,321 +25,69 @@
     "author": "BlankLabs",
     "date": "2026-02-05",
     "blocks": [
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I think about the internet a lot. Not in a nerd essay way, just in a why does everything suck now way. Everything wants a login. Everything wants a subscription. Even stuff that should just work. Doorbells, cameras, weather alerts. Basic things feel locked behind vibes and terms of service."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I mess with websites constantly. Half of it is fixing tiny stuff that probably only I notice."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "My room is cozy in a very specific way. Warm orange light, darker wood, random tech everywhere. It looks calm, but it’s definitely the setup of someone with like six unfinished ideas open at once."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "There’s always ambient game music playing. Nothing intense. Just enough sound so my brain doesn’t start running in circles. Which does happen a lot, I’ve noticed."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I don’t trust a lot of tech companies. Especially anything that lives in your house and watches you. Cameras selling data, handing stuff to cops, pretending it’s about safety. I’d rather something be a little worse if it respects me more. Convenience isn’t worth feeling weird in my own space."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Japan lives in my head rent free. Even though there’s a lot of horrible stuff that happens there too, that’s just how every place is. Infrastructure that feels thought out. Systems that actually warn people when stuff is about to go wrong."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Maybe I’m romanticizing it, but compared to how duct taped everything feels here, it’s hard not to."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Learning Japanese is slow but grounding. Anki, Obsidian, repeating things until they just kinda click. There’s no hype or grind mindset for me. Just slow progress."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "It’s one of the few things that doesn’t feel like it’s trying to manipulate my attention."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I don’t really have a big plan. I just like understanding how things work, how they fail, and how they could be better. Privacy respecting tech. Systems that don’t treat users like products. Small stuff done right."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "If you’re reading this, I was probably avoiding something else. But this matters to me, so yeah."
-      }
+      { "type": "text", "format": "paragraph", "content": "I think about the internet a lot. Not in a nerd essay way, just in a why does everything suck now way. Everything wants a login. Everything wants a subscription. Even stuff that should just work. Doorbells, cameras, weather alerts. Basic things feel locked behind vibes and terms of service." },
+      { "type": "text", "format": "paragraph", "content": "I mess with websites constantly. Half of it is fixing tiny stuff that probably only I notice." },
+      { "type": "text", "format": "paragraph", "content": "My room is cozy in a very specific way. Warm orange light, darker wood, random tech everywhere. It looks calm, but it's definitely the setup of someone with like six unfinished ideas open at once." },
+      { "type": "text", "format": "paragraph", "content": "There's always ambient game music playing. Nothing intense. Just enough sound so my brain doesn't start running in circles. Which does happen a lot, I've noticed." },
+      { "type": "text", "format": "paragraph", "content": "I don't trust a lot of tech companies. Especially anything that lives in your house and watches you. Cameras selling data, handing stuff to cops, pretending it's about safety. I'd rather something be a little worse if it respects me more. Convenience isn't worth feeling weird in my own space." },
+      { "type": "text", "format": "paragraph", "content": "Japan lives in my head rent free. Even though there's a lot of horrible stuff that happens there too, that's just how every place is. Infrastructure that feels thought out. Systems that actually warn people when stuff is about to go wrong." },
+      { "type": "text", "format": "paragraph", "content": "Maybe I'm romanticizing it, but compared to how duct taped everything feels here, it's hard not to." },
+      { "type": "text", "format": "paragraph", "content": "Learning Japanese is slow but grounding. Anki, Obsidian, repeating things until they just kinda click. There's no hype or grind mindset for me. Just slow progress." },
+      { "type": "text", "format": "paragraph", "content": "It's one of the few things that doesn't feel like it's trying to manipulate my attention." },
+      { "type": "text", "format": "paragraph", "content": "I don't really have a big plan. I just like understanding how things work, how they fail, and how they could be better. Privacy respecting tech. Systems that don't treat users like products. Small stuff done right." },
+      { "type": "text", "format": "paragraph", "content": "If you're reading this, I was probably avoiding something else. But this matters to me, so yeah." }
     ]
   },
   {
     "id": "blog003",
     "title": "MacBook Neo: An Outsider's Take",
     "subtitle": "not an Apple fanboy, just someone who uses tech",
-    "description": "Long take on the MacBook Neo, left exactly as provided but structured with headers",
+    "description": "A long take on the MacBook Neo from someone who's never lived in the Apple ecosystem",
     "author": "BlankLabs",
     "date": "2026-03-05",
     "blocks": [
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "First, let’s get straight to the point. I’m not here to argue. What Apple has created with the MacBook Neo is genuinely impressive."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "A lot of the usual critics are calling it awful. I get why people are skeptical. But I want to share my perspective, especially as someone who isn’t an Apple fanboy."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I’ve used Android my entire life. I started with a cheap Samsung budget phone, moved up to the Galaxy S21 Pro, and now I use a Google Pixel 9 as my daily driver. Apple has never really been my ecosystem."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "That said, I do own a 2020 MacBook Pro with an Intel chip. And I’ll be honest, it has lasted a long time. It’s definitely showing its age now. Chrome can take around 20 seconds to open after startup, and websites don’t load as quickly as they used to. It has clearly reached the end of its prime.\nBut for school and creative work, it still gets the job done. That says something."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "Now let’s talk about the MacBook Neo."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "This feels like Apple’s first true budget MacBook. That’s a big deal. Apple is known for premium pricing and strong brand loyalty. A MacBook Air starting at 999 dollars has always been expensive for students and everyday users."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "So when Apple announces something positioned lower, people are going to react. Some will say it’s stripped down. Some will say it’s overpriced no matter what. That always happens with Apple products."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "But from an outsider’s perspective, this could open the door for people who’ve never considered a Mac before. If the performance is solid and the build quality holds up like most MacBooks do, it might actually be one of the smarter moves Apple has made in years."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "You don’t have to love Apple to admit when they do something interesting.  And the MacBook Neo is interesting, right down to the colors: Indigo, Blush, Citrus, and Silver."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "now lets get to some things we should talk about, like it being an alternative."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "An alternative!? To what?"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "To Chromebooks."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "As someone who’s always preferred Android, I’ve never been a fan of ChromeOS. Most of the Chromebooks used in schools feel underpowered for what you pay. They lag, and they struggle with multitasking,  they’re often locked into a limited apps that feels more like a big browser than any real system os like windows or macos"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "For a similar price, you can usually find a proper Windows laptop that gives you more flexibility, better software support, and stronger overall performance. \nEven Samsung DeX, in my opinion, feels more capable as a desktop style experience than what ChromeOS offers on a lot of budget machines."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "Because of the price point!"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Yes, it still costs as much as a gaming console. That’s not cheap, but with Apple’s education discount, the value starts to make more sense, especially for students who need something reliable for school, writing, creative apps, and long term use."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "If the Neo delivers solid performance like the iphone 16 pro chip (we will get to that in a sec) and keeps the typical MacBook build quality, that is said in so far many videos (they kept the aluminum frame!) It has a competitive advantage to any low end laptop out there!"
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "The Concerns"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Now we get to the main part of this article. The concerns and the criticism."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "The Chip"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "The MacBook Neo uses the A18 pro chip, the same chip found in the iPhone 16 pro. A lot of people immediately criticized Apple for not using an M-series chip.\nI understand that reaction. \nThe M chips have built a strong reputation. But if using the A18 pro is what makes this MacBook more affordable, then that tradeoff makes sense. Not every laptop needs to be a powerhouse."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "This is aimed more at students, casual users, and people who need a reliable everyday machine. It’s not meant to replace a MacBook Pro. \nYou might notice some performance differences, sure. But at this price point, expecting top tier performance misses the point."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "It’s designed to be a school desk, café, on the go type of laptop. Not the machine you hook up to a massive display at home for heavy creative workloads. (Which speaking of)"
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "Limited External Display Support"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Another complaint is that it only supports output to one external display."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "For power users, that’s disappointing. But again, think about the target audience. Most students aren’t running dual monitor setups. They’re most likely writing papers, doing research, and ignoring boring old lectures\n\nFor that, one external display is enough."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "Slow Charging"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "This is one criticism I actually agree with."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Fast charging is important, especially for students moving between classes. If charging speeds are noticeably slower, that’s frustrating.\nIt's much more of a standard now than some sort of luxury."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "While we don’t fully know the manufacturer's intentions, there are often reasons for this. It might be a cost-cutting decision to use cheaper charging hardware, or it might be a strategic decision to protect long-term battery health, as slower charging generates less heat and, in theory, keeps the battery cooler. However, compared to the industry standard of 30-minute full charges seen in competing devices, people will definitely notice the difference. Ultimately, in a fast-paced world, if you can’t get a decent power boost during a 15-minute break, it makes you feel restricted by your charger."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "No Keyboard Backlight"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "This one is a bigger deal."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "For people who work at night or in dim environments, a backlit keyboard is genuinely useful. I get why some would see this as a deal breaker. Even small things like that matter in daily use. Especially for anyone who struggles with visibility."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Yes, adding lighting could slightly affect battery life or thickness, but for many users, that tradeoff would be worth it."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "No MagSafe"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "There’s also no MagSafe.\nOn a lower cost model, this isn’t surprising. It’s one of those premium features Apple uses to separate tiers. It would have been nice, but it makes sense why it’s missing."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "No Force Touch Trackpad"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "And finally, no haptic Force Touch trackpad. Instead, it’s a traditional physical click.\nHonestly? Most people won’t care. Some might even prefer the physical feel."
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "Conclusion"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "There are a couple more important things I forgot to mention."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "The base model comes with 8GB of RAM, and it’s not upgradeable. That alone will turn some people away. In 2026, 8GB feels like the bare minimum. For light school work and casual use, it might be fine. But long term, that limitation matters."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "There’s also no Touch ID on the base model. If you want Touch ID, you have to upgrade. And once you upgrade, you are also moving from 256GB of storage to 512GB."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "That’s where things get interesting.\nBecause at that point, the price starts creeping closer to higher tier used models. \nAnd that’s the real tension with the MacBook Neo. The base model is positioned as affordable, but meaningful upgrades push you up the ladder pretty quickly. If you don't have the education savings."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Still, stepping back and looking at the bigger picture, the Neo represents something different for Apple. It’s clearly designed to hit a lower entry price, even if that means real compromises."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "It’s not built for power users. It’s not built for heavy multitasking. It’s not built to future proof you for ten years.\nIt’s built to be accessible."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "For students who live in Google Docs, Safari, Zoom, light creative apps, and basic productivity tools, it could be enough. And sometimes, “enough” is exactly what people need.\nAnd honestly, as someone writing this on a 2020 MacBook Pro with an Intel chip that takes 20 seconds just to open Chrome, the Neo isn't just an interesting product to me. It's the upgrade I've been wanting for a while. Same port count I already live with (sometimes gets in the way, but oh well), better battery, Apple Silicon that won't get left behind by developers (I can finally use modern apps!) Sometimes the right product just shows up at the right time."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "Is it perfect? No. Is it for everyone? Definitely not. But as an alternative to overpriced Chromebooks and underpowered budget laptops, it’s at least a serious conversation."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "And the fact that Apple is even having that conversation now says a lot."
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I hope to see a future Neo lineup with an M-series chip or at least a 16GB RAM option. Apple's made their move, now let's see where they take it."
-      },
-      {
-        "type": "image",
-        "src": "pictures/MacbookNeo.jpg",
-        "caption": "macbook neo"
-      }
+      { "type": "text", "format": "paragraph", "content": "First, let's get straight to the point. I'm not here to argue. What Apple has created with the MacBook Neo is genuinely impressive." },
+      { "type": "text", "format": "paragraph", "content": "A lot of the usual critics are calling it awful. I get why people are skeptical. But I want to share my perspective, especially as someone who isn't an Apple fanboy." },
+      { "type": "text", "format": "paragraph", "content": "I've used Android my entire life. I started with a cheap Samsung budget phone, moved up to the Galaxy S21 Pro, and now I use a Google Pixel 9 as my daily driver. Apple has never really been my ecosystem." },
+      { "type": "text", "format": "paragraph", "content": "That said, I do own a 2020 MacBook Pro with an Intel chip. And I'll be honest, it has lasted a long time. It's definitely showing its age now. Chrome can take around 20 seconds to open after startup, and websites don't load as quickly as they used to. It has clearly reached the end of its prime. But for school and creative work, it still gets the job done. That says something." },
+      { "type": "text", "format": "header", "content": "Now let's talk about the MacBook Neo." },
+      { "type": "text", "format": "paragraph", "content": "This feels like Apple's first true budget MacBook. That's a big deal. Apple is known for premium pricing and strong brand loyalty. A MacBook Air starting at 999 dollars has always been expensive for students and everyday users." },
+      { "type": "text", "format": "paragraph", "content": "So when Apple announces something positioned lower, people are going to react. Some will say it's stripped down. Some will say it's overpriced no matter what. That always happens with Apple products." },
+      { "type": "text", "format": "paragraph", "content": "But from an outsider's perspective, this could open the door for people who've never considered a Mac before. If the performance is solid and the build quality holds up like most MacBooks do, it might actually be one of the smarter moves Apple has made in years." },
+      { "type": "text", "format": "paragraph", "content": "You don't have to love Apple to admit when they do something interesting. And the MacBook Neo is interesting, right down to the colors: Indigo, Blush, Citrus, and Silver." },
+      { "type": "text", "format": "header", "content": "An Alternative to What?" },
+      { "type": "text", "format": "paragraph", "content": "Chromebooks." },
+      { "type": "text", "format": "paragraph", "content": "As someone who's always preferred Android, I've never been a fan of ChromeOS. Most of the Chromebooks used in schools feel underpowered for what you pay. They lag, they struggle with multitasking, and they're often locked into a limited app selection that feels more like a big browser than a real operating system like Windows or macOS." },
+      { "type": "text", "format": "paragraph", "content": "For a similar price, you can usually find a proper Windows laptop that gives you more flexibility, better software support, and stronger overall performance. Even Samsung DeX, in my opinion, feels more capable as a desktop-style experience than what ChromeOS offers on most budget machines." },
+      { "type": "text", "format": "header", "content": "The Price Point" },
+      { "type": "text", "format": "paragraph", "content": "Yes, it still costs as much as a gaming console. That's not cheap, but with Apple's education discount, the value starts to make more sense, especially for students who need something reliable for school, writing, creative apps, and long term use." },
+      { "type": "text", "format": "paragraph", "content": "If the Neo delivers solid performance on the A18 Pro chip and keeps the typical MacBook build quality — they kept the aluminum frame — it has a competitive advantage over any low-end laptop out there." },
+      { "type": "text", "format": "header", "content": "The Concerns" },
+      { "type": "text", "format": "paragraph", "content": "Now we get to the main part. The concerns and the criticism." },
+      { "type": "text", "format": "header", "content": "The Chip" },
+      { "type": "text", "format": "paragraph", "content": "The MacBook Neo uses the A18 Pro chip, the same chip found in the iPhone 16 Pro. A lot of people immediately criticized Apple for not using an M-series chip. I understand that reaction. The M chips have built a strong reputation. But if using the A18 Pro is what makes this MacBook more affordable, that tradeoff makes sense. Not every laptop needs to be a powerhouse." },
+      { "type": "text", "format": "paragraph", "content": "This is aimed more at students, casual users, and people who need a reliable everyday machine. It's not meant to replace a MacBook Pro. You might notice some performance differences, sure. But at this price point, expecting top-tier performance misses the point." },
+      { "type": "text", "format": "paragraph", "content": "It's designed to be a school desk, café, on-the-go laptop. Not the machine you hook up to a massive display at home for heavy creative workloads." },
+      { "type": "text", "format": "header", "content": "Limited External Display Support" },
+      { "type": "text", "format": "paragraph", "content": "Another complaint is that it only supports output to one external display. For power users, that's disappointing. But again, think about the target audience. Most students aren't running dual monitor setups. They're writing papers, doing research, and ignoring boring lectures. For that use case, one external display is enough." },
+      { "type": "text", "format": "header", "content": "Slow Charging" },
+      { "type": "text", "format": "paragraph", "content": "This is one criticism I actually agree with." },
+      { "type": "text", "format": "paragraph", "content": "Fast charging is important, especially for students moving between classes. If charging speeds are noticeably slower, that's frustrating. It's much more of a standard now than some kind of luxury." },
+      { "type": "text", "format": "paragraph", "content": "While we don't fully know the manufacturer's intentions, there are often reasons for this. It might be a cost-cutting decision, or a strategic one to protect long-term battery health since slower charging generates less heat. But compared to the 30-minute charges seen in competing devices, people will notice. In a fast-paced world, if you can't get a decent power boost during a 15-minute break, it makes you feel restricted by your charger." },
+      { "type": "text", "format": "header", "content": "No Keyboard Backlight" },
+      { "type": "text", "format": "paragraph", "content": "This one is a bigger deal. For people who work at night or in dim environments, a backlit keyboard is genuinely useful. Even small things like that matter in daily use, especially for anyone who struggles with visibility. Yes, adding lighting could slightly affect battery life or thickness, but for many users that tradeoff would be worth it." },
+      { "type": "text", "format": "header", "content": "No MagSafe" },
+      { "type": "text", "format": "paragraph", "content": "There's also no MagSafe. On a lower-cost model, this isn't surprising. It's one of those premium features Apple uses to separate tiers. It would have been nice, but it makes sense why it's missing." },
+      { "type": "text", "format": "header", "content": "No Force Touch Trackpad" },
+      { "type": "text", "format": "paragraph", "content": "And finally, no haptic Force Touch trackpad. Instead, it's a traditional physical click. Honestly? Most people won't care. Some might even prefer the physical feel." },
+      { "type": "text", "format": "header", "content": "Conclusion" },
+      { "type": "text", "format": "paragraph", "content": "There are a couple more important things worth mentioning. The base model comes with 8GB of RAM, and it's not upgradeable. In 2026, 8GB feels like the bare minimum. For light school work and casual use, it might be fine. But long term, that limitation matters." },
+      { "type": "text", "format": "paragraph", "content": "There's also no Touch ID on the base model. If you want Touch ID, you have to upgrade, and at that point you're also jumping from 256GB of storage to 512GB. That's where things get interesting, because the price starts creeping closer to higher-tier used models. The base model is positioned as affordable, but meaningful upgrades push you up the ladder pretty quickly without the education discount." },
+      { "type": "text", "format": "paragraph", "content": "Still, stepping back, the Neo represents something different for Apple. It's clearly designed to hit a lower entry price, even if that means real compromises. It's not built for power users. It's not built for heavy multitasking. It's not built to future-proof you for ten years. It's built to be accessible." },
+      { "type": "text", "format": "paragraph", "content": "For students who live in Google Docs, Safari, Zoom, light creative apps, and basic productivity tools, it could be enough. And sometimes, enough is exactly what people need. Honestly, as someone writing this on a 2020 MacBook Pro with an Intel chip that takes 20 seconds just to open Chrome, the Neo isn't just an interesting product to me. It's the upgrade I've been wanting. Same port count I already live with, better battery, Apple Silicon that won't get left behind by developers. Sometimes the right product just shows up at the right time." },
+      { "type": "text", "format": "paragraph", "content": "Is it perfect? No. Is it for everyone? Definitely not. But as an alternative to overpriced Chromebooks and underpowered budget laptops, it's at least a serious conversation. And the fact that Apple is even having that conversation now says a lot." },
+      { "type": "text", "format": "paragraph", "content": "I hope to see a future Neo lineup with an M-series chip or at least a 16GB RAM option. Apple's made their move, now let's see where they take it." },
+      { "type": "image", "src": "pictures/MacbookNeo.jpg", "caption": "MacBook Neo" }
     ]
   }
 ]
