@@ -374,21 +374,78 @@
       animation: mopen .2s ease both;
     }
     @keyframes mopen { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:none } }
+
+    /* toolbar row — replaces the two absolute buttons */
+    .modal-toolbar {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .55rem .75rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .modal-toolbar-left { display: flex; align-items: center; gap: .4rem; flex: 1; flex-wrap: wrap; min-width: 0 }
+    .modal-toolbar-right { display: flex; align-items: center; gap: .4rem; flex-shrink: 0 }
+    .modal-nav-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--text3); font-family: var(--mono);
+      font-size: .6rem; letter-spacing: .06em;
+      padding: .2rem .55rem; cursor: pointer; transition: all .15s;
+      white-space: nowrap;
+    }
+    .modal-nav-btn:hover:not(:disabled) { color: var(--cyan); border-color: var(--cyan2) }
+    .modal-nav-btn:disabled { opacity: .25; cursor: default }
+    .modal-read-time {
+      font-size: .58rem; color: var(--text3); letter-spacing: .08em;
+      padding: .2rem .4rem;
+      border: 1px solid transparent;
+    }
+    .modal-jump-src {
+      background: none; border: 1px solid var(--border);
+      color: var(--text3); font-family: var(--mono);
+      font-size: .58rem; letter-spacing: .06em;
+      padding: .2rem .5rem; cursor: pointer; transition: all .15s;
+      white-space: nowrap;
+    }
+    .modal-jump-src:hover { color: var(--cyan2); border-color: var(--cyan2) }
+    .modal-share-btn {
+      background: none; border: 1px solid var(--border2);
+      color: var(--text3); font-family: var(--mono);
+      font-size: .6rem; letter-spacing: .08em;
+      padding: .2rem .55rem; cursor: pointer;
+      transition: all .15s; white-space: nowrap;
+    }
+    .modal-share-btn:hover { color: var(--cyan); border-color: var(--cyan2) }
     #modal-close {
-      position: absolute;
-      top: .75rem; right: .75rem;
       background: none;
       border: 1px solid var(--border2);
       color: var(--text3);
       font-family: var(--mono);
-      font-size: .62rem;
+      font-size: .6rem;
       letter-spacing: .08em;
       padding: .2rem .55rem;
       cursor: pointer;
-      z-index: 10;
       transition: all .15s;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     #modal-close:hover { color: var(--red); border-color: var(--red) }
+
+    /* modal scroll progress bar */
+    #modal-progress {
+      height: 2px;
+      background: var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    #modal-progress-bar {
+      height: 100%;
+      background: var(--cyan);
+      width: 0%;
+      transition: width .1s linear;
+    }
+
     .modal-hdr {
       padding: 1.25rem 1.5rem 1rem;
       border-bottom: 1px solid var(--border);
@@ -401,6 +458,8 @@
       line-height: 1.3;
       letter-spacing: -.01em;
       margin-bottom: .4rem;
+      /* leave room so long titles don't jam into nothing */
+      padding-right: 0;
     }
     .modal-meta {
       font-size: .65rem;
@@ -408,7 +467,28 @@
       letter-spacing: .05em;
     }
     .modal-meta span { color: var(--text2) }
+    .modal-tags-row { display: flex; gap: .3rem; flex-wrap: wrap; margin-top: .65rem }
+    .modal-tag-clickable {
+      font-size: .55rem; letter-spacing: .08em; color: var(--text3);
+      border: 1px solid var(--border); padding: .1rem .35rem;
+      cursor: pointer; transition: all .12s;
+    }
+    .modal-tag-clickable:hover { color: var(--cyan); border-color: var(--cyan2) }
     .modal-body { padding: 1.25rem 1.5rem 1.75rem }
+
+    /* code copy button */
+    .b-code-wrap { position: relative }
+    .code-copy-btn {
+      position: absolute; top: .45rem; right: .5rem;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text3); font-family: var(--mono);
+      font-size: .55rem; letter-spacing: .08em;
+      padding: .18rem .45rem; cursor: pointer; transition: all .15s;
+      opacity: 0;
+    }
+    .b-code-wrap:hover .code-copy-btn { opacity: 1 }
+    .code-copy-btn:hover { color: var(--cyan); border-color: var(--cyan2) }
+    .code-copy-btn.copied { color: var(--green); border-color: var(--green); opacity: 1 }
 
     /* ── BLOCK RENDERING ──────────────────────────── */
     .block { margin-bottom: 1.1rem }
@@ -811,18 +891,7 @@
     }
     .extlink-go:hover { background: rgba(255,59,78,.1) }
 
-    /* ── SHARE / COPY LINK ───────────────────── */
-    .modal-share-btn {
-      position: absolute;
-      top: .75rem; right: 3.5rem;
-      background: none; border: 1px solid var(--border2);
-      color: var(--text3); font-family: var(--mono);
-      font-size: .6rem; letter-spacing: .08em;
-      padding: .22rem .55rem; cursor: pointer; z-index: 10;
-      transition: all .15s;
-    }
-    .modal-share-btn:hover { color: var(--cyan); border-color: var(--cyan2) }
-
+    /* copy toast */
     #copy-toast {
       position: fixed;
       bottom: 1.5rem; left: 50%; transform: translateX(-50%);
@@ -1089,7 +1158,21 @@
 <!-- Main modal -->
 <div id="modal-bg">
   <div id="modal-box">
-    <button id="modal-close">[ ✕ CLOSE ]</button>
+    <!-- toolbar: nav + utils + close all in one flex row, no overlap possible -->
+    <div class="modal-toolbar">
+      <div class="modal-toolbar-left">
+        <button class="modal-nav-btn" id="modal-prev" title="Previous entry">← PREV</button>
+        <button class="modal-nav-btn" id="modal-next" title="Next entry">NEXT →</button>
+        <span class="modal-read-time" id="modal-read-time"></span>
+        <button class="modal-jump-src" id="modal-jump-src" style="display:none">↓ SOURCES</button>
+      </div>
+      <div class="modal-toolbar-right">
+        <button class="modal-share-btn" id="modal-share-btn">⎘ LINK</button>
+        <button id="modal-close">✕ CLOSE</button>
+      </div>
+    </div>
+    <!-- scroll progress bar -->
+    <div id="modal-progress"><div id="modal-progress-bar"></div></div>
     <div class="modal-hdr" id="modal-hdr"></div>
     <div class="modal-body" id="modal-body"></div>
   </div>
@@ -1517,49 +1600,79 @@ const fmtPanel = document.getElementById('fmt-panel');
 document.getElementById('fmt-open-btn').addEventListener('click', () => { fmtPanel.classList.add('open'); document.body.style.overflow = 'hidden'; });
 document.getElementById('fmt-close').addEventListener('click', () => { fmtPanel.classList.remove('open'); document.body.style.overflow = ''; });
 
-/* ─── MODAL + ?ref= + HISTORY ────────────────── */
-const modalBg   = document.getElementById('modal-bg');
-const modalHdr  = document.getElementById('modal-hdr');
-const modalBody = document.getElementById('modal-body');
-let currentEntryId = null;
+/* ─── READING TIME ───────────────────────────── */
+function calcReadTime(blocks) {
+  function extractText(b) {
+    if (!b) return '';
+    if (b.type === 'text') return (b.content || '') + ' ' + (b.items || []).join(' ');
+    if (b.type === 'code') return b.content || '';
+    if (b.type === 'callout' || b.type === 'redacted') return b.content || '';
+    if (b.type === 'source') return (b.label || '') + ' ' + (b.note || '');
+    if (b.type === 'steps') return (b.steps || []).map(s => (s.title || '') + ' ' + (s.content || '') + ' ' + (s.blocks || []).map(extractText).join(' ')).join(' ');
+    if (b.type === 'timeline') return (b.events || []).map(e => e.label + ' ' + e.detail).join(' ');
+    if (b.type === 'table') return (b.headers || []).join(' ') + ' ' + (b.rows || []).flat().join(' ');
+    if (b.blocks) return b.blocks.map(extractText).join(' ');
+    if (b.columns) return b.columns.map(extractText).join(' ');
+    return '';
+  }
+  const words = (blocks || []).map(extractText).join(' ').trim().split(/\s+/).filter(Boolean).length;
+  const mins = Math.max(1, Math.round(words / 220));
+  return mins + ' min read';
+}
 
-function openModal(entry, pushState = true) {
+/* ─── MODAL + ?ref= + HISTORY ────────────────── */
+const modalBg      = document.getElementById('modal-bg');
+const modalBox     = document.getElementById('modal-box');
+const modalHdr     = document.getElementById('modal-hdr');
+const modalBody    = document.getElementById('modal-body');
+const modalPrevBtn = document.getElementById('modal-prev');
+const modalNextBtn = document.getElementById('modal-next');
+const modalProgBar = document.getElementById('modal-progress-bar');
+let currentEntryId    = null;
+let currentEntryIndex = -1;
+let currentEntryList  = []; // the active filtered list at the time modal opens
+
+// progress bar on modal scroll
+modalBg.addEventListener('scroll', () => {
+  if (!modalBox) return;
+  const scrolled = modalBg.scrollTop;
+  const total = modalBg.scrollHeight - modalBg.clientHeight;
+  modalProgBar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
+});
+
+function openModal(entry, pushState = true, entryList) {
   if (!entry) return;
   currentEntryId = entry.id;
+  // use provided list (filtered) or fall back to all
+  currentEntryList = entryList || allEntries;
+  currentEntryIndex = currentEntryList.findIndex(e => e.id === entry.id);
+
   modalHdr.innerHTML = '';
   modalBody.innerHTML = '';
+  modalBg.scrollTop = 0;
+  modalProgBar.style.width = '0%';
 
-  // push URL so the entry is linkable
+  // prev/next state
+  modalPrevBtn.disabled = currentEntryIndex <= 0;
+  modalNextBtn.disabled = currentEntryIndex >= currentEntryList.length - 1;
+
+  // reading time
+  const rt = document.getElementById('modal-read-time');
+  rt.textContent = calcReadTime(entry.blocks);
+
+  // jump to sources — only show if entry has any source blocks
+  const hasSources = (entry.blocks || []).some(b => b.type === 'source');
+  const jmpSrc = document.getElementById('modal-jump-src');
+  jmpSrc.style.display = hasSources ? '' : 'none';
+
+  // push URL
   if (pushState) {
     const url = new URL(window.location.href);
     url.searchParams.set('ref', entry.id);
     history.pushState({ ref: entry.id }, '', url.toString());
   }
 
-  // update page title
   document.title = `[-_-] ${entry.title || entry.id} // THE ARCHIVE`;
-
-  // share button
-  const shareBtn = document.createElement('button');
-  shareBtn.className = 'modal-share-btn';
-  shareBtn.textContent = '[ ⎘ LINK ]';
-  shareBtn.title = 'Copy link to this entry';
-  shareBtn.addEventListener('click', () => {
-    const shareUrl = new URL(window.location.href);
-    shareUrl.searchParams.set('ref', entry.id);
-    navigator.clipboard.writeText(shareUrl.toString())
-      .then(() => showToast('LINK COPIED'))
-      .catch(() => {
-        // fallback for non-https or blocked clipboard
-        const ta = document.createElement('textarea');
-        ta.value = shareUrl.toString();
-        ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
-        document.body.appendChild(ta); ta.select();
-        try { document.execCommand('copy'); showToast('LINK COPIED'); } catch { showToast('COPY FAILED'); }
-        ta.remove();
-      });
-  });
-  modalHdr.appendChild(shareBtn);
 
   // badges row
   const badges = document.createElement('div'); badges.className = 'modal-badges';
@@ -1578,25 +1691,71 @@ function openModal(entry, pushState = true) {
   meta.innerHTML = `BY <span>${entry.author || 'anon'}</span> &nbsp;·&nbsp; <span>${fmtDate(entry.date)}</span>`;
   modalHdr.appendChild(meta);
 
+  // tags — clicking one closes modal and filters list by that tag
   if (entry.tags && entry.tags.length) {
-    const tw = document.createElement('div'); tw.style.cssText = 'display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.65rem';
-    entry.tags.forEach(t => { const s = document.createElement('span'); s.className = 'entry-tag'; s.textContent = t; tw.appendChild(s); });
+    const tw = document.createElement('div'); tw.className = 'modal-tags-row';
+    entry.tags.forEach(t => {
+      const s = document.createElement('span'); s.className = 'modal-tag-clickable'; s.textContent = t;
+      s.title = 'Filter by: ' + t;
+      s.addEventListener('click', () => {
+        closeModal();
+        document.getElementById('search').value = t;
+        activeQuery = t;
+        applyFilter();
+        document.getElementById('search').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      tw.appendChild(s);
+    });
     modalHdr.appendChild(tw);
   }
 
-  (entry.blocks || []).forEach(b => { const node = renderBlock(b); if (node) modalBody.appendChild(node); });
+  // render blocks — wrap code blocks with copy button
+  (entry.blocks || []).forEach(b => {
+    if (b.type === 'code') {
+      const codeWrap = document.createElement('div'); codeWrap.className = 'b-code-wrap block';
+      const node = renderBlock(b);
+      if (node) {
+        // strip the outer .block wrapper since we're adding our own
+        const inner = node.firstChild;
+        if (inner) codeWrap.appendChild(inner);
+      }
+      // copy button
+      const copyBtn = document.createElement('button'); copyBtn.className = 'code-copy-btn'; copyBtn.textContent = 'COPY';
+      copyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(b.content || '').then(() => {
+          copyBtn.textContent = 'COPIED'; copyBtn.classList.add('copied');
+          setTimeout(() => { copyBtn.textContent = 'COPY'; copyBtn.classList.remove('copied'); }, 1800);
+        }).catch(() => {
+          copyBtn.textContent = 'ERR'; setTimeout(() => { copyBtn.textContent = 'COPY'; }, 1200);
+        });
+      });
+      codeWrap.appendChild(copyBtn);
+      modalBody.appendChild(codeWrap);
+    } else {
+      const node = renderBlock(b);
+      if (node) modalBody.appendChild(node);
+    }
+  });
+
+  // if jump-to-sources, wire it up after body is built
+  if (hasSources) {
+    jmpSrc.onclick = () => {
+      // find first source block in the modal body
+      const sources = modalBody.querySelectorAll('.b-source');
+      if (sources.length) sources[0].scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+  }
 
   modalBg.classList.add('open');
   document.body.style.overflow = 'hidden';
-  modalBg.scrollTop = 0;
 }
 
 function closeModal() {
   modalBg.classList.remove('open');
   document.body.style.overflow = '';
   currentEntryId = null;
+  currentEntryIndex = -1;
   document.title = '[-_-] THE ARCHIVE';
-  // clear ?ref= from URL without triggering a navigation
   const url = new URL(window.location.href);
   if (url.searchParams.has('ref')) {
     url.searchParams.delete('ref');
@@ -1604,11 +1763,36 @@ function closeModal() {
   }
 }
 
+// prev/next navigation
+modalPrevBtn.addEventListener('click', () => {
+  if (currentEntryIndex > 0) openModal(currentEntryList[currentEntryIndex - 1], true, currentEntryList);
+});
+modalNextBtn.addEventListener('click', () => {
+  if (currentEntryIndex < currentEntryList.length - 1) openModal(currentEntryList[currentEntryIndex + 1], true, currentEntryList);
+});
+
+// share button
+document.getElementById('modal-share-btn').addEventListener('click', () => {
+  if (!currentEntryId) return;
+  const shareUrl = new URL(window.location.href);
+  shareUrl.searchParams.set('ref', currentEntryId);
+  navigator.clipboard.writeText(shareUrl.toString())
+    .then(() => showToast('LINK COPIED'))
+    .catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = shareUrl.toString();
+      ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); showToast('LINK COPIED'); } catch { showToast('COPY FAILED'); }
+      ta.remove();
+    });
+});
+
 document.getElementById('modal-close').addEventListener('click', closeModal);
 modalBg.addEventListener('click', e => { if (e.target === modalBg) closeModal(); });
 
 // browser back/forward
-window.addEventListener('popstate', e => {
+window.addEventListener('popstate', () => {
   const ref = new URL(window.location.href).searchParams.get('ref');
   if (ref) {
     const entry = allEntries.find(en => en.id === ref);
@@ -1628,6 +1812,11 @@ document.addEventListener('keydown', e => {
     if (modalBg.classList.contains('open')) { closeModal(); return; }
     fmtPanel.classList.remove('open');
     document.body.style.overflow = '';
+  }
+  // arrow keys for prev/next when modal is open
+  if (modalBg.classList.contains('open')) {
+    if (e.key === 'ArrowLeft'  && !modalPrevBtn.disabled) modalPrevBtn.click();
+    if (e.key === 'ArrowRight' && !modalNextBtn.disabled) modalNextBtn.click();
   }
 });
 
@@ -1658,7 +1847,14 @@ function makeCard(entry) {
   body.appendChild(title); body.appendChild(tldr); body.appendChild(foot);
   el.appendChild(body);
 
-  el.addEventListener('click', () => openModal(entry));
+  el.addEventListener('click', () => {
+    // pass the current rendered list so prev/next works within context
+    const cards = Array.from(document.getElementById('entry-list').querySelectorAll('.entry'));
+    const listIds = cards.map(c => c.__entryId).filter(Boolean);
+    const list = listIds.length ? listIds.map(id => allEntries.find(e => e.id === id)).filter(Boolean) : allEntries;
+    openModal(entry, true, list);
+  });
+  el.__entryId = entry.id;
   return el;
 }
 
