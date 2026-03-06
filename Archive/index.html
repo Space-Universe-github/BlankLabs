@@ -587,6 +587,136 @@
     }
     #lb-x:hover { color: var(--red); border-color: var(--red) }
 
+    /* steps / tutorial */
+    .b-steps { display: flex; flex-direction: column; gap: 0; counter-reset: step-ctr; margin: .5rem 0 }
+    .b-step {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 0;
+      counter-increment: step-ctr;
+      position: relative;
+    }
+    .b-step:not(:last-child) .step-line { position: absolute; left: 17px; top: 36px; bottom: 0; width: 1px; background: var(--border) }
+    .step-num {
+      width: 36px; height: 36px;
+      border: 1px solid var(--cyan2);
+      border-radius: 50%;
+      display: grid; place-items: center;
+      font-size: .7rem; font-weight: 600; color: var(--cyan);
+      flex-shrink: 0;
+      background: var(--bg2);
+      position: relative; z-index: 1;
+    }
+    .step-num::before { content: counter(step-ctr); }
+    .step-body { padding: .25rem 0 1.5rem 1rem }
+    .step-title { font-size: .8rem; font-weight: 600; color: var(--text); margin-bottom: .4rem }
+    .step-desc { font-size: .78rem; color: var(--text2); line-height: 1.65 }
+    .step-blocks { margin-top: .6rem; display: flex; flex-direction: column; gap: .5rem }
+    .step-blocks .block { margin-bottom: 0 }
+
+    /* keyboard keys */
+    .b-kbd { display: flex; align-items: center; gap: .4rem; flex-wrap: wrap; margin: .4rem 0 }
+    .kbd-label { font-size: .7rem; color: var(--text3); margin-right: .2rem }
+    kbd {
+      display: inline-block;
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      border-bottom: 2px solid var(--border2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: .72rem;
+      padding: .18rem .55rem;
+      border-radius: 4px;
+      line-height: 1.4;
+      box-shadow: 0 1px 0 var(--border2);
+    }
+    .kbd-sep { font-size: .65rem; color: var(--text3) }
+
+    /* table */
+    .b-table { overflow-x: auto; margin: .5rem 0 }
+    .b-table table { width: 100%; border-collapse: collapse; font-size: .75rem }
+    .b-table th {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      padding: .45rem .75rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: .62rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+    .b-table td {
+      border: 1px solid var(--border);
+      padding: .4rem .75rem;
+      color: var(--text2);
+      line-height: 1.5;
+      vertical-align: top;
+    }
+    .b-table tr:hover td { background: var(--surface2); color: var(--text) }
+
+    /* embed */
+    .b-embed { margin: .5rem 0 }
+    .b-embed iframe { width: 100%; border: 1px solid var(--border); display: block }
+    .b-embed-caption { font-size: .65rem; color: var(--text3); margin-top: .35rem; font-style: italic }
+
+    /* checklist */
+    .b-checklist { display: flex; flex-direction: column; gap: .3rem; margin: .4rem 0 }
+    .chk-item { display: flex; align-items: baseline; gap: .65rem; font-size: .78rem; line-height: 1.6; color: var(--text2) }
+    .chk-box {
+      flex-shrink: 0;
+      width: 14px; height: 14px;
+      border: 1px solid var(--border2);
+      border-radius: 2px;
+      display: grid; place-items: center;
+      font-size: .65rem;
+      margin-top: .1rem;
+      background: var(--surface2);
+    }
+    .chk-box.done { border-color: var(--green); color: var(--green); background: rgba(45,224,138,.07) }
+    .chk-text.done { text-decoration: line-through; color: var(--text3) }
+
+    /* diff */
+    .b-diff { margin: .5rem 0 }
+    .diff-label { font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text3); margin-bottom: .3rem }
+    .diff-body { background: var(--bg2); border: 1px solid var(--border); padding: .85rem 1rem; font-size: .74rem; line-height: 1.65; overflow-x: auto }
+    .diff-del { color: var(--red); display: block }
+    .diff-add { color: var(--green); display: block }
+    .diff-ctx { color: var(--text3); display: block }
+    .diff-del::before { content: '- '; opacity: .6 }
+    .diff-add::before { content: '+ '; opacity: .6 }
+    .diff-ctx::before { content: '  ' }
+
+    /* spoiler */
+    .b-spoiler {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      margin: .5rem 0;
+    }
+    .spoiler-hdr {
+      padding: .55rem .85rem;
+      font-size: .65rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--text3);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      user-select: none;
+      transition: color .15s;
+    }
+    .spoiler-hdr:hover { color: var(--text2) }
+    .spoiler-hdr::before { content: '▶'; font-size: .6em; transition: transform .2s }
+    details[open] .spoiler-hdr::before { transform: rotate(90deg) }
+    .spoiler-body { padding: .75rem .85rem; border-top: 1px solid var(--border) }
+
+    /* stat cards (for research summaries) */
+    .b-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: .5rem; margin: .5rem 0 }
+    .stat-card { background: var(--surface2); border: 1px solid var(--border); padding: .75rem .85rem; text-align: center }
+    .stat-val { font-family: var(--vt); font-size: 2rem; color: var(--cyan); line-height: 1; display: block }
+    .stat-lbl { font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--text3); margin-top: .25rem; display: block }
+
     /* format panel */
     #fmt-panel {
       display: none;
@@ -625,6 +755,92 @@
     }
     .fmt-note { font-size: .72rem; color: var(--text2); line-height: 1.6; margin-bottom: .6rem }
 
+    /* ── EXTERNAL LINK WARNING ────────────────── */
+    #extlink-bg {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 4000;
+      background: rgba(4,6,10,.96);
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    #extlink-bg.open { display: flex }
+    #extlink-box {
+      background: var(--surface);
+      border: 1px solid var(--red2);
+      max-width: 480px;
+      width: 100%;
+      animation: mopen .18s ease both;
+    }
+    .extlink-hdr {
+      background: rgba(255,59,78,.07);
+      border-bottom: 1px solid var(--red2);
+      padding: .6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+    }
+    .extlink-hdr-icon { color: var(--red); font-size: .75rem; font-weight: 600; letter-spacing: .1em }
+    .extlink-hdr-title { font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; color: var(--text2) }
+    .extlink-body { padding: 1.1rem 1.25rem }
+    .extlink-dest {
+      background: var(--bg2);
+      border: 1px solid var(--border2);
+      padding: .5rem .75rem;
+      font-size: .72rem;
+      color: var(--text2);
+      word-break: break-all;
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+    .extlink-dest-label { font-size: .55rem; letter-spacing: .14em; text-transform: uppercase; color: var(--text3); margin-bottom: .3rem }
+    .extlink-note { font-size: .72rem; color: var(--text3); line-height: 1.6; margin-bottom: 1rem }
+    .extlink-actions { display: flex; gap: .5rem; justify-content: flex-end }
+    .extlink-cancel {
+      background: none; border: 1px solid var(--border2); color: var(--text3);
+      font-family: var(--mono); font-size: .65rem; letter-spacing: .08em;
+      padding: .35rem .8rem; cursor: pointer; transition: all .15s;
+    }
+    .extlink-cancel:hover { color: var(--text); border-color: var(--text3) }
+    .extlink-go {
+      background: none; border: 1px solid var(--red2); color: var(--red);
+      font-family: var(--mono); font-size: .65rem; letter-spacing: .08em;
+      padding: .35rem .8rem; cursor: pointer; transition: all .15s;
+    }
+    .extlink-go:hover { background: rgba(255,59,78,.1) }
+
+    /* ── SHARE / COPY LINK ───────────────────── */
+    .modal-share-btn {
+      position: absolute;
+      top: .75rem; right: 3.5rem;
+      background: none; border: 1px solid var(--border2);
+      color: var(--text3); font-family: var(--mono);
+      font-size: .6rem; letter-spacing: .08em;
+      padding: .22rem .55rem; cursor: pointer; z-index: 10;
+      transition: all .15s;
+    }
+    .modal-share-btn:hover { color: var(--cyan); border-color: var(--cyan2) }
+
+    #copy-toast {
+      position: fixed;
+      bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: .08em;
+      padding: .45rem 1.1rem;
+      z-index: 9500;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+      white-space: nowrap;
+    }
+    #copy-toast.show { opacity: 1 }
+
     /* footer */
     #foot {
       text-align: center;
@@ -654,6 +870,28 @@
   <img id="lb-img" src="" alt="">
 </div>
 
+<!-- External link warning -->
+<div id="extlink-bg" role="dialog" aria-modal="true" aria-label="External link warning">
+  <div id="extlink-box">
+    <div class="extlink-hdr">
+      <span class="extlink-hdr-icon">⚠ LEAVING ARCHIVE</span>
+      <span class="extlink-hdr-title">External destination</span>
+    </div>
+    <div class="extlink-body">
+      <div class="extlink-dest-label">Destination</div>
+      <div class="extlink-dest" id="extlink-url"></div>
+      <div class="extlink-note">This link goes outside The Archive. The destination is not under our control. Proceed only if you trust the source.</div>
+      <div class="extlink-actions">
+        <button class="extlink-cancel" id="extlink-cancel">[ CANCEL ]</button>
+        <button class="extlink-go"    id="extlink-go">[ PROCEED → ]</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Copy link toast -->
+<div id="copy-toast">LINK COPIED</div>
+
 <!-- Format Reference Panel -->
 <div id="fmt-panel">
   <div class="fmt-inner">
@@ -677,69 +915,154 @@
     </div>
 
     <div class="fmt-sec">
-      <div class="fmt-sec-label">Block Types</div>
-      <pre class="fmt-pre">// Paragraph
-{ "type": "text", "format": "paragraph", "content": "..." }
+      <div class="fmt-sec-label">Text Blocks</div>
+      <pre class="fmt-pre">{ "type": "text", "format": "paragraph",  "content": "..." }
+{ "type": "text", "format": "header",     "content": "Section title" }
+{ "type": "text", "format": "subheader",  "content": "Sub-section" }
+{ "type": "text", "format": "list",       "items": ["item1", "item2"] }
+{ "type": "text", "format": "quote",      "content": "..." }
+{ "type": "text", "format": "caption",    "content": "Small grey text" }</pre>
+    </div>
 
-// Section header (uppercase, colored)
-{ "type": "text", "format": "header", "content": "..." }
-
-// Subheader
-{ "type": "text", "format": "subheader", "content": "..." }
-
-// Bullet list
-{ "type": "text", "format": "list", "items": ["item1", "item2"] }
-
-// Blockquote
-{ "type": "text", "format": "quote", "content": "..." }
-
-// Small caption text
-{ "type": "text", "format": "caption", "content": "..." }
-
-// Image with optional caption
+    <div class="fmt-sec">
+      <div class="fmt-sec-label">Media Blocks</div>
+      <pre class="fmt-pre">// Image (click to lightbox)
 { "type": "image", "src": "path/or/url.png", "caption": "optional" }
 
-// Code block
-{ "type": "code", "language": "python", "content": "print('hello')" }
+// Embed — YouTube, iframes, etc.
+{ "type": "embed", "src": "https://youtube.com/embed/...", "height": 360, "caption": "optional" }
+
+// Code block with syntax label
+{ "type": "code", "language": "python", "content": "print('hello')" }</pre>
+    </div>
+
+    <div class="fmt-sec">
+      <div class="fmt-sec-label">Tutorial / Guide Blocks</div>
+      <pre class="fmt-pre">// Numbered tutorial steps — each step can have nested blocks
+{
+  "type": "steps",
+  "steps": [
+    {
+      "title": "Install the tool",
+      "content": "Optional description under the step title.",
+      "blocks": [
+        { "type": "code", "language": "bash", "content": "npm install -g sometool" },
+        { "type": "callout", "level": "info", "content": "Requires Node 18+." }
+      ]
+    },
+    {
+      "title": "Configure",
+      "content": "Open config.json and set your values."
+    }
+  ]
+}
+
+// Keyboard shortcut display
+// combo: true = keys shown with + between them (Ctrl+S)
+// combo: false = keys shown with 'then' (sequential)
+{ "type": "kbd", "label": "Save", "keys": ["Ctrl", "S"], "combo": true, "description": "Save file" }
+{ "type": "kbd", "label": "Search and replace", "keys": ["Ctrl", "H"], "combo": true }
+
+// Checklist — items can be strings or {text, done} objects
+{
+  "type": "checklist",
+  "items": [
+    { "text": "Read the prerequisites", "done": true },
+    { "text": "Install dependencies", "done": true },
+    { "text": "Configure environment", "done": false },
+    "Optional plain string item"
+  ]
+}
+
+// Diff — before/after code comparison
+// Lines starting with "- " are red (removed), "+ " are green (added), rest is context
+{
+  "type": "diff",
+  "label": "config.js — before and after",
+  "lines": [
+    "  const port = process.env.PORT;",
+    "- app.listen(3000);",
+    "+ app.listen(port || 3000);",
+    "  module.exports = app;"
+  ]
+}</pre>
+    </div>
+
+    <div class="fmt-sec">
+      <div class="fmt-sec-label">Info & Structure Blocks</div>
+      <pre class="fmt-pre">// Callout — levels: info, warning, critical
+{ "type": "callout", "level": "warning", "content": "..." }
+
+// Spoiler / collapsible section (accepts nested blocks)
+{
+  "type": "spoiler",
+  "title": "Click to expand — contains spoilers",
+  "blocks": [ ...any blocks... ]
+}
+
+// Table
+{
+  "type": "table",
+  "headers": ["Column A", "Column B", "Column C"],
+  "rows": [
+    ["Row 1 A", "Row 1 B", "Row 1 C"],
+    ["Row 2 A", "Row 2 B", "Row 2 C"]
+  ],
+  "caption": "optional table caption"
+}
+
+// Stat cards (for research summaries, metrics)
+{
+  "type": "stats",
+  "items": [
+    { "value": "38M", "label": "Files archived" },
+    { "value": "640GB", "label": "Total size" },
+    { "value": "2009", "label": "Year captured" }
+  ]
+}
 
 // Redacted block
-{ "type": "redacted", "reason": "optional reason text" }
+{ "type": "redacted", "reason": "optional reason text" }</pre>
+    </div>
 
-// Cited source with optional archive URL
+    <div class="fmt-sec">
+      <div class="fmt-sec-label">Research / Drama Blocks</div>
+      <pre class="fmt-pre">// Cited source with optional Wayback Machine archive URL
 {
   "type": "source",
   "label": "Source label",
   "url": "https://...",
-  "archived": "https://web.archive.org/...",  // optional
+  "archived": "https://web.archive.org/...",
   "date": "YYYY-MM-DD",
-  "note": "Optional context note"
+  "note": "Context about why this source matters"
 }
-
-// Callout box — levels: info, warning, critical
-{ "type": "callout", "level": "warning", "content": "..." }
 
 // Timeline of events
 {
   "type": "timeline",
   "events": [
-    { "date": "2024-01", "label": "Event name", "detail": "What happened." }
+    { "date": "2024-01", "label": "Event name", "detail": "What happened." },
+    { "date": "2024-03", "label": "Response",   "detail": "What followed." }
   ]
 }
 
-// Two-column layout (accepts any block type per column)
+// Two-column layout (any block type per column)
 {
   "type": "columns",
   "columns": [
-    { "type": "text", "format": "paragraph", "content": "Left" },
-    { "type": "text", "format": "paragraph", "content": "Right" }
+    { "type": "text", "format": "paragraph", "content": "Left side." },
+    { "type": "text", "format": "paragraph", "content": "Right side." }
   ]
 }
 
-// Labeled evidence box (accepts nested blocks)
+// Labeled evidence box (nested blocks inside a labeled frame)
 {
   "type": "evidence",
-  "label": "Exhibit A — Screenshot",
-  "blocks": [ ...any blocks... ]
+  "label": "Exhibit A — Original tweet screenshot",
+  "blocks": [
+    { "type": "image", "src": "screenshot.png" },
+    { "type": "text", "format": "caption", "content": "Captured Oct 14 2024, since deleted." }
+  ]
 }</pre>
     </div>
 
@@ -875,6 +1198,105 @@ function fmtTS(s) {
   catch { return s; }
 }
 
+/* ─── EXTERNAL LINK INTERCEPTOR ──────────────── */
+// Domains that get a pass — no warning shown
+const ALLOWED_DOMAINS = new Set([
+  'blanklabs.site', 'www.blanklabs.site',
+  // archive / preservation
+  'web.archive.org', 'archive.org', 'archiveteam.org',
+  // reference / academic
+  'en.wikipedia.org', 'wikipedia.org', 'scholar.google.com',
+  'doi.org', 'ncbi.nlm.nih.gov', 'pubmed.ncbi.nlm.nih.gov',
+  // code / tech
+  'github.com', 'raw.githubusercontent.com', 'gist.github.com',
+  'stackoverflow.com', 'superuser.com', 'security.stackexchange.com',
+  // gov / regulatory
+  'ftc.gov', 'congress.gov', 'cisa.gov', 'nist.gov',
+  // major news (sources)
+  'reuters.com', 'apnews.com', 'bbc.com', 'bbc.co.uk',
+  // security tools / research
+  'wireshark.org', 'nmap.org', 'exploit-db.com', 'nvd.nist.gov',
+  'cve.mitre.org', 'owasp.org', 'sans.org',
+  // crypto / infosec research
+  'crypto.stanford.edu', 'nccgroup.com',
+  // google properties (docs, fonts, etc.)
+  'fonts.googleapis.com', 'fonts.gstatic.com',
+  'docs.google.com', 'drive.google.com',
+  // misc well-known
+  'youtube.com', 'www.youtube.com', 'youtu.be',
+  'pluralistic.net', 'publicaffairsbooks.com'
+]);
+
+let pendingHref = null;
+
+function isInternalLink(href) {
+  try {
+    const url = new URL(href, window.location.origin);
+    return url.hostname === window.location.hostname;
+  } catch { return false; }
+}
+
+function isAllowedDomain(href) {
+  try {
+    const url = new URL(href);
+    const host = url.hostname.replace(/^www\./, '');
+    return ALLOWED_DOMAINS.has(url.hostname) || ALLOWED_DOMAINS.has(host);
+  } catch { return false; }
+}
+
+function shouldWarn(href) {
+  if (!href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) return false;
+  if (isInternalLink(href)) return false;
+  if (isAllowedDomain(href)) return false;
+  return true;
+}
+
+const extBg     = document.getElementById('extlink-bg');
+const extUrl    = document.getElementById('extlink-url');
+const extCancel = document.getElementById('extlink-cancel');
+const extGo     = document.getElementById('extlink-go');
+
+function showExitWarning(href) {
+  pendingHref = href;
+  extUrl.textContent = href;
+  extBg.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  extCancel.focus();
+}
+function hideExitWarning() {
+  extBg.classList.remove('open');
+  document.body.style.overflow = '';
+  pendingHref = null;
+}
+
+extCancel.addEventListener('click', hideExitWarning);
+extGo.addEventListener('click', () => {
+  if (pendingHref) window.open(pendingHref, '_blank', 'noopener,noreferrer');
+  hideExitWarning();
+});
+extBg.addEventListener('click', e => { if (e.target === extBg) hideExitWarning(); });
+
+// Global link click interceptor — runs on all <a> elements rendered in blocks
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href]');
+  if (!a) return;
+  const href = a.getAttribute('href');
+  if (shouldWarn(href)) {
+    e.preventDefault();
+    showExitWarning(a.href); // use resolved href
+  }
+});
+
+/* ─── COPY TOAST ─────────────────────────────── */
+const copyToast = document.getElementById('copy-toast');
+let toastTimer;
+function showToast(msg) {
+  copyToast.textContent = msg || 'LINK COPIED';
+  copyToast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => copyToast.classList.remove('show'), 2000);
+}
+
 /* ─── BLOCK RENDERER ─────────────────────────── */
 function renderBlock(b) {
   if (!b || !b.type) return null;
@@ -962,6 +1384,115 @@ function renderBlock(b) {
     const body = document.createElement('div'); body.className = 'evidence-body';
     (b.blocks || []).forEach(inner => { const n = renderBlock(inner); if (n) body.appendChild(n); });
     ev.appendChild(lbl); ev.appendChild(body); wrap.appendChild(ev);
+
+  /* ── EXTENDED BLOCK TYPES ─────────────────── */
+
+  } else if (b.type === 'steps') {
+    const stepsWrap = document.createElement('div'); stepsWrap.className = 'b-steps';
+    (b.steps || []).forEach(step => {
+      const item = document.createElement('div'); item.className = 'b-step';
+      const line = document.createElement('div'); line.className = 'step-line';
+      const num  = document.createElement('div'); num.className = 'step-num';
+      const body = document.createElement('div'); body.className = 'step-body';
+      if (step.title) { const t = document.createElement('div'); t.className = 'step-title'; t.textContent = step.title; body.appendChild(t); }
+      if (step.content) { const d = document.createElement('div'); d.className = 'step-desc'; d.textContent = step.content; body.appendChild(d); }
+      if (step.blocks && step.blocks.length) {
+        const sb = document.createElement('div'); sb.className = 'step-blocks';
+        step.blocks.forEach(inner => { const n = renderBlock(inner); if (n) sb.appendChild(n); });
+        body.appendChild(sb);
+      }
+      item.appendChild(line); item.appendChild(num); item.appendChild(body);
+      stepsWrap.appendChild(item);
+    });
+    wrap.appendChild(stepsWrap);
+
+  } else if (b.type === 'kbd') {
+    const kbdWrap = document.createElement('div'); kbdWrap.className = 'b-kbd';
+    if (b.label) { const lbl = document.createElement('span'); lbl.className = 'kbd-label'; lbl.textContent = b.label + ':'; kbdWrap.appendChild(lbl); }
+    (b.keys || []).forEach((key, i) => {
+      if (i > 0) { const sep = document.createElement('span'); sep.className = 'kbd-sep'; sep.textContent = b.combo ? '+' : 'then'; kbdWrap.appendChild(sep); }
+      const k = document.createElement('kbd'); k.textContent = key; kbdWrap.appendChild(k);
+    });
+    if (b.description) { const desc = document.createElement('span'); desc.style.cssText = 'font-size:.72rem;color:var(--text3);margin-left:.5rem'; desc.textContent = '— ' + b.description; kbdWrap.appendChild(desc); }
+    wrap.appendChild(kbdWrap);
+
+  } else if (b.type === 'table') {
+    const tblWrap = document.createElement('div'); tblWrap.className = 'b-table';
+    const tbl = document.createElement('table');
+    if (b.headers && b.headers.length) {
+      const thead = document.createElement('thead'); const tr = document.createElement('tr');
+      b.headers.forEach(h => { const th = document.createElement('th'); th.textContent = h; tr.appendChild(th); });
+      thead.appendChild(tr); tbl.appendChild(thead);
+    }
+    if (b.rows && b.rows.length) {
+      const tbody = document.createElement('tbody');
+      b.rows.forEach(row => {
+        const tr = document.createElement('tr');
+        (Array.isArray(row) ? row : [row]).forEach(cell => { const td = document.createElement('td'); td.textContent = cell; tr.appendChild(td); });
+        tbody.appendChild(tr);
+      });
+      tbl.appendChild(tbody);
+    }
+    tblWrap.appendChild(tbl);
+    if (b.caption) { const cap = document.createElement('div'); cap.style.cssText = 'font-size:.65rem;color:var(--text3);margin-top:.35rem;font-style:italic'; cap.textContent = b.caption; tblWrap.appendChild(cap); }
+    wrap.appendChild(tblWrap);
+
+  } else if (b.type === 'embed') {
+    const embedWrap = document.createElement('div'); embedWrap.className = 'b-embed';
+    const iframe = document.createElement('iframe');
+    iframe.src = b.src || '';
+    iframe.height = b.height || 360;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    iframe.loading = 'lazy';
+    iframe.style.border = '0';
+    embedWrap.appendChild(iframe);
+    if (b.caption) { const cap = document.createElement('div'); cap.className = 'b-embed-caption'; cap.textContent = b.caption; embedWrap.appendChild(cap); }
+    wrap.appendChild(embedWrap);
+
+  } else if (b.type === 'checklist') {
+    const cl = document.createElement('div'); cl.className = 'b-checklist';
+    (b.items || []).forEach(item => {
+      const isObj = typeof item === 'object';
+      const text = isObj ? item.text : item;
+      const done = isObj ? !!item.done : false;
+      const row = document.createElement('div'); row.className = 'chk-item';
+      const box = document.createElement('div'); box.className = 'chk-box' + (done ? ' done' : ''); box.textContent = done ? '✓' : '';
+      const lbl = document.createElement('span'); lbl.className = 'chk-text' + (done ? ' done' : ''); lbl.textContent = text;
+      row.appendChild(box); row.appendChild(lbl); cl.appendChild(row);
+    });
+    wrap.appendChild(cl);
+
+  } else if (b.type === 'diff') {
+    const dw = document.createElement('div'); dw.className = 'b-diff';
+    if (b.label) { const dl = document.createElement('div'); dl.className = 'diff-label'; dl.textContent = b.label; dw.appendChild(dl); }
+    const db = document.createElement('div'); db.className = 'diff-body';
+    (b.lines || []).forEach(line => {
+      const el = document.createElement('span');
+      if (line.startsWith('- ')) { el.className = 'diff-del'; el.textContent = line.slice(2); }
+      else if (line.startsWith('+ ')) { el.className = 'diff-add'; el.textContent = line.slice(2); }
+      else { el.className = 'diff-ctx'; el.textContent = line.startsWith('  ') ? line.slice(2) : line; }
+      db.appendChild(el);
+    });
+    dw.appendChild(db); wrap.appendChild(dw);
+
+  } else if (b.type === 'spoiler') {
+    const details = document.createElement('details'); details.className = 'b-spoiler';
+    const summary = document.createElement('summary'); summary.className = 'spoiler-hdr';
+    summary.textContent = b.title || 'Spoiler / Collapsed';
+    const body = document.createElement('div'); body.className = 'spoiler-body';
+    (b.blocks || []).forEach(inner => { const n = renderBlock(inner); if (n) body.appendChild(n); });
+    details.appendChild(summary); details.appendChild(body); wrap.appendChild(details);
+
+  } else if (b.type === 'stats') {
+    const sg = document.createElement('div'); sg.className = 'b-stats';
+    (b.items || []).forEach(item => {
+      const card = document.createElement('div'); card.className = 'stat-card';
+      const val = document.createElement('span'); val.className = 'stat-val'; val.textContent = item.value || '—';
+      const lbl = document.createElement('span'); lbl.className = 'stat-lbl'; lbl.textContent = item.label || '';
+      card.appendChild(val); card.appendChild(lbl); sg.appendChild(card);
+    });
+    wrap.appendChild(sg);
   }
 
   return wrap;
@@ -986,20 +1517,57 @@ const fmtPanel = document.getElementById('fmt-panel');
 document.getElementById('fmt-open-btn').addEventListener('click', () => { fmtPanel.classList.add('open'); document.body.style.overflow = 'hidden'; });
 document.getElementById('fmt-close').addEventListener('click', () => { fmtPanel.classList.remove('open'); document.body.style.overflow = ''; });
 
-/* ─── MODAL ──────────────────────────────────── */
+/* ─── MODAL + ?ref= + HISTORY ────────────────── */
 const modalBg   = document.getElementById('modal-bg');
 const modalHdr  = document.getElementById('modal-hdr');
 const modalBody = document.getElementById('modal-body');
+let currentEntryId = null;
 
-function openModal(entry) {
+function openModal(entry, pushState = true) {
+  if (!entry) return;
+  currentEntryId = entry.id;
   modalHdr.innerHTML = '';
   modalBody.innerHTML = '';
+
+  // push URL so the entry is linkable
+  if (pushState) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('ref', entry.id);
+    history.pushState({ ref: entry.id }, '', url.toString());
+  }
+
+  // update page title
+  document.title = `[-_-] ${entry.title || entry.id} // THE ARCHIVE`;
+
+  // share button
+  const shareBtn = document.createElement('button');
+  shareBtn.className = 'modal-share-btn';
+  shareBtn.textContent = '[ ⎘ LINK ]';
+  shareBtn.title = 'Copy link to this entry';
+  shareBtn.addEventListener('click', () => {
+    const shareUrl = new URL(window.location.href);
+    shareUrl.searchParams.set('ref', entry.id);
+    navigator.clipboard.writeText(shareUrl.toString())
+      .then(() => showToast('LINK COPIED'))
+      .catch(() => {
+        // fallback for non-https or blocked clipboard
+        const ta = document.createElement('textarea');
+        ta.value = shareUrl.toString();
+        ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); showToast('LINK COPIED'); } catch { showToast('COPY FAILED'); }
+        ta.remove();
+      });
+  });
+  modalHdr.appendChild(shareBtn);
 
   // badges row
   const badges = document.createElement('div'); badges.className = 'modal-badges';
   const tb = document.createElement('span'); tb.className = 'type-badge badge-' + entry.type; tb.textContent = entry.type.toUpperCase(); badges.appendChild(tb);
   if (entry.status) {
-    const sb = document.createElement('span'); sb.className = 'type-badge'; sb.style.color = entry.status === 'active' ? 'var(--green)' : entry.status === 'developing' ? 'var(--orange)' : 'var(--text3)'; sb.style.borderColor = 'currentColor'; sb.textContent = entry.status.toUpperCase(); badges.appendChild(sb);
+    const sb = document.createElement('span'); sb.className = 'type-badge';
+    sb.style.color = entry.status === 'active' ? 'var(--green)' : entry.status === 'developing' ? 'var(--orange)' : 'var(--text3)';
+    sb.style.borderColor = 'currentColor'; sb.textContent = entry.status.toUpperCase(); badges.appendChild(sb);
   }
   const idb = document.createElement('span'); idb.className = 'entry-id'; idb.textContent = entry.id; badges.appendChild(idb);
   modalHdr.appendChild(badges);
@@ -1010,25 +1578,57 @@ function openModal(entry) {
   meta.innerHTML = `BY <span>${entry.author || 'anon'}</span> &nbsp;·&nbsp; <span>${fmtDate(entry.date)}</span>`;
   modalHdr.appendChild(meta);
 
-  // tags
   if (entry.tags && entry.tags.length) {
     const tw = document.createElement('div'); tw.style.cssText = 'display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.65rem';
     entry.tags.forEach(t => { const s = document.createElement('span'); s.className = 'entry-tag'; s.textContent = t; tw.appendChild(s); });
     modalHdr.appendChild(tw);
   }
 
-  // blocks
   (entry.blocks || []).forEach(b => { const node = renderBlock(b); if (node) modalBody.appendChild(node); });
 
   modalBg.classList.add('open');
   document.body.style.overflow = 'hidden';
+  modalBg.scrollTop = 0;
 }
 
-function closeModal() { modalBg.classList.remove('open'); document.body.style.overflow = ''; }
+function closeModal() {
+  modalBg.classList.remove('open');
+  document.body.style.overflow = '';
+  currentEntryId = null;
+  document.title = '[-_-] THE ARCHIVE';
+  // clear ?ref= from URL without triggering a navigation
+  const url = new URL(window.location.href);
+  if (url.searchParams.has('ref')) {
+    url.searchParams.delete('ref');
+    history.pushState({}, '', url.toString());
+  }
+}
+
 document.getElementById('modal-close').addEventListener('click', closeModal);
 modalBg.addEventListener('click', e => { if (e.target === modalBg) closeModal(); });
+
+// browser back/forward
+window.addEventListener('popstate', e => {
+  const ref = new URL(window.location.href).searchParams.get('ref');
+  if (ref) {
+    const entry = allEntries.find(en => en.id === ref);
+    if (entry) openModal(entry, false);
+  } else {
+    modalBg.classList.remove('open');
+    document.body.style.overflow = '';
+    currentEntryId = null;
+    document.title = '[-_-] THE ARCHIVE';
+  }
+});
+
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeLB(); closeModal(); fmtPanel.classList.remove('open'); document.body.style.overflow = ''; }
+  if (e.key === 'Escape') {
+    if (extBg.classList.contains('open')) { hideExitWarning(); return; }
+    closeLB();
+    if (modalBg.classList.contains('open')) { closeModal(); return; }
+    fmtPanel.classList.remove('open');
+    document.body.style.overflow = '';
+  }
 });
 
 /* ─── ENTRY CARD ─────────────────────────────── */
@@ -1160,10 +1760,26 @@ async function init() {
   applyFilter();
 
   if (Array.isArray(nanoposts)) renderSideNano(nanoposts);
+
+  // handle ?ref= on load — auto-open the matching entry
+  const refParam = new URL(window.location.href).searchParams.get('ref');
+  if (refParam) {
+    const entry = allEntries.find(e => e.id === refParam);
+    if (entry) {
+      // small delay so the page renders first
+      setTimeout(() => openModal(entry, false), 120);
+    } else {
+      // ref doesn't exist — clean the URL silently
+      const url = new URL(window.location.href);
+      url.searchParams.delete('ref');
+      history.replaceState({}, '', url.toString());
+    }
+  }
 }
 
 init();
 })();
 </script>
+
 </body>
-        </html>
+</html>
