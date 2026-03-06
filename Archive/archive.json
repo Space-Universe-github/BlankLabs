@@ -427,7 +427,7 @@
   {
     "id": "arc005",
     "type": "analysis",
-    "title": "behavioral1: Triage sandbox behavioral analysis",
+    "title": "CSP FILE",
     "author": "Recorded Future Triage",
     "date": "2026-03-06",
     "tags": [
@@ -461,7 +461,7 @@
       {
         "type": "text",
         "format": "header",
-        "content": "What the file did, in plain words"
+        "content": "What the file did"
       },
       {
         "type": "text",
@@ -486,7 +486,7 @@
       {
         "type": "text",
         "format": "header",
-        "content": "Simple steps to take right now if you think you installed it"
+        "content": "Simple steps to take right now if you installed it"
       },
       {
         "type": "text",
@@ -501,16 +501,6 @@
           "If you are not sure how to clean it safely, back up your personal files to an external drive, wipe the computer, and reinstall Windows from a clean source.",
           "After cleanup, change passwords for your important accounts and turn on multi factor authentication where possible."
         ]
-      },
-      {
-        "type": "text",
-        "format": "header",
-        "content": "If you want me to do more"
-      },
-      {
-        "type": "text",
-        "format": "paragraph",
-        "content": "I can make a shorter one page checklist you can print, or I can split the technical bits into a separate file for someone who knows how to do forensics. Tell me which and I will make it."
       },
       {
         "type": "source",
