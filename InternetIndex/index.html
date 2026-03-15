@@ -751,12 +751,13 @@ document.getElementById("thm").addEventListener("click", function(){
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 function stars(r) {
   var s = "";
-  for (var i=1;i<=5;i++) {
-    var on = i<=r;
+  for (var i = 1; i <= 5; i++) {
+    var on = i <= r;
+
     if (theme === "terminal") {
-      s += '<span class="st'+(on?" on")+'">'+(on?"█":"░")+"</span>";
+      s += '<span class="st' + (on ? " on" : "") + '">' + (on ? "█" : "░") + "</span>";
     } else {
-      s += '<span class="st'+(on?" on")+'"></span>';
+      s += '<span class="st' + (on ? " on" : "") + '"></span>';
     }
   }
   return s;
