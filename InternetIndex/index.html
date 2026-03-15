@@ -1,1 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="terminal">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE INTERNET INDEX // 2026</title>
+<meta name="description" content="82 privacy-first tools for 2026. Rated, annotated, compared.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,600&display=swap" rel="stylesheet">
+<style>
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ROOT VARIABLES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+:root {
+  --bg:   #050608; --bg2:  #090b0f; --sur: #0d1116; --sur2: #111820;
+  --bdr:  #182030; --bdr2: #1e2d40; --txt: #b8c8d8; --txt2: #607888; --txt3: #304050;
+  --grn:  #18dd60; --grn2: #0e8838; --amb: #e8b830; --amb2: #8a6e10;
+  --cyn:  #00d0f0; --cyn2: #008898; --red: #f03848; --red2: #882030;
+  --mag:  #d040f8; --mag2: #7018a8; --blu: #3880ff; --blu2: #1840a8;
+  --org:  #f07828; --org2: #904418; --pur: #9840f0; --pur2: #501888;
+  --M:"JetBrains Mono",monospace; --S:"Plus Jakarta Sans",system-ui,sans-serif; --F:"Playfair Display",Georgia,serif;
+}
+[data-theme="normal"] {
+  --bg:#0d1525; --bg2:#111d34; --sur:#172240; --sur2:#1d2c50;
+  --bdr:#2a3d64; --bdr2:#3a5080; --txt:#dce8ff; --txt2:#7898cc; --txt3:#3a5888;
+}
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RESET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:var(--M);min-height:100vh;overflow-x:hidden;padding-bottom:2rem}
+[data-theme="normal"] body{font-family:var(--S)}
+a{color:var(--cyn);text-decoration:none} a:hover{text-decoration:underline}
+button{cursor:pointer;font-family:inherit}
+::-webkit-scrollbar{width:5px;height:5px} ::-webkit-scrollbar-track{background:var(--bg2)} ::-webkit-scrollbar-thumb{background:var(--bdr2)}
+[data-theme="terminal"] body::after{content:"";position:fixed;inset:0;z-index:9000;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 3px)}
 
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HEADER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#hdr{position:sticky;top:0;z-index:600;background:var(--bg2);border-bottom:1px solid var(--bdr)}
+.hdr-r1{display:flex;align-items:center;gap:.5rem;padding:.55rem 1.25rem;border-bottom:1px solid var(--bdr);flex-wrap:wrap}
+.logo{font-family:var(--M);font-size:.95rem;font-weight:700;color:var(--amb);letter-spacing:.06em;text-shadow:0 0 20px rgba(232,184,48,.25);flex-shrink:0;white-space:nowrap}
+[data-theme="normal"] .logo{font-family:var(--F);font-size:1.15rem;letter-spacing:0}
+.logo-sep{color:var(--bdr2);font-size:.7rem;flex-shrink:0}
+.logo-sub{font-size:.56rem;color:var(--txt3);letter-spacing:.12em;white-space:nowrap}
+[data-theme="normal"] .logo-sub{font-family:var(--S);font-size:.65rem}
+.hdr-space{flex:1;min-width:8px}
+.sp{font-size:.58rem;color:var(--txt3)}
+[data-theme="normal"] .sp{display:none}
+#srch{background:var(--sur);border:1px solid var(--bdr2);color:var(--txt);font-family:var(--M);font-size:.72rem;padding:.28rem .65rem;width:200px;outline:none;transition:border-color .15s}
+[data-theme="normal"] #srch{font-family:var(--S);border-radius:6px;font-size:.8rem;width:220px}
+#srch::placeholder{color:var(--txt3)} #srch:focus{border-color:var(--amb2)}
+[data-theme="normal"] #srch:focus{border-color:var(--blu2)}
+#thm{background:var(--sur2);border:1px solid var(--bdr2);color:var(--txt2);font-family:var(--M);font-size:.58rem;letter-spacing:.08em;padding:.25rem .65rem;transition:all .15s;white-space:nowrap}
+[data-theme="normal"] #thm{font-family:var(--S);font-size:.7rem;border-radius:20px}
+#thm:hover{color:var(--amb);border-color:var(--amb2)}
+.hdr-r2{display:flex;align-items:center;gap:1.2rem;padding:.25rem 1.25rem;font-size:.54rem;color:var(--txt3);flex-wrap:wrap}
+[data-theme="normal"] .hdr-r2{display:none}
+.kb{display:flex;align-items:center;gap:.25rem}
+.kb b{color:var(--amb);background:var(--sur2);border:1px solid var(--bdr);padding:.05rem .3rem;font-weight:500;letter-spacing:0}
+#hdr-ct{margin-left:auto;font-size:.54rem;color:var(--txt3)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LAYOUT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#lay{display:flex;align-items:flex-start;max-width:1440px;margin:0 auto}
+#sb{width:200px;flex-shrink:0;position:sticky;top:80px;max-height:calc(100vh - 80px);overflow-y:auto;border-right:1px solid var(--bdr);background:var(--bg2);padding:.5rem 0}
+@media(max-width:860px){#sb{display:none}}
+#mn{flex:1;min-width:0;padding:1.25rem 1.25rem 4rem}
+
+/* sidebar */
+.ss{margin-bottom:.25rem}
+.ss-hd{font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--txt3);padding:.55rem 1rem .25rem;border-bottom:1px solid var(--bdr)}
+.si{display:flex;align-items:center;justify-content:space-between;padding:.3rem 1rem;font-size:.63rem;color:var(--txt2);cursor:pointer;transition:all .12s;border-left:2px solid transparent}
+.si:hover{color:var(--txt);background:var(--sur)}
+.si.on{color:var(--amb);background:var(--sur);border-left-color:var(--amb)}
+.si-d{width:6px;height:6px;border-radius:50%;margin-right:.45rem;flex-shrink:0}
+.si-n{flex:1}
+.si-c{font-size:.52rem;color:var(--txt3);background:var(--sur2);padding:.02rem .28rem}
+.sdiv{height:1px;background:var(--bdr);margin:.3rem 0}
+.sst{display:flex;justify-content:space-between;font-size:.6rem;color:var(--txt2);padding:.18rem 1rem}
+.sst span:last-child{color:var(--txt3)}
+.snv{font-size:.62rem;color:var(--txt2);padding:.3rem 1rem;cursor:pointer;transition:color .12s}
+.snv:hover{color:var(--cyn)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   HERO (normal mode only)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#hero{display:none;padding:2rem 0 1.5rem;border-bottom:1px solid var(--bdr);margin-bottom:1.5rem}
+[data-theme="normal"] #hero{display:block}
+.he{font-size:.58rem;letter-spacing:.22em;text-transform:uppercase;color:var(--txt3);margin-bottom:.6rem}
+.ht{font-family:var(--F);font-size:clamp(1.8rem,4vw,3rem);color:var(--txt);line-height:1.05;margin-bottom:.6rem}
+.ht em{font-style:italic;color:var(--amb)}
+.hd{font-size:.8rem;color:var(--txt2);line-height:1.75;max-width:500px;margin-bottom:1.25rem}
+.hs{display:flex;gap:2rem;flex-wrap:wrap}
+.hn{display:flex;flex-direction:column;gap:.15rem}
+.hn-v{font-family:var(--F);font-size:2rem;color:var(--amb);line-height:1}
+.hn-l{font-size:.58rem;letter-spacing:.14em;text-transform:uppercase;color:var(--txt3)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FILTER BAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#fb{display:flex;align-items:center;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem}
+.fl{color:var(--txt3);font-size:.54rem;letter-spacing:.12em;text-transform:uppercase;flex-shrink:0}
+.fb{background:none;border:1px solid var(--bdr);color:var(--txt3);font-family:var(--M);font-size:.58rem;letter-spacing:.06em;padding:.18rem .5rem;transition:all .12s;white-space:nowrap}
+.fb:hover{color:var(--txt2);border-color:var(--bdr2)}
+.fb.on{color:var(--bg2)!important;border-color:var(--amb)!important;background:var(--amb)!important}
+.fb.on[data-cat="Creative"]     {background:var(--amb)!important;border-color:var(--amb)!important}
+.fb.on[data-cat="Productivity"] {background:var(--cyn)!important;border-color:var(--cyn)!important;color:var(--bg)!important}
+.fb.on[data-cat="Communication"]{background:var(--mag)!important;border-color:var(--mag)!important}
+.fb.on[data-cat="Security"]     {background:var(--red)!important;border-color:var(--red)!important}
+.fb.on[data-cat="Self-Hosting"] {background:var(--grn)!important;border-color:var(--grn)!important;color:var(--bg)!important}
+.fb.on[data-cat="DevOps"]       {background:var(--blu)!important;border-color:var(--blu)!important}
+.fb.on[data-cat="Networking"]   {background:var(--org)!important;border-color:var(--org)!important;color:var(--bg)!important}
+.fb.on[data-cat="Backup"]       {background:var(--pur)!important;border-color:var(--pur)!important}
+[data-theme="normal"] .fb{font-family:var(--S);font-size:.68rem;border-radius:4px}
+.fb-sep{color:var(--bdr);font-size:.65rem}
+.tf.on{color:var(--txt)!important;background:var(--sur2)!important;border-color:var(--bdr2)!important}
+.fb-r{margin-left:auto;display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+#rct{font-size:.58rem;color:var(--txt3);white-space:nowrap}
+.vb{background:none;border:1px solid var(--bdr);color:var(--txt3);font-family:var(--M);font-size:.68rem;padding:.18rem .42rem;transition:all .12s}
+.vb.on{color:var(--amb);border-color:var(--amb2)}
+#mob-fb{display:none;background:var(--sur2);border:1px solid var(--bdr2);color:var(--txt2);font-family:var(--M);font-size:.65rem;padding:.3rem .8rem}
+[data-theme="normal"] #mob-fb{font-family:var(--S)}
+@media(max-width:860px){#mob-fb{display:block}}
+
+/* mobile drawer */
+#drwr{display:none;position:fixed;inset:0;z-index:800;background:rgba(3,5,8,.92)}
+#drwr.open{display:flex;align-items:flex-end}
+.drwr-in{background:var(--bg2);border-top:1px solid var(--bdr2);width:100%;padding:1.25rem;max-height:80vh;overflow-y:auto;animation:sup .2s ease both}
+@keyframes sup{from{transform:translateY(100%)}to{transform:none}}
+.drwr-x{background:none;border:1px solid var(--bdr2);color:var(--txt3);font-family:var(--M);font-size:.65rem;padding:.28rem .7rem;float:right}
+.drwr-s{margin-bottom:1rem}
+.drwr-st{font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--txt3);margin-bottom:.5rem;display:block}
+.drwr-b{display:flex;flex-wrap:wrap;gap:.35rem}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOOL GRID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#tg{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));border:1px solid var(--bdr);gap:0}
+#tg.lv{grid-template-columns:1fr}
+[data-theme="normal"] #tg{border:none;gap:.7rem}
+[data-theme="normal"] #tg .card{border-radius:10px;border:1px solid var(--bdr)}
+.empty{grid-column:1/-1;padding:4rem 2rem;text-align:center}
+.et{font-size:2rem;color:var(--txt3);margin-bottom:.5rem}
+[data-theme="normal"] .et{font-family:var(--F)}
+.es{font-size:.72rem;color:var(--txt3)}
+/* loading state */
+#tg-loading{padding:3rem 0;text-align:center;font-size:.72rem;color:var(--txt3);letter-spacing:.1em}
+
+.card{background:var(--sur);border-right:1px solid var(--bdr);border-bottom:1px solid var(--bdr);padding:.85rem 1rem;cursor:pointer;transition:background .12s;position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--cc,var(--bdr));opacity:.7}
+.card:hover{background:var(--sur2)} .card:hover::before{opacity:1}
+.ch{display:flex;align-items:flex-start;justify-content:space-between;gap:.4rem;margin-bottom:.4rem}
+.cn{font-size:.8rem;font-weight:500;color:var(--txt);line-height:1.2}
+[data-theme="normal"] .cn{font-family:var(--S);font-size:.88rem;font-weight:700}
+.cf{font-size:.65rem;color:var(--amb);flex-shrink:0}
+.cm{display:flex;align-items:center;gap:.35rem;margin-bottom:.4rem;flex-wrap:wrap}
+.cb{font-size:.48rem;letter-spacing:.12em;text-transform:uppercase;padding:.08rem .32rem;border:1px solid;opacity:.8}
+[data-theme="normal"] .cb{border-radius:3px;font-family:var(--S);font-size:.56rem;font-weight:600}
+.cs{display:flex;gap:2px}
+.st{font-size:.6rem;color:var(--txt3)} .st.on{color:var(--amb)}
+[data-theme="normal"] .st{width:8px;height:8px;border-radius:50%;font-size:0;background:var(--bdr)}
+[data-theme="normal"] .st.on{background:var(--amb)}
+.cd{font-size:.68rem;color:var(--txt2);line-height:1.6;margin-bottom:.5rem}
+[data-theme="normal"] .cd{font-family:var(--S);font-size:.76rem}
+.ctags{display:flex;gap:.25rem;flex-wrap:wrap}
+.ct{font-size:.48rem;letter-spacing:.08em;text-transform:uppercase;padding:.06rem .28rem;border:1px solid}
+[data-theme="normal"] .ct{border-radius:3px;font-size:.56rem}
+.ct-o{color:var(--grn);border-color:rgba(24,221,96,.3)}
+.ct-s{color:var(--cyn);border-color:rgba(0,208,240,.3)}
+.ct-p{color:var(--amb);border-color:rgba(232,184,48,.3)}
+.ct-x{color:var(--txt3);border-color:var(--bdr)}
+/* list view */
+#tg.lv .card{display:grid;grid-template-columns:180px 1fr auto;gap:0 1rem;align-items:center;padding:.6rem 1rem}
+#tg.lv .ch{margin-bottom:0} #tg.lv .cd{display:none}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SECTIONS (all hard-coded below the grid)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.sec{margin-top:2.5rem;padding-top:1.5rem;border-top:2px solid var(--bdr)}
+.sec-hd{display:flex;align-items:baseline;gap:.75rem;margin-bottom:.5rem}
+.sec-n{font-size:.52rem;color:var(--txt3);letter-spacing:.14em}
+[data-theme="normal"] .sec-n{display:none}
+.sec-t{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--cyn);font-weight:500}
+[data-theme="normal"] .sec-t{font-family:var(--F);font-size:1.5rem;letter-spacing:0;text-transform:none;color:var(--txt);font-style:italic}
+.sec-d{font-size:.65rem;color:var(--txt2);line-height:1.7;max-width:600px;margin-bottom:1.25rem}
+[data-theme="normal"] .sec-d{font-family:var(--S);font-size:.8rem}
+
+/* compare tabs */
+.ctbs{display:flex;gap:0;border-bottom:1px solid var(--bdr);margin-bottom:0;flex-wrap:wrap}
+.ctb{background:none;border:1px solid transparent;border-bottom:none;color:var(--txt3);font-family:var(--M);font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;padding:.36rem .85rem;transition:all .13s;margin-bottom:-1px}
+.ctb:hover{color:var(--txt2)} .ctb.on{color:var(--amb);border-color:var(--bdr2);border-bottom-color:var(--sur);background:var(--sur)}
+[data-theme="normal"] .ctb{font-family:var(--S);font-size:.72rem;border-radius:6px 6px 0 0}
+.ctw{display:none;overflow-x:auto;border:1px solid var(--bdr2);border-top:none}
+.ctw.on{display:block}
+.ctt{width:100%;border-collapse:collapse;font-size:.65rem}
+.ctt th{background:var(--bg2);border-bottom:1px solid var(--bdr2);padding:.48rem .8rem;text-align:left;color:var(--txt3);font-size:.52rem;letter-spacing:.14em;text-transform:uppercase;font-weight:400}
+[data-theme="normal"] .ctt th{font-family:var(--S);font-size:.6rem;font-weight:600}
+.ctt td{border-bottom:1px solid var(--bdr);padding:.42rem .8rem;color:var(--txt2);vertical-align:top}
+[data-theme="normal"] .ctt td{font-family:var(--S)}
+.ctt tr:last-child td{border-bottom:none} .ctt tr:hover td{background:var(--sur2);color:var(--txt)}
+.tg{color:var(--grn)!important} .ty{color:var(--amb)!important} .tr{color:var(--red)!important} .tf{color:var(--amb)!important;font-weight:600} .thl{color:var(--txt)!important}
+
+/* stack diagram */
+.stk{background:var(--bg2);border:1px solid var(--bdr);padding:1.1rem 1.25rem;overflow-x:auto;font-family:var(--M);font-size:.63rem;line-height:1.75;color:var(--txt2);white-space:pre}
+[data-theme="normal"] .stk{background:var(--sur);border-radius:8px;border-color:var(--bdr2);font-size:.68rem}
+.sh{color:var(--amb)} .sb{color:var(--cyn)} .sl{color:var(--txt3)} .sg{color:var(--grn)}
+
+/* 30-day plan */
+.pr{display:grid;grid-template-columns:90px 1fr;gap:.75rem;padding:.65rem 0;border-bottom:1px solid var(--bdr);align-items:start}
+.pr:last-child{border-bottom:none}
+.pw{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);padding-top:.1rem}
+.pts{display:flex;flex-direction:column;gap:.35rem}
+.pt{display:flex;align-items:center;gap:.65rem}
+.pbw{flex:1;max-width:380px;height:13px;background:var(--bg2);border:1px solid var(--bdr);overflow:hidden;position:relative;flex-shrink:0}
+.pb{height:100%} .pbl{font-size:.52rem;color:rgba(0,0,0,.55);position:absolute;left:.3rem;top:50%;transform:translateY(-50%);white-space:nowrap;letter-spacing:.05em}
+.pn{font-size:.63rem;color:var(--txt2);flex-shrink:0}
+[data-theme="normal"] .pn{font-family:var(--S)}
+
+/* rule/checklist cards */
+.rg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem;margin-top:.75rem}
+.rc{border:1px solid var(--bdr);background:var(--sur);padding:.9rem 1rem}
+[data-theme="normal"] .rc{border-radius:8px;border-color:var(--bdr2)}
+.rt{font-size:.55rem;letter-spacing:.16em;text-transform:uppercase;color:var(--cyn);margin-bottom:.6rem}
+[data-theme="normal"] .rt{font-family:var(--S);font-weight:700;font-size:.65rem;color:var(--txt);text-transform:none;letter-spacing:0}
+.rx{font-size:.65rem;color:var(--txt2);line-height:1.75}
+[data-theme="normal"] .rx{font-family:var(--S);font-size:.76rem}
+.rh{color:var(--amb);font-weight:600}
+.chk{display:flex;flex-direction:column;gap:0}
+.ci{display:flex;align-items:baseline;gap:.55rem;font-size:.65rem;color:var(--txt2);padding:.2rem 0;border-bottom:1px solid rgba(24,32,48,.5)}
+.ci:last-child{border-bottom:none}
+.civ{color:var(--grn);font-size:.62rem;flex-shrink:0}
+[data-theme="normal"] .ci{font-family:var(--S)}
+.cn2{font-size:.6rem;color:var(--txt3)}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   STATUS BAR
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#sbar{position:fixed;bottom:0;left:0;right:0;z-index:700;height:1.5rem;background:var(--amb);color:var(--bg);display:flex;align-items:center;font-size:.56rem;font-family:var(--M)}
+[data-theme="normal"] #sbar{display:none}
+.sm{background:var(--bg2);color:var(--amb);padding:0 .75rem;height:100%;display:flex;align-items:center;font-weight:700;letter-spacing:.1em}
+.ss2{padding:0 .75rem;height:100%;display:flex;align-items:center;gap:.35rem;border-right:1px solid rgba(0,0,0,.2)}
+.sk{background:rgba(0,0,0,.2);padding:.03rem .3rem;font-weight:600}
+.sr{margin-left:auto;display:flex}
+.st2{padding:0 .7rem;font-variant-numeric:tabular-nums}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MODAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#mbg{display:none;position:fixed;inset:0;z-index:2000;background:rgba(3,5,8,.92);overflow-y:auto;padding:2rem 1rem 4rem}
+[data-theme="normal"] #mbg{background:rgba(8,14,25,.88)}
+#mbg.open{display:block}
+#mbox{max-width:760px;margin:0 auto;background:var(--bg2);border:1px solid var(--bdr2);will-change:transform;animation:mo .16s ease both}
+[data-theme="normal"] #mbox{border-radius:12px;background:var(--sur)}
+@keyframes mo{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#mpb-wrap{position:fixed;top:0;left:0;right:0;height:2px;z-index:9100;opacity:0;pointer-events:none;transition:opacity .15s}
+body.modal-open #mpb-wrap{opacity:1}
+#mpb{height:100%;background:var(--amb);width:0%;transition:width .08s linear;box-shadow:0 0 8px rgba(232,184,48,.4)}
+.mc{display:flex;align-items:center;gap:.4rem;padding:.42rem .75rem;background:var(--bg);border-bottom:1px solid var(--bdr)}
+[data-theme="normal"] .mc{background:var(--sur2);border-radius:12px 12px 0 0}
+.mds{display:flex;gap:.3rem}
+.md{width:10px;height:10px;border-radius:50%}
+.mdc{background:var(--red);cursor:pointer} .mdm{background:var(--amb2)} .mdx{background:var(--grn2)}
+.mct{flex:1;text-align:center;font-size:.54rem;color:var(--txt3);letter-spacing:.1em}
+.mb2{background:none;border:1px solid var(--bdr);color:var(--txt3);font-family:var(--M);font-size:.55rem;letter-spacing:.07em;padding:.15rem .45rem;transition:all .12s}
+.mb2:hover{color:var(--amb);border-color:var(--amb2)}
+[data-theme="normal"] .mb2{font-family:var(--S);font-size:.65rem;border-radius:4px}
+#mst{height:3px}
+.mhd{padding:1.25rem 1.5rem .75rem}
+.mcr{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;flex-wrap:wrap}
+.mcb{font-size:.5rem;letter-spacing:.12em;text-transform:uppercase;padding:.1rem .42rem;border:1px solid;opacity:.85}
+[data-theme="normal"] .mcb{border-radius:4px}
+.mfv{font-size:.62rem;color:var(--amb)}
+.mtt{font-size:1.45rem;color:var(--txt);line-height:1.1;margin-bottom:.35rem;font-weight:500}
+[data-theme="normal"] .mtt{font-family:var(--F);font-size:1.75rem;font-weight:700;font-style:italic}
+.mmt{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;font-size:.6rem;color:var(--txt3)}
+[data-theme="normal"] .mmt{font-family:var(--S)}
+.mtr{display:flex;gap:.28rem;flex-wrap:wrap;margin-top:.6rem}
+.mtg{font-size:.5rem;letter-spacing:.08em;text-transform:uppercase;padding:.1rem .38rem;border:1px solid var(--bdr);color:var(--txt3);cursor:pointer;transition:all .12s}
+.mtg:hover{color:var(--amb);border-color:var(--amb2)}
+.mbd{padding:.75rem 1.5rem 1.5rem;display:flex;flex-direction:column;gap:1rem}
+.ms{display:flex;flex-direction:column;gap:.35rem}
+.ml{font-size:.5rem;letter-spacing:.18em;text-transform:uppercase;color:var(--txt3);border-bottom:1px solid var(--bdr);padding-bottom:.25rem}
+[data-theme="normal"] .ml{font-family:var(--S);font-weight:700;font-size:.6rem}
+.mx{font-size:.7rem;color:var(--txt2);line-height:1.7}
+[data-theme="normal"] .mx{font-family:var(--S);font-size:.78rem}
+.mli{list-style:none;display:flex;flex-direction:column;gap:.22rem}
+.mli li{font-size:.68rem;color:var(--txt2);display:flex;gap:.45rem;align-items:baseline;line-height:1.55}
+[data-theme="normal"] .mli li{font-family:var(--S)}
+.pi2{color:var(--grn);flex-shrink:0} .ci2{color:var(--red);flex-shrink:0}
+.mig{display:grid;grid-template-columns:1fr 1fr;gap:.42rem}
+.mic{background:var(--bg);border:1px solid var(--bdr);padding:.5rem .7rem}
+[data-theme="normal"] .mic{background:var(--bg2);border-radius:6px}
+.mik{font-size:.48rem;letter-spacing:.14em;text-transform:uppercase;color:var(--txt3);margin-bottom:.2rem}
+[data-theme="normal"] .mik{font-family:var(--S);font-weight:600}
+.miv{font-size:.68rem;color:var(--txt2)}
+[data-theme="normal"] .miv{font-family:var(--S)}
+.acs{display:flex;gap:.28rem;flex-wrap:wrap}
+.ac{font-size:.62rem;padding:.15rem .48rem;background:var(--sur2);border:1px solid var(--bdr2);color:var(--txt2);cursor:pointer;transition:all .12s}
+.ac:hover{color:var(--amb);border-color:var(--amb2)}
+[data-theme="normal"] .ac{font-family:var(--S);border-radius:4px}
+.tl{list-style:none;display:flex;flex-direction:column;gap:.25rem}
+.tl li{font-size:.66rem;color:var(--txt2);padding-left:1rem;position:relative;line-height:1.55}
+.tl li::before{content:"→";position:absolute;left:0;color:var(--amb2)}
+[data-theme="normal"] .tl li{font-family:var(--S)}
+@media(max-width:480px){.mig{grid-template-columns:1fr}}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOAST / FOOTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#toast{position:fixed;bottom:2.5rem;left:50%;transform:translateX(-50%);background:var(--sur2);border:1px solid var(--bdr2);color:var(--grn);font-family:var(--M);font-size:.65rem;letter-spacing:.08em;padding:.4rem 1rem;z-index:9500;opacity:0;pointer-events:none;transition:opacity .2s;white-space:nowrap}
+[data-theme="normal"] #toast{border-radius:20px;font-family:var(--S)}
+#toast.show{opacity:1}
+#ftr{max-width:1440px;margin:2rem auto 0;padding:1.5rem 1.25rem 3.5rem;border-top:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.fc{font-size:.57rem;color:var(--txt3);line-height:1.6}
+[data-theme="normal"] .fc{font-family:var(--S);font-size:.65rem}
+.fl2{display:flex;gap:1rem}
+.fl2 a{font-size:.57rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);transition:color .12s}
+.fl2 a:hover{color:var(--amb);text-decoration:none}
+[data-theme="normal"] .fl2 a{font-family:var(--S);text-transform:none;letter-spacing:0;font-size:.7rem}
+
+/* responsive */
+@media(max-width:600px){
+  .hdr-r1{padding:.45rem .75rem} .hdr-r2{padding:.2rem .75rem}
+  #srch{width:140px} #mn{padding:.75rem .75rem 4rem}
+  #tg{grid-template-columns:1fr} .mig{grid-template-columns:1fr}
+  .ht{font-size:1.7rem} .pbw{max-width:200px} .rg{grid-template-columns:1fr} .ctbs{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<div id="mpb-wrap"><div id="mpb"></div></div>
+<div id="toast"></div>
+
+<!-- HEADER -->
+<header id="hdr">
+  <div class="hdr-r1">
+    <span class="logo">THE INTERNET INDEX</span>
+    <span class="logo-sep">//</span>
+    <span class="logo-sub">2026 PRIVACY-FIRST TOOLS</span>
+    <div class="hdr-space"></div>
+    <div style="display:flex;align-items:center;gap:.35rem">
+      <span class="sp">SEARCH:</span>
+      <input id="srch" type="search" placeholder="filter tools_" autocomplete="off" spellcheck="false">
+    </div>
+    <button id="thm">⊞ NORMAL VIEW</button>
+  </div>
+  <div class="hdr-r2">
+    <span class="kb"><b>[/]</b>Search</span>
+    <span class="kb"><b>[1-8]</b>Category</span>
+    <span class="kb"><b>[f]</b>Favs</span>
+    <span class="kb"><b>[o]</b>OSS</span>
+    <span class="kb"><b>[s]</b>Self-host</span>
+    <span class="kb"><b>[g/l]</b>Grid/List</span>
+    <span class="kb"><b>[t]</b>Theme</span>
+    <span class="kb"><b>[Esc]</b>Clear</span>
+    <span id="hdr-ct" style="margin-left:auto">loading…</span>
+  </div>
+</header>
+
+<!-- MOBILE DRAWER -->
+<div id="drwr">
+  <div class="drwr-in">
+    <button class="drwr-x" id="drwr-x">✕ CLOSE</button>
+    <div style="clear:both;height:.75rem"></div>
+    <div class="drwr-s"><span class="drwr-st">Category</span><div class="drwr-b" id="drwr-cats"></div></div>
+    <div class="drwr-s"><span class="drwr-st">Filter</span><div class="drwr-b" id="drwr-tags"></div></div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div id="lay">
+  <nav id="sb">
+    <div class="ss">
+      <div class="ss-hd">Categories</div>
+      <div class="si on" data-cat="all"><span class="si-n">All Tools</span><span class="si-c" id="sbc-all">…</span></div>
+      <div class="si" data-cat="Creative"      ><span class="si-d" style="background:var(--amb)"></span><span class="si-n">Creative</span><span class="si-c" id="sbc-Creative">…</span></div>
+      <div class="si" data-cat="Productivity"  ><span class="si-d" style="background:var(--cyn)"></span><span class="si-n">Productivity</span><span class="si-c" id="sbc-Productivity">…</span></div>
+      <div class="si" data-cat="Communication" ><span class="si-d" style="background:var(--mag)"></span><span class="si-n">Communication</span><span class="si-c" id="sbc-Communication">…</span></div>
+      <div class="si" data-cat="Security"      ><span class="si-d" style="background:var(--red)"></span><span class="si-n">Security</span><span class="si-c" id="sbc-Security">…</span></div>
+      <div class="si" data-cat="Self-Hosting"  ><span class="si-d" style="background:var(--grn)"></span><span class="si-n">Self-Hosting</span><span class="si-c" id="sbc-Self-Hosting">…</span></div>
+      <div class="si" data-cat="DevOps"        ><span class="si-d" style="background:var(--blu)"></span><span class="si-n">DevOps</span><span class="si-c" id="sbc-DevOps">…</span></div>
+      <div class="si" data-cat="Networking"    ><span class="si-d" style="background:var(--org)"></span><span class="si-n">Networking</span><span class="si-c" id="sbc-Networking">…</span></div>
+      <div class="si" data-cat="Backup"        ><span class="si-d" style="background:var(--pur)"></span><span class="si-n">Backup</span><span class="si-c" id="sbc-Backup">…</span></div>
+    </div>
+    <div class="sdiv"></div>
+    <div class="ss">
+      <div class="ss-hd">Stats</div>
+      <div class="sst"><span>Open Source</span><span id="sb-oss">—</span></div>
+      <div class="sst"><span>Self-hostable</span><span id="sb-sh">—</span></div>
+      <div class="sst"><span>Pi-friendly</span><span id="sb-pi">—</span></div>
+      <div class="sst"><span>Editor picks</span><span id="sb-fav">—</span></div>
+    </div>
+    <div class="sdiv"></div>
+    <div class="ss">
+      <div class="ss-hd">Jump to</div>
+      <div class="snv" data-jump="#s1">Comparison Tables</div>
+      <div class="snv" data-jump="#s2">Privacy Stack</div>
+      <div class="snv" data-jump="#s3">30-Day Plan</div>
+      <div class="snv" data-jump="#s4">Hardware Guide</div>
+      <div class="snv" data-jump="#s5">Ops Rules</div>
+    </div>
+  </nav>
+
+  <div id="mn">
+    <!-- Hero (normal mode) -->
+    <div id="hero">
+      <p class="he">Privacy-first software guide · 2026</p>
+      <h1 class="ht">The tools that let you<br><em>own your data.</em></h1>
+      <p class="hd">A curated, rated reference of privacy-first and open-source software. Brutally honest ratings. Comparison tables, recommended stacks, 30-day rollout plan, hardware guide — all on one page.</p>
+      <div class="hs">
+        <div class="hn"><span class="hn-v" id="h-tot">…</span><span class="hn-l">Tools indexed</span></div>
+        <div class="hn"><span class="hn-v" id="h-oss">…</span><span class="hn-l">Open source</span></div>
+        <div class="hn"><span class="hn-v" id="h-sh">…</span><span class="hn-l">Self-hostable</span></div>
+        <div class="hn"><span class="hn-v">8</span><span class="hn-l">Categories</span></div>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div id="fb">
+      <span class="fl">CAT</span>
+      <button class="fb on" data-cat="all">ALL</button>
+      <button class="fb" data-cat="Creative">CREATIVE</button>
+      <button class="fb" data-cat="Productivity">PRODUCTIVITY</button>
+      <button class="fb" data-cat="Communication">COMMS</button>
+      <button class="fb" data-cat="Security">SECURITY</button>
+      <button class="fb" data-cat="Self-Hosting">SELF-HOST</button>
+      <button class="fb" data-cat="DevOps">DEVOPS</button>
+      <button class="fb" data-cat="Networking">NETWORKING</button>
+      <button class="fb" data-cat="Backup">BACKUP</button>
+      <span class="fb-sep">|</span>
+      <button class="fb tf" data-tag="fav">☆ FAV</button>
+      <button class="fb tf" data-tag="oss">OSS</button>
+      <button class="fb tf" data-tag="sh">SELF-HOST</button>
+      <button class="fb tf" data-tag="pi">PI</button>
+      <div class="fb-r">
+        <button id="mob-fb">⊕ FILTERS</button>
+        <span id="rct"></span>
+        <button class="vb on" id="vg">▦</button>
+        <button class="vb" id="vl">☰</button>
+      </div>
+    </div>
+
+    <!-- Tool grid populated by JS -->
+    <div id="tg">
+      <div id="tg-loading">LOADING DATA<span id="ld-dot">_</span></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 1 — COMPARISON TABLES
+    ════════════════════════════════════════════════════════════════ -->
+    <div class="sec" id="s1">
+      <div class="sec-hd"><span class="sec-n">§ 01</span><span class="sec-t">Comparison Tables</span></div>
+      <p class="sec-d">Side-by-side comparisons for contested categories: VPNs, image editors, office suites, and password managers.</p>
+      <div class="ctbs">
+        <button class="ctb on" data-tab="vpn">VPN Services</button>
+        <button class="ctb" data-tab="img">Image Editors</button>
+        <button class="ctb" data-tab="off">Office Suites</button>
+        <button class="ctb" data-tab="pwd">Password Managers</button>
+      </div>
+      <div class="ctw on" id="tab-vpn">
+        <table class="ctt">
+          <thead><tr><th>VPN</th><th>Jurisdiction</th><th>No-Logs</th><th>Open Source</th><th>Price</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="thl tf">☆ Mullvad</td><td>Sweden</td><td class="tg">Yes ✓ (audited)</td><td class="ty">Partial (apps OSS)</td><td>€5/mo flat</td><td>Anonymous account; pay with cash or crypto</td></tr>
+            <tr><td class="thl tf">☆ ProtonVPN</td><td>Switzerland</td><td class="tg">Yes ✓ (audited)</td><td class="tg">Yes (clients)</td><td>Free / Paid</td><td>Swiss law; Tor over VPN; audited no-logs</td></tr>
+            <tr><td class="thl">IVPN</td><td>Gibraltar</td><td class="tg">Yes ✓</td><td class="tr">No (closed clients)</td><td>$8/mo</td><td>Static IP option; MESHnet feature</td></tr>
+            <tr><td class="thl tf">☆ WireGuard (self-hosted)</td><td>Your server</td><td>N/A — you control it</td><td class="tg">Yes (GPL)</td><td>Server cost only</td><td>Full control, max privacy, DIY required</td></tr>
+            <tr><td class="thl">1.1.1.1 Warp</td><td>USA</td><td class="ty">Claimed</td><td class="tr">No</td><td>Free</td><td>NOT a true VPN — DNS over HTTPS only</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ctw" id="tab-img">
+        <table class="ctt">
+          <thead><tr><th>Editor</th><th>OSS</th><th>Platform</th><th>Best For</th><th>Rating</th><th>Summary</th></tr></thead>
+          <tbody>
+            <tr><td class="thl tf">☆ Krita</td><td class="tg">Yes (GPL)</td><td>Desktop</td><td>Digital painting & illustration</td><td class="tg">★★★★☆</td><td>Best brush engine of any free tool</td></tr>
+            <tr><td class="thl">GIMP</td><td class="tg">Yes (GPL)</td><td>Desktop</td><td>Photo editing, compositing</td><td class="ty">★★★☆☆</td><td>Most capable free option; UI dated but improving</td></tr>
+            <tr><td class="thl">Affinity Photo</td><td class="tr">No (proprietary)</td><td>Desktop</td><td>Professional photography</td><td class="tg">★★★★☆</td><td>Now free; polished; closed-source</td></tr>
+            <tr><td class="thl">Inkscape</td><td class="tg">Yes (GPL)</td><td>Desktop</td><td>Vector, logos, SVG editing</td><td class="tg">★★★★☆</td><td>Best free Illustrator replacement</td></tr>
+            <tr><td class="thl">Photopea</td><td class="tr">No (web)</td><td>Browser</td><td>Quick PSD edits anywhere</td><td class="ty">★★☆☆☆</td><td>Ad-supported; files stay local; no install</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ctw" id="tab-off">
+        <table class="ctt">
+          <thead><tr><th>Suite</th><th>OSS</th><th>Platform</th><th>Self-Host</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="thl tf">☆ LibreOffice</td><td class="tg">Yes (MPL/LGPL)</td><td>Desktop all OS</td><td class="tr">No</td><td>Best offline MS Office replacement; actively maintained</td></tr>
+            <tr><td class="thl">OnlyOffice</td><td class="ty">Partial (AGPL)</td><td>Desktop + Web</td><td class="tg">Yes (Document Server)</td><td>Good DOCX fidelity; excellent Nextcloud integration</td></tr>
+            <tr><td class="thl">Collabora Online</td><td class="tg">Yes (LibreOffice core)</td><td>Web</td><td class="tg">Yes</td><td>Best browser editing; pairs perfectly with Nextcloud</td></tr>
+            <tr><td class="thl">Google Workspace</td><td class="tr">No</td><td>Web</td><td class="tr">No</td><td>Not privacy-friendly; extensive data harvesting by design</td></tr>
+            <tr><td class="thl">Microsoft 365</td><td class="tr">No</td><td>Desktop + Web</td><td class="tr">No</td><td>Industry standard; closed-source; significant telemetry</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="ctw" id="tab-pwd">
+        <table class="ctt">
+          <thead><tr><th>Manager</th><th>OSS</th><th>Self-Host</th><th>Offline</th><th>Audit</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td class="thl tf">☆ Bitwarden</td><td class="tg">Yes (AGPL/MIT)</td><td class="tg">Yes</td><td class="ty">Partial</td><td class="tg">Yes — independent</td><td>Best balance of convenience and privacy; self-host with Vaultwarden</td></tr>
+            <tr><td class="thl tf">☆ KeePassXC</td><td class="tg">Yes (GPLv3)</td><td>N/A (local)</td><td class="tg">Fully offline</td><td class="tg">ANSSI certified</td><td>Maximum privacy; no cloud; sync manually via Nextcloud/Git</td></tr>
+            <tr><td class="thl tf">☆ Vaultwarden</td><td class="tg">Yes (GPL)</td><td class="tg">Yes (Pi-friendly)</td><td class="tr">No</td><td class="ty">Community</td><td>Run Bitwarden on minimal hardware; Raspberry Pi compatible</td></tr>
+            <tr><td class="thl">1Password</td><td class="tr">No</td><td class="tr">No</td><td class="tr">No</td><td class="tg">Yes</td><td>Polished UX; closed-source; SaaS only</td></tr>
+            <tr><td class="thl tr">LastPass</td><td class="tr">No</td><td class="tr">No</td><td class="tr">No</td><td class="tr">MAJOR breach 2022</td><td>AVOID — multiple severe data breaches; do not use for sensitive data</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 2 — STACK DIAGRAM
+    ════════════════════════════════════════════════════════════════ -->
+    <div class="sec" id="s2">
+      <div class="sec-hd"><span class="sec-n">§ 02</span><span class="sec-t">Recommended Privacy Stack</span></div>
+      <p class="sec-d">A privacy-first setup connecting your devices, self-hosted services, and secure communications into one coherent system.</p>
+      <div class="stk"><span class="sh">┌──────────────────────────────────────────────────────────────────────────────────────┐
+│                   RECOMMENDED PRIVACY-FIRST INFRASTRUCTURE  2026                    │
+└──────────────────────────────────────────────────────────────────────────────────────┘</span>
+
+<span class="sh">  ╔═══════════════════════════╗       ╔════════════════════════════════╗</span>
+<span class="sh">  ║      PERSONAL DEVICE      ║       ║         HOME LAB SERVER         ║</span>
+<span class="sh">  ╠═══════════════════════════╣       ╠════════════════════════════════╣</span>
+<span class="sb">  ║ Firefox / LibreWolf        ║ ────▶ ║ Pi-hole  (DNS-level ad blocker) ║</span>
+<span class="sb">  ║ uBlock Origin (extension)  ║       ║ Nextcloud (files/cal/contacts)  ║</span>
+<span class="sb">  ║ Bitwarden / KeePassXC     ║ ────▶ ║ Vaultwarden (password server)   ║</span>
+<span class="sb">  ║ Obsidian / Joplin (notes) ║ ────▶ ║ Prometheus + Grafana (monitor)  ║</span>
+<span class="sb">  ║ Tor Browser (sensitive)   ║       ║ WireGuard  (VPN gateway)        ║</span>
+<span class="sh">  ╚══════════════╤════════════╝       ╚════════════╤═══════════════════╝</span>
+                 <span class="sl">│ WireGuard tunnel                ▲ Remote access from anywhere</span>
+                 <span class="sl">└─────────────────────────────────┘</span>
+
+<span class="sh">  ╔═══════════════════════════╗       ╔════════════════════════════════╗</span>
+<span class="sh">  ║       SMARTPHONE          ║       ║        COMMUNICATIONS           ║</span>
+<span class="sh">  ╠═══════════════════════════╣       ╠════════════════════════════════╣</span>
+<span class="sb">  ║ GrapheneOS  (Pixel)        ║       ║ Signal     (messaging/calls)    ║</span>
+<span class="sb">  ║ Sandboxed Google Play      ║       ║ Element    (team chat / Matrix) ║</span>
+<span class="sb">  ║ Vanadium browser           ║       ║ ProtonMail / Thunderbird        ║</span>
+<span class="sb">  ║ Syncthing   (file sync)    ║       ║ Jitsi Meet (video calls)        ║</span>
+<span class="sh">  ╚═══════════════════════════╝       ╚════════════════════════════════╝</span>
+
+<span class="sg">  ☆ = editor pick   OSS = open source   Pi = Raspberry Pi friendly</span>
+<span class="sg">  RULE: self-host where feasible — pay only for services that genuinely respect you.</span>
+</div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 3 — 30-DAY PLAN
+    ════════════════════════════════════════════════════════════════ -->
+    <div class="sec" id="s3">
+      <div class="sec-hd"><span class="sec-n">§ 03</span><span class="sec-t">30-Day Homelab Rollout Plan</span></div>
+      <p class="sec-d">A realistic week-by-week plan to build your privacy infrastructure from scratch. By day 30 you'll have a full working stack.</p>
+      <div>
+        <div class="pr"><div class="pw">PREP<br>Days 1–3</div><div class="pts">
+          <div class="pt"><div class="pbw" style="max-width:70px"><div class="pb" style="width:100%;background:var(--grn);opacity:.7"></div><span class="pbl">DONE</span></div><span class="pn">Order hardware (Pi 4, NUC, or spare PC)</span></div>
+          <div class="pt"><div class="pbw" style="max-width:70px"><div class="pb" style="width:100%;background:var(--grn);opacity:.7"></div><span class="pbl">DONE</span></div><span class="pn">Set up router, switches, and network topology</span></div>
+        </div></div>
+        <div class="pr"><div class="pw">WEEK 1<br>Days 4–7</div><div class="pts">
+          <div class="pt"><div class="pbw"><div class="pb" style="width:100%;background:var(--cyn)"></div><span class="pbl">Install Debian / Ubuntu Linux</span></div></div>
+          <div class="pt"><div class="pbw"><div class="pb" style="width:85%;background:var(--cyn)"></div><span class="pbl">Configure OPNsense or OpenWrt firewall</span></div></div>
+          <div class="pt"><div class="pbw" style="max-width:240px"><div class="pb" style="width:60%;background:var(--cyn)"></div><span class="pbl">Deploy Docker + Portainer</span></div></div>
+        </div></div>
+        <div class="pr"><div class="pw">WEEK 2<br>Days 8–14</div><div class="pts">
+          <div class="pt"><div class="pbw"><div class="pb" style="width:100%;background:var(--amb)"></div><span class="pbl">Install Nextcloud (Docker Compose)</span></div></div>
+          <div class="pt"><div class="pbw"><div class="pb" style="width:75%;background:var(--amb)"></div><span class="pbl">Set up Pi-hole for DNS ad blocking</span></div></div>
+          <div class="pt"><div class="pbw" style="max-width:260px"><div class="pb" style="width:55%;background:var(--amb)"></div><span class="pbl">Deploy Vaultwarden password server</span></div></div>
+          <div class="pt"><div class="pbw" style="max-width:200px"><div class="pb" style="width:45%;background:var(--amb)"></div><span class="pbl">Configure WireGuard VPN</span></div></div>
+        </div></div>
+        <div class="pr"><div class="pw">WEEK 3<br>Days 15–21</div><div class="pts">
+          <div class="pt"><div class="pbw"><div class="pb" style="width:100%;background:var(--blu)"></div><span class="pbl">Deploy Prometheus + Grafana monitoring</span></div></div>
+          <div class="pt"><div class="pbw"><div class="pb" style="width:75%;background:var(--blu)"></div><span class="pbl">Set up Gitea / Forgejo (self-hosted Git)</span></div></div>
+          <div class="pt"><div class="pbw" style="max-width:290px"><div class="pb" style="width:65%;background:var(--blu)"></div><span class="pbl">Configure Restic automated backups (3-2-1 rule)</span></div></div>
+        </div></div>
+        <div class="pr"><div class="pw">WEEK 4<br>Days 22–30</div><div class="pts">
+          <div class="pt"><div class="pbw"><div class="pb" style="width:100%;background:var(--pur)"></div><span class="pbl">Security hardening: SSH keys, Fail2Ban, auto-updates</span></div></div>
+          <div class="pt"><div class="pbw"><div class="pb" style="width:80%;background:var(--pur)"></div><span class="pbl">Set up Grafana monitoring alerts</span></div></div>
+          <div class="pt"><div class="pbw" style="max-width:260px"><div class="pb" style="width:60%;background:var(--pur)"></div><span class="pbl">Test backups — actually verify a restore works!</span></div></div>
+          <div class="pt"><div class="pbw" style="max-width:180px"><div class="pb" style="width:45%;background:var(--pur)"></div><span class="pbl">Document everything</span></div></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 4 — HARDWARE GUIDE
+    ════════════════════════════════════════════════════════════════ -->
+    <div class="sec" id="s4">
+      <div class="sec-hd"><span class="sec-n">§ 04</span><span class="sec-t">Hardware Guide &amp; Checklist</span></div>
+      <p class="sec-d">What to buy, how to configure your network, and how to harden everything. Buy from trusted vendors to avoid supply-chain compromises.</p>
+      <div class="rg">
+        <div class="rc"><div class="rt">SERVER HARDWARE</div><div class="chk">
+          <div class="ci"><span class="civ">✓</span><span>CPU ≥ 4-core with VT-x / AMD-V <span class="cn2">— Pi 4 works for light services</span></span></div>
+          <div class="ci"><span class="civ">✓</span><span>RAM ≥ 8–16 GB <span class="cn2">— 4 GB minimum for Pi-only stack</span></span></div>
+          <div class="ci"><span class="civ">✓</span><span>SSD for OS and databases <span class="cn2">— NVMe preferred for Nextcloud</span></span></div>
+          <div class="ci"><span class="civ">✓</span><span>HDD/NAS for bulk storage <span class="cn2">— RAID or ZFS for data redundancy</span></span></div>
+          <div class="ci"><span class="civ">✓</span><span>Gigabit NIC(s) <span class="cn2">— dual NIC for firewall/router roles</span></span></div>
+          <div class="ci"><span class="civ">✓</span><span>UPS (uninterruptible power) <span class="cn2">— protect against sudden power cuts</span></span></div>
+          <div class="ci"><span class="civ">✓</span><span>ECC RAM for critical data storage <span class="cn2">— TrueNAS / ZFS benefit most</span></span></div>
+        </div></div>
+        <div class="rc"><div class="rt">NETWORK SETUP</div><div class="chk">
+          <div class="ci"><span class="civ">✓</span><span>Replace ISP router with OPNsense or OpenWrt</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Use VLANs to isolate IoT devices from personal devices</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Disable Wi-Fi on IoT devices where possible; use guest VLAN</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Pi-hole or AdGuard Home as DNS server for all clients</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Use DuckDNS or self-host a dynamic DNS solution</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Prefer open hardware (Purism, System76) where budget allows</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Disable Intel ME / AMD PSP via firmware where possible</span></div>
+        </div></div>
+        <div class="rc"><div class="rt">SECURITY HARDENING</div><div class="chk">
+          <div class="ci"><span class="civ">✓</span><span>Change ALL default passwords immediately on first boot</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Key-based SSH only — disable password authentication entirely</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Fail2Ban or Crowdsec on all public-facing services</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Enable automated unattended-upgrades for OS packages</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Remove all unused services and plugins</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Prometheus + Grafana alerts for unusual CPU/network activity</span></div>
+          <div class="ci"><span class="civ">✓</span><span>Test backups monthly — an untested restore is not a backup</span></div>
+        </div></div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         SECTION 5 — OPS RULES
+    ════════════════════════════════════════════════════════════════ -->
+    <div class="sec" id="s5">
+      <div class="sec-hd"><span class="sec-n">§ 05</span><span class="sec-t">Operations Rules</span></div>
+      <p class="sec-d">Proven principles for a secure, reliable self-hosted infrastructure. Apply these and you'll avoid 90% of self-hosting disasters.</p>
+      <div class="rg">
+        <div class="rc"><div class="rt">THE 20/20/20 RULE</div><div class="rx">
+          Every <span class="rh">20 days</span> — update all critical services (OS packages and all containerized apps).<br><br>
+          Every <span class="rh">20 hours</span> — check backup status; confirm the latest job completed successfully.<br><br>
+          Every <span class="rh">20 minutes</span> — review intrusion alerts (IDS notifications, Fail2Ban bans, Grafana critical alerts).
+        </div></div>
+        <div class="rc"><div class="rt">THE 3-2-1 BACKUP RULE</div><div class="rx">
+          <span class="rh">3 copies</span> of your data — the original plus 2 backups.<br><br>
+          <span class="rh">2 different media types</span> — e.g. local NAS + cloud, or internal SSD + external drive.<br><br>
+          <span class="rh">1 offsite copy</span> — Restic to S3/B2, or Borg to a remote VPS. One copy must survive a house fire.<br><br>
+          Use immutable snapshots (S3 Object Lock) for ransomware protection. Automate and verify monthly.
+        </div></div>
+        <div class="rc"><div class="rt">TRUST HIERARCHY</div><div class="rx">
+          <span class="rh">Self-hosted</span> (max control, max responsibility) →<br>
+          <span class="rh">Open-source audited</span> (Proton, Mullvad, Bitwarden) →<br>
+          <span class="rh">Closed but respectful</span> (Affinity, some hardware) →<br>
+          <span class="rh">Avoid</span> (Google, Meta, surveillance-as-a-service)<br><br>
+          "Self-hosted password managers can be as secure as cloud ones — but only when you maintain the infrastructure."
+        </div></div>
+        <div class="rc"><div class="rt">THREAT MODELING</div><div class="rx">
+          Before picking tools, ask: what are you protecting, and against whom?<br><br>
+          <span class="rh">Most people:</span> Bitwarden + Signal + Pi-hole + Nextcloud covers 90% of needs.<br><br>
+          <span class="rh">Journalists / activists:</span> Tails + Tor + Signal + Qubes OS + hardware security keys.<br><br>
+          <span class="rh">Homelab enthusiasts:</span> Full stack — GrapheneOS, WireGuard, self-hosted everything.<br><br>
+          Security is a process, not a product. Test your setup, practice restores, document everything.
+        </div></div>
+        <div class="rc"><div class="rt">OPEN SOURCE vs PAID</div><div class="rx">
+          <span class="rh">Image editors:</span> Krita and GIMP for free control; Affinity Photo (now free) for polished UX. Avoid Photoshop subscription.<br><br>
+          <span class="rh">VPN:</span> Mullvad / ProtonVPN (user-friendly, audited, moderate cost) vs WireGuard DIY (max privacy, minimal cost, requires maintenance).<br><br>
+          <span class="rh">Office:</span> LibreOffice offline; OnlyOffice/Collabora for self-hosted web editing. Google Workspace and Microsoft 365 are last resorts only.
+        </div></div>
+        <div class="rc"><div class="rt">HARDWARE PRIVACY TIPS</div><div class="rx">
+          Prefer <span class="rh">Linux-friendly hardware</span> — Intel/AMD CPUs without proprietary management engines.<br><br>
+          For Wi-Fi: use a <span class="rh">separate access point</span> (Ubiquiti or OpenWrt-compatible) distinct from your router.<br><br>
+          <span class="rh">Buy hardware from trusted vendors</span> to avoid supply-chain compromises.<br><br>
+          Avoid routers with no third-party firmware support — you're handing your network to the vendor indefinitely.
+        </div></div>
+      </div>
+    </div>
+
+  </div><!-- end #mn -->
+</div><!-- end #lay -->
+
+<footer id="ftr">
+  <div class="fc">
+    The Internet Index · 2026 Edition · Data loaded from <code>tools.json</code><br>
+    Based on official docs, security audits, and community reviews. Verify before deploying to production.
+  </div>
+  <div class="fl2">
+    <a href="/Archive/">The Archive</a>
+    <a href="/">BlankLabs</a>
+  </div>
+</footer>
+
+<!-- STATUS BAR -->
+<div id="sbar">
+  <div class="sm">BROWSE</div>
+  <div class="ss2"><span id="sbd-cat">ALL</span></div>
+  <div class="ss2"><span id="sbd-cnt">loading…</span></div>
+  <div class="ss2"><span class="sk">[/]</span>search&nbsp;<span class="sk">[t]</span>theme&nbsp;<span class="sk">[Esc]</span>clear</div>
+  <div class="sr"><div class="st2" id="sbar-time"></div></div>
+</div>
+
+<!-- MODAL -->
+<div id="mbg">
+  <div id="mbox">
+    <div id="mst"></div>
+    <div class="mc">
+      <div class="mds">
+        <div class="md mdc" id="mclose-dot" title="Close"></div>
+        <div class="md mdm"></div>
+        <div class="md mdx"></div>
+      </div>
+      <span class="mct" id="mct-title">TOOL DETAIL</span>
+      <button class="mb2" id="m-share">⎘ LINK</button>
+      <button class="mb2" id="m-close">✕ CLOSE</button>
+    </div>
+    <div class="mhd" id="m-hdr"></div>
+    <div class="mbd" id="m-body"></div>
+  </div>
+</div>
+
+<script>
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   STATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+var TOOLS = [];
+var activeCat   = "all";
+var activeQuery = "";
+var activeTags  = {};  /* tag -> bool — no Set needed for compat */
+var listView    = false;
+var openTool    = null;
+var theme       = localStorage.getItem("iindex-theme") || "terminal";
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CAT COLORS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+var CAT_COL = {
+  "Creative":"var(--amb)","Productivity":"var(--cyn)","Communication":"var(--mag)",
+  "Security":"var(--red)","Self-Hosting":"var(--grn)","DevOps":"var(--blu)",
+  "Networking":"var(--org)","Backup":"var(--pur)"
+};
+function cc(c){ return CAT_COL[c] || "var(--bdr2)"; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   THEME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function setTheme(t) {
+  theme = t;
+  document.documentElement.setAttribute("data-theme", t);
+  document.getElementById("thm").textContent = t === "terminal" ? "⊞ NORMAL VIEW" : "⌨ TERMINAL VIEW";
+  localStorage.setItem("iindex-theme", t);
+  if (TOOLS.length) renderGrid();
+}
+document.getElementById("thm").addEventListener("click", function(){
+  setTheme(theme === "terminal" ? "normal" : "terminal");
+});
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   STARS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function stars(r) {
+  var s = "";
+  for (var i=1;i<=5;i++) {
+    var on = i<=r;
+    if (theme === "terminal") {
+      s += '<span class="st'+(on?" on")+'">'+(on?"█":"░")+"</span>";
+    } else {
+      s += '<span class="st'+(on?" on")+'"></span>';
+    }
+  }
+  return s;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function makeCard(t) {
+  var el = document.createElement("div");
+  el.className = "card";
+  el.style.setProperty("--cc", cc(t.c));
+  el.dataset.id = t.id;
+  el.innerHTML =
+    '<div class="ch"><div class="cn">'+t.n+'</div>'+(t.fav?'<span class="cf">☆</span>':'')+
+    '</div><div class="cm"><span class="cb" style="color:'+cc(t.c)+';border-color:'+cc(t.c)+'">'+t.c+'</span>'+
+    '<div class="cs">'+stars(t.r)+'</div></div>'+
+    '<div class="cd">'+t.d+'</div>'+
+    '<div class="ctags">'+
+    (t.oss?'<span class="ct ct-o">OSS</span>':'<span class="ct ct-x">PROP</span>')+
+    (t.sh?'<span class="ct ct-s">SH</span>':'')+
+    (t.pi?'<span class="ct ct-p">PI</span>':'')+
+    '</div>';
+  el.addEventListener("click", function(){ openModal(t); });
+  return el;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   FILTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function getFiltered() {
+  var r = TOOLS.slice();
+  if (activeCat !== "all") r = r.filter(function(t){ return t.c === activeCat; });
+  if (activeTags["fav"]) r = r.filter(function(t){ return t.fav; });
+  if (activeTags["oss"]) r = r.filter(function(t){ return t.oss; });
+  if (activeTags["sh"])  r = r.filter(function(t){ return t.sh; });
+  if (activeTags["pi"])  r = r.filter(function(t){ return t.pi; });
+  if (activeQuery) {
+    var q = activeQuery.toLowerCase();
+    r = r.filter(function(t){
+      return t.n.toLowerCase().indexOf(q)>-1 ||
+             t.d.toLowerCase().indexOf(q)>-1 ||
+             t.c.toLowerCase().indexOf(q)>-1 ||
+             (t.pro||[]).join(" ").toLowerCase().indexOf(q)>-1 ||
+             (t.alt||[]).join(" ").toLowerCase().indexOf(q)>-1 ||
+             t.lic.toLowerCase().indexOf(q)>-1;
+    });
+  }
+  return r;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   RENDER GRID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function renderGrid() {
+  var grid = document.getElementById("tg");
+  grid.className = listView ? "lv" : "";
+  grid.innerHTML = "";
+  var fl = getFiltered();
+  var cnt = fl.length + " / " + TOOLS.length;
+  document.getElementById("rct").textContent = cnt;
+  document.getElementById("hdr-ct").textContent = cnt + " tools";
+  document.getElementById("sbd-cnt").textContent = cnt + " visible";
+  document.getElementById("sbd-cat").textContent = activeCat.toUpperCase();
+
+  if (!fl.length) {
+    var em = document.createElement("div"); em.className = "empty";
+    em.innerHTML = '<div class="et">NO SIGNAL.</div><div class="es">No tools match. Try clearing the filters.</div>';
+    grid.appendChild(em); return;
+  }
+  var frag = document.createDocumentFragment();
+  for (var i=0;i<fl.length;i++) frag.appendChild(makeCard(fl[i]));
+  grid.appendChild(frag);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   UPDATE STATS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function updateStats() {
+  var oss=0,sh=0,pi=0,fav=0;
+  var cats = {};
+  TOOLS.forEach(function(t){
+    if(t.oss) oss++; if(t.sh) sh++; if(t.pi) pi++; if(t.fav) fav++;
+    cats[t.c] = (cats[t.c]||0)+1;
+  });
+  document.getElementById("sb-oss").textContent = oss;
+  document.getElementById("sb-sh").textContent  = sh;
+  document.getElementById("sb-pi").textContent  = pi;
+  document.getElementById("sb-fav").textContent = fav;
+  var hOss = document.getElementById("h-oss"); if(hOss) hOss.textContent = oss;
+  var hSh  = document.getElementById("h-sh");  if(hSh)  hSh.textContent  = sh;
+  var hTot = document.getElementById("h-tot"); if(hTot) hTot.textContent = TOOLS.length;
+  document.getElementById("sbc-all").textContent = TOOLS.length;
+  ["Creative","Productivity","Communication","Security","Self-Hosting","DevOps","Networking","Backup"].forEach(function(c){
+    var el = document.getElementById("sbc-"+c);
+    if (el) el.textContent = cats[c] || 0;
+  });
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   CAT FILTER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function setCat(cat) {
+  activeCat = cat;
+  document.querySelectorAll(".fb[data-cat]").forEach(function(b){
+    b.classList.toggle("on", b.dataset.cat === cat);
+  });
+  document.querySelectorAll("#sb .si[data-cat]").forEach(function(i){
+    i.classList.toggle("on", i.dataset.cat === cat);
+  });
+  renderGrid();
+}
+document.querySelectorAll(".fb[data-cat]").forEach(function(btn){
+  btn.addEventListener("click", function(){ setCat(btn.dataset.cat); });
+});
+document.querySelectorAll("#sb .si[data-cat]").forEach(function(item){
+  item.addEventListener("click", function(){ setCat(item.dataset.cat); });
+});
+
+/* tag filters */
+document.querySelectorAll(".tf").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    var tag = btn.dataset.tag;
+    activeTags[tag] = !activeTags[tag];
+    btn.classList.toggle("on", !!activeTags[tag]);
+    renderGrid();
+  });
+});
+
+/* search */
+document.getElementById("srch").addEventListener("input", function(e){
+  activeQuery = e.target.value.trim(); renderGrid();
+});
+
+/* view toggle */
+document.getElementById("vg").addEventListener("click", function(){
+  listView=false; document.getElementById("vg").classList.add("on"); document.getElementById("vl").classList.remove("on"); renderGrid();
+});
+document.getElementById("vl").addEventListener("click", function(){
+  listView=true; document.getElementById("vl").classList.add("on"); document.getElementById("vg").classList.remove("on"); renderGrid();
+});
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   COMPARE TABS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+document.querySelectorAll(".ctb").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    document.querySelectorAll(".ctb").forEach(function(b){ b.classList.remove("on"); });
+    document.querySelectorAll(".ctw").forEach(function(w){ w.classList.remove("on"); });
+    btn.classList.add("on");
+    var tw = document.getElementById("tab-"+btn.dataset.tab);
+    if (tw) tw.classList.add("on");
+  });
+});
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   SIDEBAR JUMP NAV
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+document.querySelectorAll(".snv[data-jump]").forEach(function(el){
+  el.addEventListener("click", function(){
+    var target = document.querySelector(el.dataset.jump);
+    if (target) target.scrollIntoView({behavior:"smooth",block:"start"});
+  });
+});
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MOBILE DRAWER
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+var drwr = document.getElementById("drwr");
+function buildDrawer() {
+  var cw = document.getElementById("drwr-cats"); cw.innerHTML = "";
+  var tw = document.getElementById("drwr-tags"); tw.innerHTML = "";
+  var cats = ["all","Creative","Productivity","Communication","Security","Self-Hosting","DevOps","Networking","Backup"];
+  cats.forEach(function(c){
+    var b = document.createElement("button"); b.className = "fb"+(activeCat===c?" on":"");
+    b.setAttribute("data-cat",c); b.textContent = c === "Self-Hosting" ? "SELF-HOST" : c.toUpperCase();
+    b.addEventListener("click", function(){ setCat(c); buildDrawer(); }); cw.appendChild(b);
+  });
+  [["fav","☆ FAV"],["oss","OSS ONLY"],["sh","SELF-HOST"],["pi","PI-FRIENDLY"]].forEach(function(p){
+    var b = document.createElement("button"); b.className = "fb tf"+(activeTags[p[0]]?" on":"");
+    b.setAttribute("data-tag",p[0]); b.textContent = p[1];
+    b.addEventListener("click", function(){
+      activeTags[p[0]] = !activeTags[p[0]]; buildDrawer(); renderGrid();
+    }); tw.appendChild(b);
+  });
+}
+document.getElementById("mob-fb").addEventListener("click", function(){
+  buildDrawer(); drwr.classList.add("open"); document.body.style.overflow="hidden";
+});
+document.getElementById("drwr-x").addEventListener("click", function(){
+  drwr.classList.remove("open"); document.body.style.overflow="";
+});
+drwr.addEventListener("click", function(e){
+  if(e.target===drwr){ drwr.classList.remove("open"); document.body.style.overflow=""; }
+});
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   MODAL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+var mbg  = document.getElementById("mbg");
+var mhdr = document.getElementById("m-hdr");
+var mbdy = document.getElementById("m-body");
+var mpb  = document.getElementById("mpb");
+
+mbg.addEventListener("scroll", function(){
+  var total = mbg.scrollHeight - mbg.clientHeight;
+  mpb.style.width = total>0 ? (mbg.scrollTop/total*100)+"%" : "0%";
+});
+
+function openModal(t, push) {
+  if (push === undefined) push = true;
+  openTool = t;
+  mhdr.innerHTML = ""; mbdy.innerHTML = "";
+  mbg.scrollTop = 0; mpb.style.width = "0%";
+  document.getElementById("mst").style.background = cc(t.c);
+  document.getElementById("mct-title").textContent = t.n.toUpperCase() + "  ·  DETAIL";
+  if (push) {
+    var url = new URL(window.location.href);
+    url.searchParams.set("tool", t.id);
+    history.pushState({tool:t.id}, "", url.toString());
+    document.title = t.n + " — The Internet Index";
+  }
+  mbg.classList.add("open");
+  document.body.classList.add("modal-open");
+  document.body.style.overflow = "hidden";
+  requestAnimationFrame(function(){
+    mhdr.innerHTML =
+      '<div class="mcr"><span class="mcb" style="color:'+cc(t.c)+';border-color:'+cc(t.c)+'">'+t.c+'</span>'+
+      (t.fav?'<span class="mfv">☆ Editor\'s Pick</span>':'')+
+      '<span style="font-size:.58rem;color:var(--txt3)">'+t.lic+'</span></div>'+
+      '<div class="mtt">'+t.n+'</div>'+
+      '<div class="mmt"><span style="display:flex;gap:2px">'+stars(t.r)+'</span>'+
+      (t.oss?'<span style="color:var(--grn)">● Open Source</span>':'')+
+      (t.sh ?'<span style="color:var(--cyn)">● Self-hostable</span>':'')+
+      (t.pi ?'<span style="color:var(--amb)">● Pi-friendly</span>':'')+
+      '</div>';
+    function sec(lbl, node) {
+      var s = document.createElement("div"); s.className = "ms";
+      var l = document.createElement("div"); l.className = "ml"; l.textContent = lbl;
+      s.appendChild(l); s.appendChild(node); mbdy.appendChild(s);
+    }
+    var dEl = document.createElement("div"); dEl.className = "mx"; dEl.textContent = t.d;
+    sec("About", dEl);
+    if (t.pro && t.pro.length) {
+      var ul = document.createElement("ul"); ul.className = "mli";
+      t.pro.forEach(function(p){ var li = document.createElement("li"); li.innerHTML = '<span class="pi2">+</span>'+p; ul.appendChild(li); });
+      sec("Pros", ul);
+    }
+    if (t.con && t.con.length) {
+      var ul2 = document.createElement("ul"); ul2.className = "mli";
+      t.con.forEach(function(c){ var li = document.createElement("li"); li.innerHTML = '<span class="ci2">−</span>'+c; ul2.appendChild(li); });
+      sec("Cons", ul2);
+    }
+    var ig = document.createElement("div"); ig.className = "mig";
+    [["License / Cost",t.lic],["Category",t.c],["Self-hostable",t.sh?"Yes":"No"],["Pi-friendly",t.pi?"Yes":"No"]].forEach(function(p){
+      var item = document.createElement("div"); item.className = "mic";
+      item.innerHTML = '<div class="mik">'+p[0]+'</div><div class="miv">'+p[1]+'</div>';
+      ig.appendChild(item);
+    });
+    sec("Details", ig);
+    if (t.alt && t.alt.length) {
+      var acs = document.createElement("div"); acs.className = "acs";
+      t.alt.forEach(function(a){
+        var chip = document.createElement("span"); chip.className = "ac"; chip.textContent = a;
+        chip.addEventListener("click", function(){
+          closeModal(); activeQuery = a; document.getElementById("srch").value = a; renderGrid();
+        }); acs.appendChild(chip);
+      });
+      sec("Alternatives", acs);
+    }
+    if (t.tut && t.tut.length) {
+      var tl = document.createElement("ul"); tl.className = "tl";
+      t.tut.forEach(function(tt){ var li = document.createElement("li"); li.textContent = tt; tl.appendChild(li); });
+      sec("Tutorial Ideas", tl);
+    }
+    var tr = document.createElement("div"); tr.className = "mtr";
+    [t.c].concat(t.alt||[]).forEach(function(tag){
+      var s = document.createElement("span"); s.className = "mtg"; s.textContent = tag;
+      s.addEventListener("click", function(){
+        closeModal(); activeQuery = tag; document.getElementById("srch").value = tag; renderGrid();
+      }); tr.appendChild(s);
+    });
+    mbdy.appendChild(tr);
+  });
+}
+
+function closeModal() {
+  mbg.classList.remove("open"); document.body.classList.remove("modal-open"); document.body.style.overflow = "";
+  openTool = null; document.title = "THE INTERNET INDEX // 2026";
+  var url = new URL(window.location.href);
+  if (url.searchParams.has("tool")) { url.searchParams.delete("tool"); history.pushState({}, "", url.toString()); }
+}
+
+document.getElementById("m-close").addEventListener("click", closeModal);
+document.getElementById("mclose-dot").addEventListener("click", closeModal);
+mbg.addEventListener("click", function(e){ if(e.target===mbg) closeModal(); });
+document.getElementById("m-share").addEventListener("click", function(){
+  if (!openTool) return;
+  var url = new URL(window.location.href); url.searchParams.set("tool", openTool.id);
+  navigator.clipboard.writeText(url.toString()).then(function(){ showToast("LINK COPIED"); }).catch(function(){ showToast("COPY FAILED"); });
+});
+window.addEventListener("popstate", function(){
+  var id = parseInt(new URL(window.location.href).searchParams.get("tool"));
+  if (id) { var t = TOOLS.filter(function(x){ return x.id===id; })[0]; if(t) openModal(t,false); }
+  else if (mbg.classList.contains("open")) closeModal();
+});
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   KEYBOARD
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+document.addEventListener("keydown", function(e){
+  var tag = e.target.tagName;
+  if (e.key === "Escape") {
+    if (mbg.classList.contains("open")) { closeModal(); return; }
+    if (drwr.classList.contains("open")) { drwr.classList.remove("open"); document.body.style.overflow=""; return; }
+    activeQuery=""; activeCat="all"; activeTags={};
+    document.getElementById("srch").value="";
+    document.querySelectorAll(".fb[data-cat]").forEach(function(b){ b.classList.toggle("on",b.dataset.cat==="all"); });
+    document.querySelectorAll(".tf").forEach(function(b){ b.classList.remove("on"); });
+    document.querySelectorAll("#sb .si[data-cat]").forEach(function(i){ i.classList.toggle("on",i.dataset.cat==="all"); });
+    renderGrid(); return;
+  }
+  if (tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT") return;
+  if (e.key==="/"||e.key==="s") { e.preventDefault(); document.getElementById("srch").focus(); return; }
+  if (e.key==="t"||e.key==="T") { setTheme(theme==="terminal"?"normal":"terminal"); return; }
+  if (e.key==="g"||e.key==="G") { document.getElementById("vg").click(); return; }
+  if (e.key==="l"||e.key==="L") { document.getElementById("vl").click(); return; }
+  if (e.key==="f"||e.key==="F") { document.querySelector('.tf[data-tag="fav"]').click(); return; }
+  if (e.key==="o"||e.key==="O") { document.querySelector('.tf[data-tag="oss"]').click(); return; }
+  if (e.key==="p"||e.key==="P") { document.querySelector('.tf[data-tag="pi"]').click(); return; }
+  var cats = ["all","Creative","Productivity","Communication","Security","Self-Hosting","DevOps","Networking","Backup"];
+  var n = parseInt(e.key);
+  if (n>=1 && n<=8) setCat(cats[n]);
+});
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   TOAST + CLOCK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+var toastEl = document.getElementById("toast"); var toastT;
+function showToast(msg) {
+  toastEl.textContent = msg; toastEl.classList.add("show");
+  clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove("show"); }, 2000);
+}
+function tick() {
+  var t = document.getElementById("sbar-time");
+  if (t) t.textContent = new Date().toTimeString().slice(0,8);
+}
+setInterval(tick,1000); tick();
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   LOADING ANIMATION
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+var ldDot = document.getElementById("ld-dot");
+var ldFrames = ["_","▌","_","▐"]; var ldI = 0;
+var ldTimer = setInterval(function(){
+  if (!ldDot) { clearInterval(ldTimer); return; }
+  ldDot.textContent = ldFrames[ldI++ % ldFrames.length];
+}, 200);
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   INIT — FETCH tools.json EXTERNALLY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+function init() {
+  /* apply saved theme before fetch */
+  document.documentElement.setAttribute("data-theme", theme);
+  document.getElementById("thm").textContent = theme === "terminal" ? "⊞ NORMAL VIEW" : "⌨ TERMINAL VIEW";
+
+  fetch("tools.json?v=" + Date.now())
+    .then(function(r){
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then(function(data){
+      clearInterval(ldTimer);
+      TOOLS = data;
+      updateStats();
+      renderGrid();
+      /* handle ?tool= deep link */
+      var toolId = parseInt(new URL(window.location.href).searchParams.get("tool"));
+      if (toolId) {
+        var found = TOOLS.filter(function(x){ return x.id===toolId; })[0];
+        if (found) setTimeout(function(){ openModal(found,false); }, 150);
+      }
+    })
+    .catch(function(err){
+      clearInterval(ldTimer);
+      document.getElementById("tg").innerHTML =
+        '<div class="empty"><div class="et">LOAD ERROR.</div>'+
+        '<div class="es">Could not fetch tools.json — make sure it\'s in the same directory.<br>'+
+        '<small style="color:var(--red)">'+err.message+'</small></div></div>';
+      document.getElementById("hdr-ct").textContent = "error";
+    });
+}
+
+init();
+</script>
+</body>
+</html>
