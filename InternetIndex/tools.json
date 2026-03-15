@@ -1,0 +1,2407 @@
+[
+  {
+    "id": 1,
+    "n": "Krita",
+    "c": "Creative",
+    "r": 4,
+    "fav": true,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Open-source digital painting & illustration app",
+    "pro": [
+      "Powerful brush engine",
+      "PSD support",
+      "completely free",
+      "animation features"
+    ],
+    "con": [
+      "Complex UI",
+      "heavy on large canvas files"
+    ],
+    "alt": [
+      "GIMP",
+      "Affinity Photo"
+    ],
+    "tut": [
+      "Digital painting step-by-step",
+      "Animation with frame-by-frame timeline"
+    ]
+  },
+  {
+    "id": 2,
+    "n": "GIMP",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Cross-platform image editor \u2014 the free Photoshop alternative",
+    "pro": [
+      "Full-featured (layers, masks, plugins)",
+      "GPL open-source"
+    ],
+    "con": [
+      "Clunky UI (improving in 3.0)",
+      "slower than commercial editors"
+    ],
+    "alt": [
+      "Krita",
+      "Photoshop",
+      "Photopea"
+    ],
+    "tut": [
+      "Basic photo retouching",
+      "Batch processing images with GIMP scripts"
+    ]
+  },
+  {
+    "id": 3,
+    "n": "Affinity Photo",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": false,
+    "sh": false,
+    "pi": false,
+    "lic": "Proprietary (free)",
+    "d": "Professional photo editor \u2014 now completely free as of late 2025",
+    "pro": [
+      "Polished UI",
+      "excellent RAW processing",
+      "no subscription",
+      "GPU accelerated"
+    ],
+    "con": [
+      "Closed-source",
+      "some AI features behind Canva subscription",
+      "Mac/Windows only"
+    ],
+    "alt": [
+      "Photoshop",
+      "GIMP"
+    ],
+    "tut": [
+      "Photo compositing",
+      "RAW processing workflow",
+      "Frequency separation retouching"
+    ]
+  },
+  {
+    "id": 4,
+    "n": "Photopea",
+    "c": "Creative",
+    "r": 2,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "Free (ad-supported)",
+    "d": "Browser-based PSD editor \u2014 zero install, runs anywhere",
+    "pro": [
+      "No install required",
+      "local file processing (files never leave device)",
+      "supports PSD/XCF"
+    ],
+    "con": [
+      "Ad-supported",
+      "proprietary",
+      "browser-dependent performance"
+    ],
+    "alt": [
+      "GIMP",
+      "Affinity Photo"
+    ],
+    "tut": [
+      "Editing PSDs in the browser",
+      "Removing backgrounds from images"
+    ]
+  },
+  {
+    "id": 5,
+    "n": "Inkscape",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Powerful free vector graphics editor \u2014 open-source Illustrator alternative",
+    "pro": [
+      "Full SVG support",
+      "boolean path ops",
+      "GPL open-source",
+      "cross-platform"
+    ],
+    "con": [
+      "Steep learning curve",
+      "performance lags on complex SVGs"
+    ],
+    "alt": [
+      "Adobe Illustrator",
+      "Affinity Designer"
+    ],
+    "tut": [
+      "Creating vector logos",
+      "Tracing images to SVG",
+      "Icon design pipeline"
+    ]
+  },
+  {
+    "id": 6,
+    "n": "Blender",
+    "c": "Creative",
+    "r": 5,
+    "fav": true,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "GPL (free)",
+    "d": "Industry-grade 3D suite \u2014 modeling, sculpting, animation, VFX, rendering",
+    "pro": [
+      "Extremely powerful (Cycles renderer, physics, sculpt)",
+      "GPL free",
+      "huge community"
+    ],
+    "con": [
+      "Steep learning curve",
+      "UI complexity",
+      "ARM support limited on Pi"
+    ],
+    "alt": [
+      "Maya",
+      "Cinema 4D"
+    ],
+    "tut": [
+      "Modeling a simple character",
+      "Basic animation with keyframes and rigging"
+    ]
+  },
+  {
+    "id": 7,
+    "n": "Kdenlive",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Non-linear video editor built on FFmpeg \u2014 solid free DaVinci alternative",
+    "pro": [
+      "Free and open-source",
+      "multi-track timeline",
+      "effects and keyframes"
+    ],
+    "con": [
+      "Occasional crashes",
+      "less polished UX than DaVinci",
+      "slower render"
+    ],
+    "alt": [
+      "DaVinci Resolve",
+      "Shotcut"
+    ],
+    "tut": [
+      "Basic cutting and transitions",
+      "Exporting video with Kdenlive"
+    ]
+  },
+  {
+    "id": 8,
+    "n": "DaVinci Resolve",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": false,
+    "sh": false,
+    "pi": false,
+    "lic": "Free / Studio ($$$)",
+    "d": "Industry-standard color grading and editing \u2014 robust free tier",
+    "pro": [
+      "Hollywood-grade color tools",
+      "Fusion VFX",
+      "Fairlight audio",
+      "free tier"
+    ],
+    "con": [
+      "Very resource-intensive",
+      "Linux requires specific GPU drivers",
+      "proprietary"
+    ],
+    "alt": [
+      "Kdenlive",
+      "Premiere"
+    ],
+    "tut": [
+      "Color grading a clip with nodes",
+      "Multicam editing workflow"
+    ]
+  },
+  {
+    "id": 9,
+    "n": "OBS Studio",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "GPL (free)",
+    "d": "Open-source broadcast software for livestreaming and screen recording",
+    "pro": [
+      "Cross-platform",
+      "plugin support",
+      "free with no ads",
+      "scene/source system"
+    ],
+    "con": [
+      "Steep setup for novices",
+      "CPU-heavy with many sources"
+    ],
+    "alt": [
+      "Streamlabs OBS",
+      "XSplit"
+    ],
+    "tut": [
+      "Setting up a live stream",
+      "Recording game footage with OBS"
+    ]
+  },
+  {
+    "id": 10,
+    "n": "Audacity",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Popular free audio editor and recorder \u2014 go-to for podcast editing",
+    "pro": [
+      "Free",
+      "multi-track recording",
+      "many effects and plugin support",
+      "cross-platform"
+    ],
+    "con": [
+      "Outdated UI",
+      "past EULA controversies"
+    ],
+    "alt": [
+      "Ardour",
+      "Reaper"
+    ],
+    "tut": [
+      "Podcast editing basics",
+      "Noise reduction and filters in Audacity"
+    ]
+  },
+  {
+    "id": 11,
+    "n": "Ardour",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free / donationware binaries)",
+    "d": "Full-featured DAW for professional multi-track recording and MIDI",
+    "pro": [
+      "Professional audio engine",
+      "mixer",
+      "VST/LV2 plugin support",
+      "ARM builds for Pi 4"
+    ],
+    "con": [
+      "Steeper learning curve",
+      "audio card setup can be tricky"
+    ],
+    "alt": [
+      "Pro Tools",
+      "Reaper"
+    ],
+    "tut": [
+      "Recording guitar tracks in Ardour",
+      "MIDI integration with JACK"
+    ]
+  },
+  {
+    "id": 12,
+    "n": "Synfig Studio",
+    "c": "Creative",
+    "r": 2,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "2D vector animation suite with tweening and bone-based puppet system",
+    "pro": [
+      "Free",
+      "bone rigging and puppet system",
+      "tweening tools"
+    ],
+    "con": [
+      "Clunky interface",
+      "limited community",
+      "less intuitive than commercial tools"
+    ],
+    "alt": [
+      "Adobe Animate",
+      "Moho"
+    ],
+    "tut": [
+      "Animating a character walkcycle in Synfig"
+    ]
+  },
+  {
+    "id": 13,
+    "n": "Shotcut",
+    "c": "Creative",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Beginner-friendly video editor using FFmpeg \u2014 quick trims and exports",
+    "pro": [
+      "Simple UI",
+      "broad format support via FFmpeg",
+      "free"
+    ],
+    "con": [
+      "Fewer advanced features",
+      "occasional export bugs"
+    ],
+    "alt": [
+      "Kdenlive",
+      "OpenShot"
+    ],
+    "tut": [
+      "Cutting a vlog video",
+      "Adding titles and transitions in Shotcut"
+    ]
+  },
+  {
+    "id": 14,
+    "n": "HandBrake",
+    "c": "Creative",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Video transcoder \u2014 compress, convert, and rip video with easy presets",
+    "pro": [
+      "Wide codec/format support",
+      "easy presets",
+      "constant active updates"
+    ],
+    "con": [
+      "GUI is functional but utilitarian"
+    ],
+    "alt": [
+      "ffmpeg"
+    ],
+    "tut": [
+      "Encoding video for the web",
+      "Ripping DVDs with HandBrake"
+    ]
+  },
+  {
+    "id": 15,
+    "n": "Anki",
+    "c": "Productivity",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free desktop / $3 iOS)",
+    "d": "Spaced-repetition flashcard system \u2014 effective for language learning",
+    "pro": [
+      "Highly effective spaced repetition algorithm",
+      "large add-on ecosystem",
+      "cross-platform"
+    ],
+    "con": [
+      "UI is dated and bare",
+      "iOS app costs $3"
+    ],
+    "alt": [
+      "Mnemosyne"
+    ],
+    "tut": [
+      "Creating language flashcards",
+      "Japanese vocabulary study system"
+    ]
+  },
+  {
+    "id": 16,
+    "n": "Obsidian",
+    "c": "Productivity",
+    "r": 4,
+    "fav": true,
+    "oss": false,
+    "sh": false,
+    "pi": true,
+    "lic": "Proprietary (free for personal use)",
+    "d": "Private-first Markdown note-taking with knowledge graph \u2014 notes stored locally",
+    "pro": [
+      "Files stored as plain Markdown you own locally",
+      "knowledge graph view",
+      "massive plugin ecosystem",
+      "offline-first"
+    ],
+    "con": [
+      "Core is closed-source",
+      "E2E encryption requires plugins or paid sync"
+    ],
+    "alt": [
+      "Joplin",
+      "Logseq"
+    ],
+    "tut": [
+      "Setting up a Zettelkasten in Obsidian",
+      "Using the graph view for knowledge connections"
+    ]
+  },
+  {
+    "id": 17,
+    "n": "Joplin",
+    "c": "Productivity",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Secure offline-first note app with built-in E2E encryption and Nextcloud sync",
+    "pro": [
+      "E2E encryption built-in",
+      "GPL open-source",
+      "works with Nextcloud/WebDAV",
+      "cross-platform including mobile"
+    ],
+    "con": [
+      "Sync setup can be tricky",
+      "UI less polished than Obsidian"
+    ],
+    "alt": [
+      "Standard Notes",
+      "Obsidian"
+    ],
+    "tut": [
+      "Syncing notes with Nextcloud",
+      "Using E2E encryption in Joplin"
+    ]
+  },
+  {
+    "id": 18,
+    "n": "Standard Notes",
+    "c": "Productivity",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL core (free) / paid add-ons",
+    "d": "E2E encrypted notes focused on long-term preservation \u2014 audited, independent",
+    "pro": [
+      "Strong default AES-256 encryption",
+      "independently audited",
+      "unlimited device sync"
+    ],
+    "con": [
+      "Advanced features require paid plan",
+      "basic editor is plain text"
+    ],
+    "alt": [
+      "Joplin",
+      "Obsidian"
+    ],
+    "tut": [
+      "Using advanced editors via add-ons",
+      "Tagging and organizing notes"
+    ]
+  },
+  {
+    "id": 19,
+    "n": "Logseq",
+    "c": "Productivity",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "MIT (free)",
+    "d": "Local-first graph-based outliner in Markdown \u2014 daily notes, queries, block references",
+    "pro": [
+      "Fully open-source",
+      "works offline",
+      "powerful query and block reference system",
+      "plugins"
+    ],
+    "con": [
+      "Still maturing",
+      "mobile apps less stable"
+    ],
+    "alt": [
+      "Obsidian",
+      "Roam Research"
+    ],
+    "tut": [
+      "Connecting daily notes with block references",
+      "Query blocks in Logseq"
+    ]
+  },
+  {
+    "id": 20,
+    "n": "LibreOffice",
+    "c": "Productivity",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "MPL/LGPL (free)",
+    "d": "Full office suite \u2014 the open-source MS Office replacement",
+    "pro": [
+      "No license cost",
+      "good MS format compatibility",
+      "active community",
+      "desktop native"
+    ],
+    "con": [
+      "UI slightly outdated",
+      "complex features slower to load"
+    ],
+    "alt": [
+      "MS Office",
+      "OnlyOffice"
+    ],
+    "tut": [
+      "Styles and formatting in Writer",
+      "Pivot tables in Calc"
+    ]
+  },
+  {
+    "id": 21,
+    "n": "OnlyOffice",
+    "c": "Productivity",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "AGPL (free) / Enterprise paid",
+    "d": "Office suite with excellent MS format compatibility \u2014 desktop and self-hosted web",
+    "pro": [
+      "Slick modern interface",
+      "web version with real-time collaboration",
+      "good DOCX fidelity"
+    ],
+    "con": [
+      "Fewer features than MS Office",
+      "some file format fidelity issues"
+    ],
+    "alt": [
+      "LibreOffice",
+      "Collabora Online"
+    ],
+    "tut": [
+      "Collaborative editing with Nextcloud integration",
+      "Setting up OnlyOffice Document Server"
+    ]
+  },
+  {
+    "id": 22,
+    "n": "Collabora Online",
+    "c": "Productivity",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "LGPL (free) / paid support",
+    "d": "LibreOffice-based browser office suite \u2014 best Nextcloud integration",
+    "pro": [
+      "Best Nextcloud integration",
+      "runs in browser on your server",
+      "LGPL open-source"
+    ],
+    "con": [
+      "Enterprise-focused",
+      "UI less polished",
+      "performance depends on server"
+    ],
+    "alt": [
+      "OnlyOffice",
+      "Google Docs"
+    ],
+    "tut": [
+      "Deploying Collabora with Nextcloud on Docker",
+      "Editing documents in browser"
+    ]
+  },
+  {
+    "id": 23,
+    "n": "Notion",
+    "c": "Productivity",
+    "r": 2,
+    "fav": false,
+    "oss": false,
+    "sh": false,
+    "pi": true,
+    "lic": "Proprietary (freemium)",
+    "d": "All-in-one workspace \u2014 popular but privacy-unfriendly and closed-source",
+    "pro": [
+      "Very flexible page types",
+      "collaborative features"
+    ],
+    "con": [
+      "Closed-source",
+      "no E2E encryption",
+      "heavy cloud dependency",
+      "data harvesting"
+    ],
+    "alt": [
+      "Obsidian",
+      "Joplin"
+    ],
+    "tut": [
+      "Building a personal wiki in Notion"
+    ]
+  },
+  {
+    "id": 24,
+    "n": "Trilium Notes",
+    "c": "Productivity",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "AGPL (free)",
+    "d": "Hierarchical note app with built-in encryption, scripting, and tree structure",
+    "pro": [
+      "Built-in encryption",
+      "rich tree structure",
+      "scriptable with JS",
+      "self-hostable"
+    ],
+    "con": [
+      "UI and docs are rough",
+      "server required for sync"
+    ],
+    "alt": [
+      "Obsidian",
+      "Joplin"
+    ],
+    "tut": [
+      "Setting up a Trilium self-hosted note server"
+    ]
+  },
+  {
+    "id": 25,
+    "n": "VSCodium",
+    "c": "Productivity",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "MIT (free)",
+    "d": "Fully open MIT-licensed build of VS Code \u2014 no Microsoft telemetry",
+    "pro": [
+      "MIT-licensed with no MS telemetry",
+      "full VS Code feature parity",
+      "thousands of extensions"
+    ],
+    "con": [
+      "Updates lag slightly behind VS Code",
+      "still heavy on RAM"
+    ],
+    "alt": [
+      "VS Code (official)",
+      "Neovim",
+      "Sublime Text"
+    ],
+    "tut": [
+      "Migrating from VS Code to VSCodium",
+      "Setting up a Python dev environment"
+    ]
+  },
+  {
+    "id": 26,
+    "n": "ffmpeg",
+    "c": "Productivity",
+    "r": 5,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "LGPL/GPL (free)",
+    "d": "Command-line Swiss-army knife for audio/video \u2014 every codec, every format",
+    "pro": [
+      "Handles virtually every codec",
+      "scriptable for batch processing",
+      "foundation of most video tools"
+    ],
+    "con": [
+      "CLI only \u2014 steep learning curve",
+      "cryptic flag syntax"
+    ],
+    "alt": [
+      "HandBrake (GUI front-end)"
+    ],
+    "tut": [
+      "Batch-converting videos with ffmpeg",
+      "Live streaming with ffmpeg"
+    ]
+  },
+  {
+    "id": 27,
+    "n": "Signal",
+    "c": "Communication",
+    "r": 5,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "BSD (free)",
+    "d": "The gold standard for private messaging \u2014 E2E encryption by default, no ads, no trackers",
+    "pro": [
+      "E2E encrypted by default",
+      "minimal metadata",
+      "no ads or trackers",
+      "non-profit"
+    ],
+    "con": [
+      "Requires phone number for registration",
+      "centralized server"
+    ],
+    "alt": [
+      "Element/Matrix",
+      "Session"
+    ],
+    "tut": [
+      "Setting up disappearing messages",
+      "Sealed sender and privacy settings in Signal"
+    ]
+  },
+  {
+    "id": 28,
+    "n": "Element (Matrix)",
+    "c": "Communication",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "Apache 2 (free)",
+    "d": "Decentralized chat on Matrix protocol \u2014 federated, self-hostable, E2E available",
+    "pro": [
+      "Federated network",
+      "E2E encryption available",
+      "bridges to Slack/Telegram/IRC",
+      "self-hostable"
+    ],
+    "con": [
+      "UX not as polished as Signal",
+      "E2E setup has friction",
+      "server maintenance overhead"
+    ],
+    "alt": [
+      "Signal",
+      "Slack",
+      "Discord"
+    ],
+    "tut": [
+      "Self-hosting Matrix Synapse with Element",
+      "Bridging Matrix to Telegram"
+    ]
+  },
+  {
+    "id": 29,
+    "n": "Session",
+    "c": "Communication",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "AGPL (free)",
+    "d": "Anonymous messenger \u2014 no phone or email required, onion-routed network",
+    "pro": [
+      "No phone number or email needed",
+      "onion routing hides metadata",
+      "decentralized"
+    ],
+    "con": [
+      "Smaller user base",
+      "messages sometimes slow",
+      "still maturing"
+    ],
+    "alt": [
+      "Signal",
+      "Briar"
+    ],
+    "tut": [
+      "Using Session for anonymous communication"
+    ]
+  },
+  {
+    "id": 30,
+    "n": "Telegram",
+    "c": "Communication",
+    "r": 1,
+    "fav": false,
+    "oss": false,
+    "sh": false,
+    "pi": false,
+    "lic": "Proprietary (free)",
+    "d": "Popular chat app \u2014 NOT E2E by default. Do NOT use for sensitive communications",
+    "pro": [
+      "Massive user base",
+      "channels",
+      "bots and automation"
+    ],
+    "con": [
+      "NOT E2E encrypted by default",
+      "closed-source server",
+      "tracks metadata",
+      "avoid for sensitive comms"
+    ],
+    "alt": [
+      "Signal",
+      "Element",
+      "Session"
+    ],
+    "tut": [
+      "Migrating from Telegram to Signal"
+    ]
+  },
+  {
+    "id": 31,
+    "n": "ProtonMail",
+    "c": "Communication",
+    "r": 3,
+    "fav": false,
+    "oss": false,
+    "sh": false,
+    "pi": false,
+    "lic": "Free / Paid subscription",
+    "d": "Swiss-based encrypted email \u2014 E2E within Proton network, audited, no-logs",
+    "pro": [
+      "Swiss jurisdiction",
+      "E2E encryption between Proton users",
+      "audited",
+      "no-logs"
+    ],
+    "con": [
+      "E2E only within Proton network",
+      "limited search on encrypted messages",
+      "paid for full features"
+    ],
+    "alt": [
+      "Tutanota",
+      "Thunderbird"
+    ],
+    "tut": [
+      "Setting up ProtonMail with a custom domain"
+    ]
+  },
+  {
+    "id": 32,
+    "n": "Thunderbird",
+    "c": "Communication",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Open-source email client by Mozilla \u2014 local mail storage, native OpenPGP support",
+    "pro": [
+      "Mails stored locally",
+      "native OpenPGP/S-MIME",
+      "GPL open-source",
+      "actively developed"
+    ],
+    "con": [
+      "GPG setup can be technical",
+      "UI modernization still in progress"
+    ],
+    "alt": [
+      "ProtonMail",
+      "Tutanota"
+    ],
+    "tut": [
+      "Setting up encrypted email in Thunderbird",
+      "Migrating from Gmail"
+    ]
+  },
+  {
+    "id": 33,
+    "n": "Jitsi Meet",
+    "c": "Communication",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "Apache 2 (free)",
+    "d": "Open-source Zoom alternative \u2014 self-hostable, no account required for guests",
+    "pro": [
+      "E2E encryption (beta)",
+      "self-hostable",
+      "no account required for guests"
+    ],
+    "con": [
+      "Limited features vs Zoom",
+      "performance issues at scale",
+      "jitter in large calls"
+    ],
+    "alt": [
+      "Zoom",
+      "BigBlueButton"
+    ],
+    "tut": [
+      "Hosting Jitsi Meet on your own server"
+    ]
+  },
+  {
+    "id": 34,
+    "n": "CryptPad",
+    "c": "Communication",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "AGPL (free)",
+    "d": "Zero-knowledge encrypted real-time collaborative suite \u2014 docs, kanban, whiteboard",
+    "pro": [
+      "Zero-knowledge encryption",
+      "real-time collaboration",
+      "self-hostable",
+      "multiple document types"
+    ],
+    "con": [
+      "Can lag on large files",
+      "smaller community than Google Docs"
+    ],
+    "alt": [
+      "Etherpad",
+      "Notion"
+    ],
+    "tut": [
+      "Encrypted document sharing with CryptPad"
+    ]
+  },
+  {
+    "id": 35,
+    "n": "Mastodon",
+    "c": "Communication",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "AGPL (free)",
+    "d": "Decentralized federated social network \u2014 Twitter-like, no algorithm, no Big Tech",
+    "pro": [
+      "Federated (no single owner)",
+      "no algorithmic manipulation",
+      "open-source",
+      "self-hostable"
+    ],
+    "con": [
+      "Fragmented communities",
+      "smaller reach than Twitter/X"
+    ],
+    "alt": [
+      "Twitter/X",
+      "Pleroma",
+      "Misskey"
+    ],
+    "tut": [
+      "Getting started with Mastodon",
+      "Self-hosting a Mastodon instance"
+    ]
+  },
+  {
+    "id": 36,
+    "n": "Etherpad",
+    "c": "Communication",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "Apache 2 (free)",
+    "d": "Lightweight real-time collaborative text editor \u2014 no account needed, self-hostable",
+    "pro": [
+      "Lightweight",
+      "no account required",
+      "real-time editing",
+      "easy to self-host"
+    ],
+    "con": [
+      "Basic formatting only",
+      "no encryption by default"
+    ],
+    "alt": [
+      "CryptPad",
+      "HackMD"
+    ],
+    "tut": [
+      "Collaborative meeting notes with Etherpad"
+    ]
+  },
+  {
+    "id": 37,
+    "n": "WireGuard",
+    "c": "Security",
+    "r": 5,
+    "fav": true,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Modern VPN tunnel protocol \u2014 ~4000 lines of auditable code, baked into Linux kernel",
+    "pro": [
+      "Extremely fast and low overhead",
+      "kernel module",
+      "~4000 lines (fully auditable)",
+      "easy to configure"
+    ],
+    "con": [
+      "Newer \u2014 some legacy tooling gaps",
+      "manual key management"
+    ],
+    "alt": [
+      "OpenVPN"
+    ],
+    "tut": [
+      "Setting up a home WireGuard VPN server",
+      "Deploying WireGuard on OpenWrt"
+    ]
+  },
+  {
+    "id": 38,
+    "n": "ProtonVPN",
+    "c": "Security",
+    "r": 3,
+    "fav": false,
+    "oss": false,
+    "sh": false,
+    "pi": true,
+    "lic": "Subscription (free tier available)",
+    "d": "Swiss-based audited VPN with Tor over VPN \u2014 no-logs, open-source clients",
+    "pro": [
+      "Swiss jurisdiction",
+      "no-logs audited",
+      "Tor over VPN",
+      "open-source clients",
+      "free tier"
+    ],
+    "con": [
+      "Slower on free tier",
+      "paid for full features"
+    ],
+    "alt": [
+      "Mullvad VPN",
+      "IVPN"
+    ],
+    "tut": [
+      "Connecting ProtonVPN on Linux with WireGuard"
+    ]
+  },
+  {
+    "id": 39,
+    "n": "Mullvad VPN",
+    "c": "Security",
+    "r": 3,
+    "fav": false,
+    "oss": false,
+    "sh": false,
+    "pi": true,
+    "lic": "~\u20ac5/mo flat",
+    "d": "Privacy-focused Swedish VPN \u2014 anonymous accounts, audited, pay with cash",
+    "pro": [
+      "Swedish no-logs policy (audited)",
+      "pay anonymously (cash/crypto)",
+      "flat predictable pricing"
+    ],
+    "con": [
+      "Paid only",
+      "fewer exit IPs than large providers"
+    ],
+    "alt": [
+      "ProtonVPN",
+      "IVPN"
+    ],
+    "tut": [
+      "Using Mullvad VPN with WireGuard on Linux"
+    ]
+  },
+  {
+    "id": 40,
+    "n": "Bitwarden",
+    "c": "Security",
+    "r": 4,
+    "fav": true,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "AGPL (server) / MIT (clients) / Free",
+    "d": "Open-source password manager \u2014 browser extensions, TOTP, self-hosting, audited",
+    "pro": [
+      "Transparent OSS code (server AGPL, clients MIT)",
+      "independently audited",
+      "free tier",
+      "E2E encryption"
+    ],
+    "con": [
+      "Hosted service means trusting their servers",
+      "advanced features need subscription"
+    ],
+    "alt": [
+      "Vaultwarden",
+      "KeePassXC"
+    ],
+    "tut": [
+      "Self-hosting Bitwarden with Docker",
+      "Sharing vaults with family or team"
+    ]
+  },
+  {
+    "id": 41,
+    "n": "Vaultwarden",
+    "c": "Security",
+    "r": 3,
+    "fav": true,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Lightweight Rust-based Bitwarden-compatible server \u2014 runs on a Raspberry Pi",
+    "pro": [
+      "Extremely lightweight (runs on Pi)",
+      "full Bitwarden app compatibility",
+      "completely free"
+    ],
+    "con": [
+      "No official support",
+      "maintenance overhead",
+      "must keep updated"
+    ],
+    "alt": [
+      "Bitwarden",
+      "KeePassXC"
+    ],
+    "tut": [
+      "Deploying Vaultwarden on a Pi with Docker",
+      "Setting up HTTPS with Caddy"
+    ]
+  },
+  {
+    "id": 42,
+    "n": "KeePassXC",
+    "c": "Security",
+    "r": 4,
+    "fav": true,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPLv3 (free)",
+    "d": "Offline password vault \u2014 data stays on device, ANSSI certified, YubiKey/TOTP support",
+    "pro": [
+      "Completely offline",
+      "ANSSI certified",
+      "YubiKey & TOTP support",
+      "audited codebase"
+    ],
+    "con": [
+      "Manual sync needed across devices",
+      "no official mobile app"
+    ],
+    "alt": [
+      "Bitwarden",
+      "1Password"
+    ],
+    "tut": [
+      "Setting up auto-type in KeePassXC",
+      "Using YubiKey for 2FA"
+    ]
+  },
+  {
+    "id": 43,
+    "n": "Cryptomator",
+    "c": "Security",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "Apache 2 (free)",
+    "d": "Encrypt files before uploading to cloud \u2014 per-folder vault, works with any cloud",
+    "pro": [
+      "Works with any cloud (Dropbox, OneDrive, Google Drive)",
+      "per-folder vault",
+      "OSS Apache 2"
+    ],
+    "con": [
+      "Requires manual vault creation",
+      "less seamless than native encryption"
+    ],
+    "alt": [
+      "VeraCrypt",
+      "Age"
+    ],
+    "tut": [
+      "Encrypting Dropbox folders with Cryptomator"
+    ]
+  },
+  {
+    "id": 44,
+    "n": "VeraCrypt",
+    "c": "Security",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "AGPL (free)",
+    "d": "Disk and container encryption \u2014 whole-drive or encrypted file container",
+    "pro": [
+      "Well-established TrueCrypt fork",
+      "strong encryption (AES, Serpent)",
+      "plausible deniability"
+    ],
+    "con": [
+      "GUI is dated",
+      "performance overhead"
+    ],
+    "alt": [
+      "LUKS (Linux)",
+      "FileVault (macOS)"
+    ],
+    "tut": [
+      "Creating an encrypted container with VeraCrypt"
+    ]
+  },
+  {
+    "id": 45,
+    "n": "SoloKeys",
+    "c": "Security",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "Open hardware (~$20)",
+    "d": "Open-source FIDO2 hardware security key \u2014 fully open hardware and firmware",
+    "pro": [
+      "Fully open hardware and firmware",
+      "strong phishing protection (FIDO2)",
+      "affordable (~$20)"
+    ],
+    "con": [
+      "Fewer models than YubiKey",
+      "newer project"
+    ],
+    "alt": [
+      "YubiKey",
+      "OnlyKey"
+    ],
+    "tut": [
+      "Registering a SoloKey with Google or GitHub"
+    ]
+  },
+  {
+    "id": 46,
+    "n": "Tails OS",
+    "c": "Security",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "GPL (free)",
+    "d": "Amnesic live OS routing all traffic via Tor \u2014 USB boot, leaves zero trace",
+    "pro": [
+      "All traffic through Tor",
+      "leaves no trace on host computer",
+      "well-audited"
+    ],
+    "con": [
+      "USB-boot only",
+      "limited app support",
+      "some workflows are cumbersome"
+    ],
+    "alt": [
+      "Whonix",
+      "Qubes OS"
+    ],
+    "tut": [
+      "Running Tails from a USB drive for secure browsing"
+    ]
+  },
+  {
+    "id": 47,
+    "n": "GrapheneOS",
+    "c": "Security",
+    "r": 4,
+    "fav": true,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "Apache 2 (free)",
+    "d": "Privacy-hardened Android fork for Pixel phones \u2014 strongest Android hardening available",
+    "pro": [
+      "Strongest Android hardening available",
+      "sandboxed Google Play",
+      "Vanadium hardened browser"
+    ],
+    "con": [
+      "Pixel hardware only",
+      "steeper learning curve"
+    ],
+    "alt": [
+      "LineageOS",
+      "CalyxOS"
+    ],
+    "tut": [
+      "Installing GrapheneOS on a Pixel",
+      "Using sandboxed Google Play"
+    ]
+  },
+  {
+    "id": 48,
+    "n": "LineageOS",
+    "c": "Security",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "Apache 2 (free)",
+    "d": "Android fork supporting many older devices \u2014 de-Google your phone with microG",
+    "pro": [
+      "Supports many device models",
+      "can install microG for app compat",
+      "active community"
+    ],
+    "con": [
+      "Not as hardened as GrapheneOS",
+      "must vet unofficial device images"
+    ],
+    "alt": [
+      "GrapheneOS",
+      "CalyxOS"
+    ],
+    "tut": [
+      "Installing LineageOS with microG"
+    ]
+  },
+  {
+    "id": 49,
+    "n": "Qubes OS",
+    "c": "Security",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "GPL (free)",
+    "d": "Compartmentalized OS \u2014 each app runs in its own isolated VM (qube)",
+    "pro": [
+      "Each app in its own qube (VM)",
+      "strong isolation",
+      "Tor integration via Whonix qube",
+      "GPL"
+    ],
+    "con": [
+      "Very high system requirements",
+      "complex setup",
+      "not for casual users"
+    ],
+    "alt": [
+      "Tails",
+      "Whonix"
+    ],
+    "tut": [
+      "Getting started with Qubes DisposableVMs"
+    ]
+  },
+  {
+    "id": 50,
+    "n": "Tor Browser",
+    "c": "Security",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "GPL (free)",
+    "d": "Anonymity browser routing traffic through the Tor onion network \u2014 blocks fingerprinting",
+    "pro": [
+      "Multi-layer onion routing",
+      "blocks fingerprinting by default",
+      ".onion site access"
+    ],
+    "con": [
+      "Slow by design",
+      "some sites block Tor exit nodes"
+    ],
+    "alt": [
+      "Brave (Tor window)"
+    ],
+    "tut": [
+      "Accessing .onion sites",
+      "Configuring Tor bridges for censored regions"
+    ]
+  },
+  {
+    "id": 51,
+    "n": "uBlock Origin",
+    "c": "Security",
+    "r": 5,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": false,
+    "lic": "GPL (free)",
+    "d": "Most effective browser extension for ad/tracker blocking \u2014 wide-spectrum, low overhead",
+    "pro": [
+      "Extremely effective",
+      "very low performance impact",
+      "GPL open-source",
+      "customizable filter lists"
+    ],
+    "con": [
+      "Can break some sites without whitelisting",
+      "needs Firefox for full Manifest v2 support"
+    ],
+    "alt": [
+      "AdBlock Plus (less effective)"
+    ],
+    "tut": [
+      "Setting up uBlock Origin with optimal filters",
+      "Advanced mode for power users"
+    ]
+  },
+  {
+    "id": 52,
+    "n": "Pi-hole",
+    "c": "Security",
+    "r": 4,
+    "fav": true,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Network-wide DNS ad and tracker blocker \u2014 blocks ads on every device, no client installs",
+    "pro": [
+      "Blocks ads on ALL devices",
+      "lightweight enough for Pi",
+      "web interface with stats",
+      "custom blocklists"
+    ],
+    "con": [
+      "Cannot block CDN-delivered ads",
+      "DNS-based so not all ads blockable"
+    ],
+    "alt": [
+      "AdGuard Home"
+    ],
+    "tut": [
+      "Setting up Pi-hole on Raspberry Pi",
+      "Adding custom blocklists"
+    ]
+  },
+  {
+    "id": 53,
+    "n": "AdGuard Home",
+    "c": "Security",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Go-based DNS ad-blocker \u2014 similar to Pi-hole with built-in GUI and regex support",
+    "pro": [
+      "Built-in web GUI",
+      "regex filter support",
+      "lower memory footprint than Pi-hole"
+    ],
+    "con": [
+      "Smaller community than Pi-hole",
+      "fewer blocklist integrations"
+    ],
+    "alt": [
+      "Pi-hole"
+    ],
+    "tut": [
+      "Migrating from Pi-hole to AdGuard Home"
+    ]
+  },
+  {
+    "id": 54,
+    "n": "Fail2Ban",
+    "c": "Security",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Brute-force protection daemon \u2014 monitors logs and bans malicious IPs automatically",
+    "pro": [
+      "Easy to configure",
+      "works with SSH/Nginx/many services",
+      "lightweight"
+    ],
+    "con": [
+      "Can block legitimate users if misconfigured",
+      "requires tuning per service"
+    ],
+    "alt": [
+      "Crowdsec",
+      "Authelia"
+    ],
+    "tut": [
+      "Setting up Fail2Ban for SSH and Nginx"
+    ]
+  },
+  {
+    "id": 55,
+    "n": "Nextcloud",
+    "c": "Self-Hosting",
+    "r": 5,
+    "fav": true,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "AGPL (free / hosting costs only)",
+    "d": "Personal cloud platform \u2014 replace Dropbox/Google Drive/Calendar/Contacts with your own server",
+    "pro": [
+      "Files + calendar + contacts + office + talk in one",
+      "E2E encryption available",
+      "huge app ecosystem"
+    ],
+    "con": [
+      "Self-hosting overhead",
+      "performance depends on your hardware"
+    ],
+    "alt": [
+      "Dropbox",
+      "Google Drive"
+    ],
+    "tut": [
+      "Installing Nextcloud with Docker",
+      "Enabling E2E encryption in Nextcloud"
+    ]
+  },
+  {
+    "id": 56,
+    "n": "Syncthing",
+    "c": "Self-Hosting",
+    "r": 5,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "MPL 2 (free)",
+    "d": "Decentralized P2P file sync \u2014 no server, no cloud required, just peer-to-peer",
+    "pro": [
+      "Truly peer-to-peer",
+      "no server required",
+      "easy setup",
+      "continuous sync with conflict resolution"
+    ],
+    "con": [
+      "All devices must be online for sync",
+      "no cloud backup redundancy"
+    ],
+    "alt": [
+      "Nextcloud",
+      "Resilio Sync"
+    ],
+    "tut": [
+      "Syncing photos between phone and PC",
+      "Syncthing folder configuration"
+    ]
+  },
+  {
+    "id": 57,
+    "n": "Jellyfin",
+    "c": "Self-Hosting",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "MIT (free)",
+    "d": "Free self-hosted media server \u2014 stream movies, music, shows like Netflix from your hardware",
+    "pro": [
+      "Completely free",
+      "no premium tier",
+      "active development",
+      "clients for many devices"
+    ],
+    "con": [
+      "Setup required",
+      "UI not as polished as Plex",
+      "transcoding is CPU-heavy on Pi"
+    ],
+    "alt": [
+      "Plex (closed)",
+      "Emby"
+    ],
+    "tut": [
+      "Setting up Jellyfin on Raspberry Pi",
+      "Organizing your media library"
+    ]
+  },
+  {
+    "id": 58,
+    "n": "Home Assistant",
+    "c": "Self-Hosting",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "Apache 2 (free)",
+    "d": "Local-first smart home hub \u2014 3000+ integrations, data stays on your device",
+    "pro": [
+      "Massive integration library (3000+ devices)",
+      "data stays local",
+      "automated routines"
+    ],
+    "con": [
+      "Initial configuration effort",
+      "YAML config can be complex"
+    ],
+    "alt": [
+      "OpenHAB",
+      "SmartThings"
+    ],
+    "tut": [
+      "Automating lights and sensors",
+      "Creating custom Home Assistant dashboards"
+    ]
+  },
+  {
+    "id": 59,
+    "n": "Gitea / Forgejo",
+    "c": "Self-Hosting",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "MIT (free)",
+    "d": "Lightweight self-hosted Git service \u2014 full GitHub-like features, very low resource usage",
+    "pro": [
+      "Very low resource usage",
+      "full GitHub-like features (issues, CI/CD, packages)",
+      "Forgejo is community fork"
+    ],
+    "con": [
+      "Smaller ecosystem than GitHub",
+      "some advanced CI needs plugins"
+    ],
+    "alt": [
+      "GitHub",
+      "GitLab"
+    ],
+    "tut": [
+      "Setting up Gitea with Docker",
+      "Migrating repos from GitHub to Gitea"
+    ]
+  },
+  {
+    "id": 60,
+    "n": "Mailcow / Mail-in-a-Box",
+    "c": "Self-Hosting",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "GPL (free / VPS cost)",
+    "d": "Dockerized self-hosted mail server \u2014 SMTP/IMAP, spam filter, webmail, DKIM pre-configured",
+    "pro": [
+      "Full email stack in Docker",
+      "DKIM/DMARC/SPF auto-configured",
+      "web management UI"
+    ],
+    "con": [
+      "Requires dedicated VPS",
+      "spam reputation management is ongoing work",
+      "complex to maintain"
+    ],
+    "alt": [
+      "ProtonMail",
+      "Fastmail"
+    ],
+    "tut": [
+      "Deploying Mailcow on a VPS with Docker"
+    ]
+  },
+  {
+    "id": 61,
+    "n": "TrueNAS CORE",
+    "c": "Self-Hosting",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "BSD (free)",
+    "d": "FreeBSD-based NAS OS with ZFS \u2014 automated snapshots, RAIDZ, open-source CORE edition",
+    "pro": [
+      "ZFS (snapshots, checksums, RAIDZ)",
+      "web UI for management",
+      "open-source CORE edition"
+    ],
+    "con": [
+      "Requires dedicated hardware",
+      "steep ZFS learning curve",
+      "Scale edition is closed-source"
+    ],
+    "alt": [
+      "OpenMediaVault",
+      "Synology"
+    ],
+    "tut": [
+      "Setting up TrueNAS CORE with ZFS RAIDZ",
+      "Creating automated ZFS snapshots"
+    ]
+  },
+  {
+    "id": 62,
+    "n": "Grafana",
+    "c": "DevOps",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "AGPLv3 (free)",
+    "d": "Leading open-source visualization \u2014 connect to any data source, beautiful dashboards",
+    "pro": [
+      "Beautiful flexible dashboards",
+      "connects to Prometheus/InfluxDB/MySQL",
+      "alerting built-in"
+    ],
+    "con": [
+      "AGPLv3 license change in 2021",
+      "can be resource-heavy for small setups"
+    ],
+    "alt": [
+      "Kibana",
+      "Datadog"
+    ],
+    "tut": [
+      "Creating a network traffic dashboard",
+      "Collecting Pi-hole stats with Grafana"
+    ]
+  },
+  {
+    "id": 63,
+    "n": "Prometheus",
+    "c": "DevOps",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "Apache 2 (free)",
+    "d": "Leading open-source monitoring \u2014 scrapes time-series metrics with powerful PromQL",
+    "pro": [
+      "Cloud-native CNCF project",
+      "pull-based architecture",
+      "powerful PromQL query language"
+    ],
+    "con": [
+      "Local storage only (no built-in long-term)",
+      "PromQL learning curve"
+    ],
+    "alt": [
+      "InfluxDB",
+      "VictoriaMetrics"
+    ],
+    "tut": [
+      "Exporting system metrics with node_exporter",
+      "Custom alert rules in Prometheus"
+    ]
+  },
+  {
+    "id": 64,
+    "n": "Netdata",
+    "c": "DevOps",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Real-time monitoring with zero config \u2014 1-second resolution, lightweight web UI",
+    "pro": [
+      "Zero configuration",
+      "real-time metrics at 1-second resolution",
+      "low overhead"
+    ],
+    "con": [
+      "Less historical data than Prometheus",
+      "cloud features require account"
+    ],
+    "alt": [
+      "Prometheus",
+      "Zabbix"
+    ],
+    "tut": [
+      "Installing Netdata on a Pi alongside Pi-hole"
+    ]
+  },
+  {
+    "id": 65,
+    "n": "Docker / Podman",
+    "c": "DevOps",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "Apache 2 / MIT (free)",
+    "d": "Container platforms \u2014 Docker is standard, Podman is rootless daemonless alternative",
+    "pro": [
+      "Reproducible deployments",
+      "huge image ecosystem",
+      "Compose files for multi-service stacks"
+    ],
+    "con": [
+      "Docker has some telemetry",
+      "Podman adoption still growing"
+    ],
+    "alt": [
+      "LXC",
+      "containerd"
+    ],
+    "tut": [
+      "Getting started with Docker Compose",
+      "Migrating Docker stacks to Podman"
+    ]
+  },
+  {
+    "id": 66,
+    "n": "Portainer",
+    "c": "DevOps",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "MIT CE (free)",
+    "d": "Web GUI for managing Docker containers \u2014 makes self-hosting much easier for beginners",
+    "pro": [
+      "Easy container management",
+      "stack deployment with Compose",
+      "beginner-friendly"
+    ],
+    "con": [
+      "Some features in paid Business edition",
+      "can become a crutch vs learning Docker CLI"
+    ],
+    "alt": [
+      "Docker CLI",
+      "Yacht"
+    ],
+    "tut": [
+      "Managing Docker stacks with Portainer",
+      "Deploying your first container via GUI"
+    ]
+  },
+  {
+    "id": 67,
+    "n": "Ansible",
+    "c": "DevOps",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Agentless IT automation using YAML playbooks \u2014 configure and deploy servers at scale",
+    "pro": [
+      "Simple YAML playbooks",
+      "agentless (SSH only)",
+      "idempotent runs"
+    ],
+    "con": [
+      "Python dependency on control node",
+      "slow for large inventories"
+    ],
+    "alt": [
+      "Puppet",
+      "Salt"
+    ],
+    "tut": [
+      "Automating package updates with Ansible",
+      "Deploying Docker stacks via playbook"
+    ]
+  },
+  {
+    "id": 68,
+    "n": "Node-RED",
+    "c": "DevOps",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "Apache 2 (free)",
+    "d": "Visual flow-based automation \u2014 connect MQTT, APIs, IoT sensors with drag-and-drop",
+    "pro": [
+      "Visual node interface (no code required)",
+      "runs on Pi",
+      "large library of contributed nodes"
+    ],
+    "con": [
+      "Can be heavy for large flows",
+      "debugging complex flows is tricky"
+    ],
+    "alt": [
+      "Home Assistant automations",
+      "n8n"
+    ],
+    "tut": [
+      "Connecting MQTT sensors with Node-RED",
+      "Alert notifications from sensor data"
+    ]
+  },
+  {
+    "id": 69,
+    "n": "Caddy",
+    "c": "DevOps",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "Apache 2 (free)",
+    "d": "Modern web server with automatic HTTPS via Let's Encrypt \u2014 simple Caddyfile config",
+    "pro": [
+      "Automatic TLS certificate management",
+      "simple Caddyfile",
+      "good reverse proxy"
+    ],
+    "con": [
+      "Smaller community than Nginx",
+      "Go-based overhead"
+    ],
+    "alt": [
+      "Nginx",
+      "Traefik"
+    ],
+    "tut": [
+      "Caddy as a reverse proxy for your apps",
+      "Configuring Caddyfile for subdomains"
+    ]
+  },
+  {
+    "id": 70,
+    "n": "Nginx",
+    "c": "DevOps",
+    "r": 4,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "BSD (free)",
+    "d": "High-performance web server and reverse proxy \u2014 industry standard, massive documentation",
+    "pro": [
+      "Extremely performant",
+      "excellent reverse proxy features",
+      "massive community"
+    ],
+    "con": [
+      "Config syntax not beginner-friendly",
+      "less ergonomic HTTPS auto-setup than Caddy"
+    ],
+    "alt": [
+      "Caddy",
+      "Apache"
+    ],
+    "tut": [
+      "Nginx reverse proxy setup",
+      "HTTPS with Certbot and Nginx"
+    ]
+  },
+  {
+    "id": 71,
+    "n": "OpenWrt",
+    "c": "Networking",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "GPL (free)",
+    "d": "Custom Linux firmware for consumer routers \u2014 WireGuard, QoS, VLAN, custom firewall",
+    "pro": [
+      "Highly customizable Linux firmware",
+      "large package repo",
+      "WireGuard/VLAN/QoS built-in"
+    ],
+    "con": [
+      "Requires compatible router",
+      "CLI comfort needed"
+    ],
+    "alt": [
+      "Default firmware",
+      "OPNsense"
+    ],
+    "tut": [
+      "Flashing OpenWrt on a supported router",
+      "Setting up VLANs in LuCI"
+    ]
+  },
+  {
+    "id": 72,
+    "n": "OPNsense",
+    "c": "Networking",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "BSD 2-clause (free)",
+    "d": "Open-source feature-rich firewall \u2014 BSD hardened with built-in IDS/IPS (Suricata)",
+    "pro": [
+      "Rich firewall features",
+      "built-in Suricata IDS/IPS",
+      "easy update system",
+      "BSD hardened"
+    ],
+    "con": [
+      "Requires dedicated x86 hardware",
+      "learning curve for advanced features"
+    ],
+    "alt": [
+      "pfSense"
+    ],
+    "tut": [
+      "Deploying OPNsense with VLANs",
+      "Configuring WireGuard on OPNsense"
+    ]
+  },
+  {
+    "id": 73,
+    "n": "pfSense",
+    "c": "Networking",
+    "r": 3,
+    "fav": false,
+    "oss": false,
+    "sh": true,
+    "pi": false,
+    "lic": "Open-core (FreeBSD base)",
+    "d": "Mature firewall OS \u2014 but commercial entity moving toward closed-source; prefer OPNsense",
+    "pro": [
+      "Mature",
+      "many features",
+      "VPN/IDS/DNS integration",
+      "large community"
+    ],
+    "con": [
+      "Core becoming closed-source",
+      "Netgate controls direction",
+      "prefer OPNsense for privacy"
+    ],
+    "alt": [
+      "OPNsense"
+    ],
+    "tut": [
+      "Basic firewall rules in pfSense",
+      "Port forwarding setup"
+    ]
+  },
+  {
+    "id": 74,
+    "n": "PiVPN",
+    "c": "Networking",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "MIT (free)",
+    "d": "Simple installer for WireGuard or OpenVPN on a Raspberry Pi \u2014 guided, QR codes",
+    "pro": [
+      "One-script guided setup",
+      "WireGuard and OpenVPN support",
+      "QR code client config generation"
+    ],
+    "con": [
+      "Basic vs full router setups",
+      "requires port forwarding on your router"
+    ],
+    "alt": [
+      "Manual WireGuard setup"
+    ],
+    "tut": [
+      "PiVPN setup with WireGuard",
+      "Generating client configs with QR codes"
+    ]
+  },
+  {
+    "id": 75,
+    "n": "ESPHome",
+    "c": "Networking",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": false,
+    "lic": "MIT (free)",
+    "d": "Firmware for ESP8266/ESP32 \u2014 YAML-defined DIY IoT sensors with Home Assistant integration",
+    "pro": [
+      "YAML config (no C++ needed)",
+      "seamless Home Assistant integration",
+      "large community"
+    ],
+    "con": [
+      "Requires ESP microcontroller hardware",
+      "YAML errors can be cryptic"
+    ],
+    "alt": [
+      "Tasmota",
+      "Arduino"
+    ],
+    "tut": [
+      "Building a temperature sensor with ESPHome",
+      "Flashing ESPHome to a Shelly device"
+    ]
+  },
+  {
+    "id": 76,
+    "n": "Ntopng",
+    "c": "Networking",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": true,
+    "pi": true,
+    "lic": "GPL (free) / Pro paid",
+    "d": "Network traffic analysis \u2014 visualize flows, detect anomalies, identify bandwidth hogs",
+    "pro": [
+      "Real-time traffic visualization",
+      "protocol breakdown",
+      "web UI included"
+    ],
+    "con": [
+      "Pro features require paid license",
+      "resource-heavy on large networks"
+    ],
+    "alt": [
+      "Wireshark",
+      "Zeek"
+    ],
+    "tut": [
+      "Setting up Ntopng for home network monitoring"
+    ]
+  },
+  {
+    "id": 77,
+    "n": "Restic",
+    "c": "Backup",
+    "r": 5,
+    "fav": true,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "BSD (free)",
+    "d": "Fast encrypted deduplicated backups \u2014 single binary, AES-256 default, many backends",
+    "pro": [
+      "Single binary",
+      "AES-256 encryption by default",
+      "deduplication",
+      "supports S3/B2/SFTP/local"
+    ],
+    "con": [
+      "CLI only",
+      "initial full backup can be slow on large datasets"
+    ],
+    "alt": [
+      "BorgBackup",
+      "Kopia"
+    ],
+    "tut": [
+      "Incremental backups to S3 with Restic",
+      "Verifying backup integrity"
+    ]
+  },
+  {
+    "id": 78,
+    "n": "BorgBackup",
+    "c": "Backup",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "BSD (free)",
+    "d": "Deduplicating archiver with compression and encryption \u2014 battle-tested, FUSE mount",
+    "pro": [
+      "Very space-efficient deduplication",
+      "battle-tested",
+      "FUSE mount to browse archives"
+    ],
+    "con": [
+      "No GUI",
+      "no built-in scheduler",
+      "no native S3 support"
+    ],
+    "alt": [
+      "Restic",
+      "Kopia"
+    ],
+    "tut": [
+      "Backing up home directory with Borg",
+      "Scheduling Borg with cron and systemd"
+    ]
+  },
+  {
+    "id": 79,
+    "n": "Kopia",
+    "c": "Backup",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "Apache 2 (free)",
+    "d": "Modern encrypted backup with GUI and CLI \u2014 S3, B2, Google Drive, OneDrive support",
+    "pro": [
+      "Modern UI (CLI and GUI)",
+      "cross-platform",
+      "good cloud backend support"
+    ],
+    "con": [
+      "Newer, smaller community",
+      "some rough edges in GUI"
+    ],
+    "alt": [
+      "Restic",
+      "BorgBackup"
+    ],
+    "tut": [
+      "Using Kopia to back up to Backblaze B2"
+    ]
+  },
+  {
+    "id": 80,
+    "n": "Duplicati",
+    "c": "Backup",
+    "r": 2,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "AGPL (free)",
+    "d": "Block-level encrypted backup with web UI \u2014 versioning, scheduling, cloud support",
+    "pro": [
+      "Web GUI",
+      "versioning and scheduling built-in",
+      "supports OneDrive/S3/etc"
+    ],
+    "con": [
+      "Past instability",
+      ".NET/Mono dependency",
+      "Restic preferred for most"
+    ],
+    "alt": [
+      "Restic",
+      "BorgBackup"
+    ],
+    "tut": [
+      "Encrypting cloud backup to OneDrive with Duplicati"
+    ]
+  },
+  {
+    "id": 81,
+    "n": "Rsync",
+    "c": "Backup",
+    "r": 5,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "Classic file sync and incremental backup \u2014 foundation of most Linux backup scripts",
+    "pro": [
+      "Built into every Linux system",
+      "extremely efficient delta transfer",
+      "battle-proven",
+      "scriptable"
+    ],
+    "con": [
+      "No built-in encryption (use with SSH)",
+      "manual scheduling",
+      "no deduplication"
+    ],
+    "alt": [
+      "Restic",
+      "Syncthing"
+    ],
+    "tut": [
+      "Incremental backup with rsync and hard links",
+      "Automated rsync backup script"
+    ]
+  },
+  {
+    "id": 82,
+    "n": "Timeshift",
+    "c": "Backup",
+    "r": 3,
+    "fav": false,
+    "oss": true,
+    "sh": false,
+    "pi": true,
+    "lic": "GPL (free)",
+    "d": "System snapshot tool for Linux \u2014 rsync or BTRFS, like macOS Time Machine for Linux",
+    "pro": [
+      "Easy system restore points",
+      "BTRFS subvolume support",
+      "good GUI",
+      "scheduled snapshots"
+    ],
+    "con": [
+      "System snapshots only \u2014 not a file backup solution",
+      "Ubuntu/Mint focused"
+    ],
+    "alt": [
+      "BorgBackup",
+      "Restic"
+    ],
+    "tut": [
+      "Setting up automatic system snapshots with Timeshift"
+    ]
+  }
+]
