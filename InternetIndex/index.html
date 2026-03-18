@@ -1156,3 +1156,126 @@ init();
 </script>
 </body>
 </html>
+
+<script>
+(function () {
+  // check if user dismissed it before
+  if (localStorage.getItem("hideDiscordNotif") === "true") return;
+
+  // create container
+  const box = document.createElement("div");
+  box.innerHTML = `
+    <div id="discord-notif">
+      <div class="notif-content">
+        <span class="icon">💬</span>
+        <div class="text">
+          <strong>Discord is LIVE</strong><br>
+          come hang out with us 👀
+        </div>
+      </div>
+      <div class="actions">
+        <a href="https://discord.gg/YOURINVITE" target="_blank">Join</a>
+        <button id="closeNotif">✕</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(box);
+
+  const notif = document.getElementById("discord-notif");
+  const closeBtn = document.getElementById("closeNotif");
+
+  // styles
+  const style = document.createElement("style");
+  style.innerHTML = `
+    #discord-notif {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 260px;
+      background: linear-gradient(135deg, #5865F2, #404EED);
+      color: white;
+      padding: 14px;
+      border-radius: 14px;
+      font-family: Arial, sans-serif;
+      box-shadow: 0 0 20px rgba(88,101,242,0.6);
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+      transition: all 0.4s ease;
+      z-index: 9999;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 10px rgba(88,101,242,0.4); }
+      50% { box-shadow: 0 0 25px rgba(88,101,242,0.9); }
+      100% { box-shadow: 0 0 10px rgba(88,101,242,0.4); }
+    }
+
+    #discord-notif.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .notif-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .icon {
+      font-size: 20px;
+    }
+
+    .text {
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .actions {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .actions a {
+      background: white;
+      color: #5865F2;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .actions a:hover {
+      transform: scale(1.05);
+    }
+
+    .actions button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .actions button:hover {
+      opacity: 1;
+    }
+  `;
+  document.head.appendChild(style);
+
+  // show animation
+  setTimeout(() => {
+    notif.classList.add("show");
+  }, 100);
+
+  // close button logic (permanent)
+  closeBtn.addEventListener("click", () => {
+    localStorage.setItem("hideDiscordNotif", "true");
+    notif.remove();
+  });
+})();
+</script>
