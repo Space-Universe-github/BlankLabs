@@ -14,5 +14,61 @@
     "images": ["pictures/mountains.jpg"],
     "tags": ["photography", "travel", "family", "nature", "ocean"],
     "date": "2026-02-06"
+  },
+  {
+    "id": "proj003",
+    "title": "Shark Tank",
+    "description": "A chaotic bin full of BLÅHAJ plushies at IKEA. There’s something hilarious about seeing a mountain of soft sharks just piled up in a wire cage. It’s hard to walk past without wanting to jump in.",
+    "images": ["pictures/20240512_110913.jpg"],
+    "tags": ["photography", "retail", "fun", "lifestyle"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj004",
+    "title": "Artistic Assembly",
+    "description": "A wall of wooden artist mannequins posed in different ways. Some are waving, others are dancing, and they have colorful dots and hats. It's like a tiny wooden crowd all trying to get your attention at once.",
+    "images": ["pictures/20240512_115725.jpg"],
+    "tags": ["photography", "art", "retail", "creative"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj005",
+    "title": "Soaring High",
+    "description": "A striking bronze eagle statue captured against a clear blue sky, with the American flag waving proudly in the background. The lighting hits the wings perfectly, giving it a very bold and patriotic feel.",
+    "images": ["pictures/20241013_174817.jpg"],
+    "tags": ["photography", "monument", "patriotic", "outdoors"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj006",
+    "title": "The Breakfast Bowl",
+    "description": "A hearty morning meal featuring scrambled eggs over golden tater tots, drizzled with a creamy sauce and topped with fresh green onions. Complete with orange juice and coffee in the background—the ultimate fuel for a busy day.",
+    "images": ["pictures/20241103_094702.jpg"],
+    "tags": ["photography", "food", "breakfast", "lifestyle"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj007",
+    "title": "Golden Hour Diner",
+    "description": "An empty fast-food dining area bathed in the warm, long shadows of the late afternoon sun. The repeated patterns of the tables and red benches create a quiet, almost lonely urban atmosphere as the day winds down.",
+    "images": ["pictures/20250406_174703.jpg"],
+    "tags": ["photography", "urban", "lighting", "minimalism"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj008",
+    "title": "Brick and Blue",
+    "description": "A tall, historic brick building with a classic fire escape stands out against a brilliant blue sky. The 'PED XING' sign and traffic lights in the foreground ground the shot in a bustling city environment.",
+    "images": ["pictures/20250407_123550.jpg"],
+    "tags": ["photography", "urban", "architecture", "cityscape"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj009",
+    "title": "Macro Visitor",
+    "description": "A close-up of a bright orange ladybug climbing a vibrant green, textured leaf. The sunlight highlights the intricate ridges of the plant, making the small beetle pop against the natural background.",
+    "images": ["pictures/20250507_165820.jpg"],
+    "tags": ["photography", "nature", "macro", "wildlife"],
+    "date": "2026-03-24"
   }
 ]
