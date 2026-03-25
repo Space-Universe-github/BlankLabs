@@ -70,5 +70,85 @@
     "images": ["pictures/20250507_165820.jpg"],
     "tags": ["photography", "nature", "macro", "wildlife"],
     "date": "2026-03-24"
+  },
+  {
+    "id": "proj010",
+    "title": "Flight of the Bumblebee",
+    "description": "A vibrant purple foxglove plant in full bloom, with a honeybee perfectly frozen in mid-air as it approaches the flowers. The nursery background provides a lush, colorful bokeh that makes the main stalk stand out.",
+    "images": ["pictures/PXL_20250517_220543446.RAW-01.COVER.jpg"],
+    "tags": ["photography", "nature", "garden", "wildlife", "action"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj011",
+    "title": "Deep Purple Blooms",
+    "description": "A close-up of dense, deep purple flower spikes surrounded by bright green foliage. The field of flowers in the background creates a beautiful soft-focus effect, emphasizing the rich texture and color of the central plant.",
+    "images": ["pictures/PXL_20250517_221216111.RAW-01.COVER.jpg"],
+    "tags": ["photography", "nature", "floral", "botanical"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj012",
+    "title": "Electric Lead",
+    "description": "A creative table lamp shaped like a giant pencil, glowing with a bright, cool blue light. The sleek design and vibrant color make it a standout piece of modern decor.",
+    "images": ["pictures/PXL_20250614_194639285.PORTRAIT.jpg"],
+    "tags": ["photography", "lighting", "decor", "creative"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj013",
+    "title": "The Golden Source",
+    "description": "Jars of fresh, golden honey stacked at a market. A few honeybees are caught clinging to the bright red lid of the front jar, clearly tempted by the sweetness inside.",
+    "images": ["pictures/PXL_20250726_192608061.RAW-01.COVER.jpg"],
+    "tags": ["photography", "nature", "market", "wildlife"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj014",
+    "title": "Skyward Celebration",
+    "description": "Multiple rows of colorful 'papel picado' banners stretched across a bright blue sky. The sunlight filters through the intricate cut-out patterns of the flags, creating a festive and airy vibe.",
+    "images": ["pictures/PXL_20250726_194524736.RAW-01.COVER.jpg"],
+    "tags": ["photography", "culture", "festive", "outdoors"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj015",
+    "title": "Sugar Rush",
+    "description": "A sprawling outdoor market display featuring dozens of bins filled with colorful gummy candies, dried fruits, and spice-covered treats. From sour belts to chili-coated morsels, it’s a vibrant feast for the eyes.",
+    "images": ["pictures/PXL_20250823_180024820.RAW-01.COVER.jpg"],
+    "tags": ["photography", "food", "market", "vibrant"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj016",
+    "title": "Road Ready",
+    "description": "A white and black motorcycle parked on a dirt lot with mountains in the background. The crisp, modern look of the bike stands out against the rugged outdoor setting.",
+    "images": ["pictures/PXL_20250823_221826019.RAW-01.COVER.jpg"],
+    "tags": ["photography", "travel", "motorcycle", "outdoors"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj017",
+    "title": "Villa Horizon",
+    "description": "A peaceful view of modern white villas with red-tiled roofs spread across a hillside. In the distance, rolling mountains are partially obscured by a soft, low-hanging mist.",
+    "images": ["pictures/PXL_20250824_151102713.RAW-01.COVER.jpg"],
+    "tags": ["photography", "travel", "architecture", "landscape"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj018",
+    "title": "Retail Echoes",
+    "description": "The exterior of a Sears department store in a quiet mall corridor. The gate is closed, and the empty, tiled walkway creates a sense of nostalgia for a changing retail landscape.",
+    "images": ["pictures/PXL_20251008_192311677.RAW-01.COVER.jpg"],
+    "tags": ["photography", "urban", "retail", "nostalgia"],
+    "date": "2026-03-24"
+  },
+  {
+    "id": "proj019",
+    "title": "Clear Directives",
+    "description": "A speed limit sign and street sweeping notice stacked together against a vibrant blue sky filled with fluffy white clouds. The crisp metal edges contrast beautifully with the soft textures of the sky.",
+    "images": ["pictures/PXL_20251015_190322948.RAW-01.COVER.jpg"],
+    "tags": ["photography", "urban", "minimalism", "outdoors"],
+    "date": "2026-03-24"
   }
 ]
