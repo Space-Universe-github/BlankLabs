@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="description" content="blanklabs portfolio">
 <title>blanklabs — portfolio</title>
+<script>
+(() => {
+  try {
+    const theme = localStorage.getItem('bl-t') || 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.style.colorScheme = theme;
+  } catch (e) {}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -773,12 +782,13 @@ if (isTouch){
   }, {passive:true});
 }
 
-let theme = localStorage.getItem('bl-theme') || 'dark';
+let theme = localStorage.getItem('bl-t') || 'dark';
 function applyTheme(next){
   theme = next;
   document.documentElement.setAttribute('data-theme', theme);
+  document.documentElement.style.colorScheme = theme;
   document.getElementById('theme-label').textContent = theme;
-  localStorage.setItem('bl-theme', theme);
+  localStorage.setItem('bl-t', theme);
 }
 applyTheme(theme);
 document.getElementById('thm').addEventListener('click', () => {
@@ -974,7 +984,8 @@ function navigateTo(url, techy){
   const overlay = document.getElementById('pt');
   const wipe = document.getElementById('pt-wipe');
   const lbl = document.getElementById('pt-lbl');
-  wipe.style.background = techy ? '#05050a' : 'var(--bg)';
+  const dark = document.documentElement.getAttribute('data-theme') !== 'light';
+  wipe.style.background = techy ? '#05050a' : (dark ? 'var(--bg)' : 'var(--bg)');
   lbl.textContent = techy ? 'initializing' : 'loading';
   overlay.classList.add('go');
   overlay.style.pointerEvents = 'all';
