@@ -118,39 +118,28 @@ body.touch-device #cursor{display:none}
 .corner.br{bottom:1.25rem;right:1.25rem;border-width:0 1px 1px 0}
 @media(max-width:480px){.corner{display:none}}
 
-#pt{
-  position:fixed;inset:0;z-index:9500;pointer-events:none;
-  display:flex;align-items:center;justify-content:center;
-  opacity:0;
-}
-#pt.go{opacity:1;pointer-events:all}
+#pt{position:fixed;inset:0;z-index:9000;pointer-events:none;display:flex;align-items:center;justify-content:center}
 #pt-wipe{
   position:absolute;inset:0;background:var(--bg);
-  transform:translateY(100%);
+  transform:scaleY(0);transform-origin:bottom;
+  transition:transform .55s cubic-bezier(.76,0,.24,1);
 }
-#pt.go #pt-wipe{animation:wipe .72s cubic-bezier(.76,0,.24,1) forwards}
+#pt.go #pt-wipe{transform:scaleY(1)}
 #pt-content{
   position:relative;z-index:1;
-  display:flex;flex-direction:column;align-items:center;gap:.5rem;
+  display:flex;flex-direction:column;align-items:center;gap:.75rem;
+  opacity:0;transform:translateY(6px);
+  transition:opacity .3s .2s,transform .3s .2s;
 }
-#pt-face{
-  font-size:1.75rem;font-weight:300;color:var(--txt);
-}
-#pt-lbl{
-  font-family:var(--mono);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--txt3);
-  opacity:0;transform:translateY(10px);
-}
-#pt.go #pt-lbl{animation:ptLabel .58s var(--ease) .08s forwards}
-#pt-bar{
-  width:120px;height:1px;background:var(--bdr);overflow:hidden;margin-top:.1rem;
-}
+#pt.go #pt-content{opacity:1;transform:translateY(0)}
+#pt-face{font-size:1.75rem;font-weight:300;color:var(--txt)}
+#pt-lbl{font-size:.6rem;letter-spacing:.22em;text-transform:uppercase;color:var(--txt3);font-family:var(--mono)}
+#pt-bar{width:80px;height:1px;background:var(--bdr);overflow:hidden;margin-top:.25rem}
 #pt-bar-fill{
-  width:100%;height:100%;background:var(--txt3);transform:scaleX(0);transform-origin:left;
+  height:100%;background:var(--txt3);width:0%;
+  transition:width .6s var(--ease) .3s;
 }
-#pt.go #pt-bar-fill{animation:ptFill .68s var(--ease) .1s forwards}
-@keyframes wipe{0%{transform:translateY(100%)}45%{transform:translateY(0)}100%{transform:translateY(-100%)}}
-@keyframes ptLabel{to{opacity:1;transform:none}}
-@keyframes ptFill{to{transform:scaleX(1)}}
+#pt.go #pt-bar-fill{width:100%}
 
 #toast-wrap{
   position:fixed;right:1rem;bottom:1rem;z-index:8000;
@@ -984,8 +973,7 @@ function navigateTo(url, techy){
   const overlay = document.getElementById('pt');
   const wipe = document.getElementById('pt-wipe');
   const lbl = document.getElementById('pt-lbl');
-  const dark = document.documentElement.getAttribute('data-theme') !== 'light';
-  wipe.style.background = techy ? '#05050a' : (dark ? 'var(--bg)' : 'var(--bg)');
+  wipe.style.background = techy ? '#05050a' : 'var(--bg)';
   lbl.textContent = techy ? 'initializing' : 'loading';
   overlay.classList.add('go');
   overlay.style.pointerEvents = 'all';
