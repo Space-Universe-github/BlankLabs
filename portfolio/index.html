@@ -219,7 +219,7 @@ function renderGrid(data) {
 }
 
 // Reach out to parent directory for JSON
-fetch('../Portfolio.json')
+fetch('../portfolio.json')
   .then(res => res.json())
   .then(data => renderGrid(data))
   .catch(err => console.error("Data Load Fail:", err));
