@@ -3,113 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>blanklabs — gallery</title>
+<title>blanklabs — portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Serif+Display&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600&family=DM+Serif+Display&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+/* ═══════════════════════════════════════════════════════════
+   DESIGN TOKENS (Synced with index.html)
+═══════════════════════════════════════════════════════════ */
 :root {
-  --bg: #0c0c0f; --bg2: #101013; --surface: #16161a;
-  --bdr: rgba(255,255,255,.06); --bdr2: rgba(255,255,255,.12);
-  --txt: #eae6dd; --txt2: rgba(234,230,221,.5); --txt3: rgba(234,230,221,.2);
+  --bg: #0c0c0f; --bg2: #101013; --bg3: #141418; --surface: #18181d; --surface2: #1e1e24;
+  --bdr: rgba(255,255,255,.07); --bdr2: rgba(255,255,255,.13); --bdr3: rgba(255,255,255,.2);
+  --txt: #eae6dd; --txt2: rgba(234,230,221,.48); --txt3: rgba(234,230,221,.22);
   --accent: #c8b48c;
   --sans: 'DM Sans', sans-serif; --serif: 'DM Serif Display', serif; --mono: 'JetBrains Mono', monospace;
-  --ease: cubic-bezier(.23, 1, .32, 1);
+  --ease: cubic-bezier(.4,0,.2,1); --spring: cubic-bezier(.34,1.56,.64,1);
 }
 [data-theme="light"] {
-  --bg: #f4f1ec; --bg2: #ece8e1; --surface: #e4e0d8;
-  --bdr: rgba(0,0,0,.06); --bdr2: rgba(0,0,0,.12);
-  --txt: #1c1916; --txt2: rgba(28,25,22,.6); --txt3: rgba(28,25,22,.3);
+  --bg: #f4f1ec; --bg2: #ece8e1; --bg3: #e3dfd7; --surface: #dbd6cc; --surface2: #d3cdc2;
+  --bdr: rgba(0,0,0,.07); --bdr2: rgba(0,0,0,.13); --bdr3: rgba(0,0,0,.22);
+  --txt: #1c1916; --txt2: rgba(28,25,22,.48); --txt3: rgba(28,25,22,.3);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 body { 
     background: var(--bg); color: var(--txt); font-family: var(--sans); 
-    overflow-x: hidden; min-height: 100vh; line-height: 1.5;
+    min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column;
+    transition: background .45s var(--ease); -webkit-font-smoothing: antialiased;
 }
 
-/* ══════════════════════════════════════
-   OPTIMIZED BACKGROUND
-══════════════════════════════════════ */
-#bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
-#glow { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(200,180,140,0.04) 0%, transparent 50%); }
+/* ═══════════════════════════════════════════════════════════
+   UI & OPTIMIZATION
+═══════════════════════════════════════════════════════════ */
+#bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; }
+#glow { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(600px at var(--mx,50%) var(--my,50%), rgba(200,180,140,0.04) 0%, transparent 70%); }
 
-/* ══════════════════════════════════════
-   NAVIGATION
-══════════════════════════════════════ */
 nav { position: relative; z-index: 100; display: flex; justify-content: space-between; padding: 1.5rem 2rem; align-items: center; }
-.logo { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--txt3); text-decoration: none; }
-#thm { width: 30px; height: 15px; border-radius: 10px; background: var(--surface); border: 1px solid var(--bdr2); cursor: pointer; position: relative; }
-#thm::after { content: ''; position: absolute; top: 2px; left: 2px; width: 9px; height: 9px; border-radius: 50%; background: var(--txt2); transition: 0.3s var(--ease); }
-[data-theme="light"] #thm::after { left: 17px; background: var(--txt); }
+.back-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--txt3); text-decoration: none; transition: .3s; }
+.back-home:hover { color: var(--txt); }
 
-/* ══════════════════════════════════════
-   HEADER & FILTERS
-══════════════════════════════════════ */
-header { position: relative; z-index: 10; padding: 4rem 2rem 2rem; text-align: center; }
-h1 { font-family: var(--serif); font-size: clamp(2.5rem, 8vw, 4rem); font-weight: 400; margin-bottom: 0.5rem; }
-.sub { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--txt3); }
+header { position: relative; z-index: 10; padding: 4rem 1.5rem 2rem; text-align: center; }
+#kaomoji { font-size: 1.8rem; font-weight: 300; display: block; margin-bottom: 0.5rem; animation: float 6s ease-in-out infinite; }
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+h1 { font-family: var(--serif); font-size: clamp(2.5rem, 7vw, 4rem); font-weight: 400; margin-bottom: 1rem; }
 
-.filter-wrap { display: flex; justify-content: center; gap: 2rem; margin: 3rem 0; position: relative; z-index: 20; }
-.filter-btn { 
+.filter-wrap { display: flex; justify-content: center; gap: 1.5rem; margin: 2rem 0 3rem; }
+.f-btn { 
     background: none; border: none; color: var(--txt3); font-family: var(--mono); 
-    font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; 
-    transition: color 0.3s; padding-bottom: 4px; border-bottom: 1px solid transparent;
+    font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
+    padding-bottom: 4px; border-bottom: 1px solid transparent; transition: .3s;
 }
-.filter-btn.active { color: var(--txt); border-color: var(--accent); }
+.f-btn.active { color: var(--txt); border-color: var(--accent); }
 
-/* ══════════════════════════════════════
-   THE "COOL PARTED" MASONRY GRID
-══════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   MASONRY GALLERY (THE "COOL PARTED" LOOK)
+═══════════════════════════════════════════════════════════ */
 .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem 5rem; position: relative; z-index: 10; }
 #gallery { 
-    columns: 3 300px; column-gap: 1.5rem; width: 100%; 
-    transition: opacity 0.5s var(--ease);
+    columns: 3 320px; column-gap: 1.5rem; width: 100%; 
+    transition: opacity 0.4s var(--ease);
 }
 
 .item { 
     break-inside: avoid; margin-bottom: 1.5rem; position: relative; 
     background: var(--surface); border: 1px solid var(--bdr);
-    overflow: hidden; cursor: zoom-in; transition: transform 0.4s var(--ease);
+    overflow: hidden; cursor: zoom-in; transition: transform 0.4s var(--spring);
+    animation: fadeIn 0.8s var(--ease) both;
 }
-.item:hover { transform: translateY(-5px); border-color: var(--bdr2); }
-.item img { 
-    width: 100%; height: auto; display: block; filter: grayscale(20%); 
-    transition: filter 0.5s, transform 0.8s var(--ease); 
-}
-.item:hover img { filter: grayscale(0%); transform: scale(1.05); }
+.item:hover { transform: translateY(-8px) scale(1.01); border-color: var(--bdr3); }
+.item img { width: 100%; height: auto; display: block; transition: 0.8s var(--ease); }
+.item:hover img { transform: scale(1.05); }
 
-.item-info { 
-    padding: 1rem; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); 
-    position: absolute; bottom: 0; left: 0; right: 0; opacity: 0; transition: 0.3s;
+.item-overlay { 
+    position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,12,15,0.8) 0%, transparent 50%);
+    display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem;
+    opacity: 0; transition: opacity 0.3s;
 }
-.item:hover .item-info { opacity: 1; }
-.item-title { font-size: 0.8rem; font-weight: 500; }
-.item-tags { font-family: var(--mono); font-size: 0.55rem; color: var(--accent); margin-top: 0.2rem; }
+.item:hover .item-overlay { opacity: 1; }
+.item-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.3rem; }
+.item-meta { font-family: var(--mono); font-size: 0.55rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
 
-/* ══════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    LIGHTBOX
-══════════════════════════════════════ */
+═══════════════════════════════════════════════════════════ */
 #lightbox { 
     position: fixed; inset: 0; z-index: 2000; background: rgba(12,12,15,0.98); 
-    backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(15px); display: none; align-items: center; justify-content: center;
     cursor: zoom-out; opacity: 0; transition: opacity 0.4s;
 }
 #lightbox.open { display: flex; opacity: 1; }
-#lightbox img { max-width: 90%; max-height: 85vh; object-fit: contain; box-shadow: 0 30px 60px rgba(0,0,0,0.5); }
-.lb-close { position: absolute; top: 2rem; right: 2rem; font-family: var(--mono); color: var(--txt2); font-size: 0.7rem; }
+#lightbox img { max-width: 90%; max-height: 85vh; object-fit: contain; box-shadow: 0 40px 100px rgba(0,0,0,0.6); }
 
-/* ══════════════════════════════════════
-   MOBILE OPTIMIZATION
-══════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   MOBILE ADJUSTMENTS
+═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
     #gallery { columns: 2; column-gap: 1rem; }
     .item { margin-bottom: 1rem; }
-    header { padding: 3rem 1.5rem 1rem; }
-    .filter-wrap { gap: 1rem; }
+    header { padding: 3rem 1rem 1rem; }
+    #kaomoji { font-size: 1.4rem; }
 }
-
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.item { animation: fadeIn 0.6s var(--ease) forwards; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
 </style>
 </head>
 <body>
@@ -118,61 +111,63 @@ h1 { font-family: var(--serif); font-size: clamp(2.5rem, 8vw, 4rem); font-weight
 <div id="glow"></div>
 
 <nav>
-    <a href="../index.html" class="logo">← BLANKLABS</a>
-    <button id="thm" title="Toggle Theme"></button>
+    <a href="../index.html" class="back-home">← [back_home]</a>
 </nav>
 
 <header>
-    <div class="sub">Curated Archive</div>
+    <span id="kaomoji">[o_o]</span>
     <h1>Portfolio</h1>
     <div class="filter-wrap">
-        <button class="filter-btn active" data-filter="sneak">Photography</button>
-        <button class="filter-btn" data-filter="all">Full Archive</button>
-        <button class="filter-btn" onclick="window.location.href='#'">Writing</button>
+        <button class="f-btn active" data-filter="sneak">Photography</button>
+        <button class="f-btn" data-filter="all">Full Archive</button>
+        <button class="f-btn" onclick="alert('Writing archive coming soon...')">Writing</button>
     </div>
 </header>
 
 <div class="container">
-    <div id="gallery"></div>
+    <div id="gallery">
+        </div>
 </div>
 
 <div id="lightbox">
-    <span class="lb-close">CLOSE [ESC]</span>
-    <img src="" alt="Full view">
+    <img src="" alt="Zoomed view">
 </div>
 
 <script>
 (function() {
     'use strict';
 
-    let allData = [];
+    let portfolioData = [];
     const gallery = document.getElementById('gallery');
     const lightbox = document.getElementById('lightbox');
     const lbImg = lightbox.querySelector('img');
 
-    /* ══════════════════════════════════════
-       DATA FETCHING & RENDERING
-    ══════════════════════════════════════ */
-    async function init() {
+    /* ═══════════════════════════════════════════════
+       DATA LOGIC
+    ═══════════════════════════════════════════════ */
+    async function loadPortfolio() {
         try {
-            const response = await fetch('../Portfolio.json');
-            allData = await response.json();
-            render('sneak');
+            // Updated to uncap 'p' as requested
+            const response = await fetch('../portfolio.json');
+            if (!response.ok) throw new Error("JSON not found");
+            portfolioData = await response.json();
+            renderGallery('sneak');
         } catch (e) {
-            gallery.innerHTML = `<div style="grid-column:1/-1; color:var(--txt3); font-family:var(--mono); font-size:0.7rem;">[error_loading_json]</div>`;
+            gallery.innerHTML = `<div style="text-align:center; color:var(--txt3); font-family:var(--mono); font-size:0.7rem;">[error_loading_archive: ${e.message}]</div>`;
         }
     }
 
-    function render(mode) {
+    function renderGallery(mode) {
         gallery.style.opacity = '0';
+        
         setTimeout(() => {
-            const displayData = mode === 'sneak' ? allData.slice(0, 6) : allData;
-            gallery.innerHTML = displayData.map((item, i) => `
-                <div class="item" style="animation-delay: ${i * 0.05}s" onclick="openLB('../${item.images[0]}')">
-                    <img src="../${item.images[0]}" alt="${item.title}" loading="lazy">
-                    <div class="item-info">
+            const items = mode === 'sneak' ? portfolioData.slice(0, 6) : portfolioData;
+            gallery.innerHTML = items.map((item, idx) => `
+                <div class="item" style="animation-delay: ${idx * 0.05}s" onclick="zoom('../${item.images[0]}')">
+                    <img src="../${item.images[0]}" alt="${item.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Missing'">
+                    <div class="item-overlay">
                         <div class="item-title">${item.title}</div>
-                        <div class="item-tags">${item.tags.join(' / ')}</div>
+                        <div class="item-meta">${item.tags.join(' // ')}</div>
                     </div>
                 </div>
             `).join('');
@@ -180,20 +175,10 @@ h1 { font-family: var(--serif); font-size: clamp(2.5rem, 8vw, 4rem); font-weight
         }, 300);
     }
 
-    /* ══════════════════════════════════════
+    /* ═══════════════════════════════════════════════
        INTERACTIONS
-    ══════════════════════════════════════ */
-    // Filter Switching
-    document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            render(e.target.dataset.filter);
-        });
-    });
-
-    // Lightbox
-    window.openLB = (url) => {
+    ═══════════════════════════════════════════════ */
+    window.zoom = (url) => {
         lbImg.src = url;
         lightbox.classList.add('open');
         document.body.style.overflow = 'hidden';
@@ -204,58 +189,46 @@ h1 { font-family: var(--serif); font-size: clamp(2.5rem, 8vw, 4rem); font-weight
         document.body.style.overflow = 'auto';
     });
 
-    // Theme
-    const thmBtn = document.getElementById('thm');
-    let theme = localStorage.getItem('bl-t') || 'dark';
-    const apply = (t) => {
-        document.documentElement.setAttribute('data-theme', t);
-        localStorage.setItem('bl-t', t);
-        theme = t;
-    };
-    apply(theme);
-    thmBtn.addEventListener('click', () => apply(theme === 'dark' ? 'light' : 'dark'));
+    document.querySelectorAll('.f-btn[data-filter]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+            e.target.classList.add('active');
+            renderGallery(e.target.dataset.filter);
+        });
+    });
 
-    /* ══════════════════════════════════════
-       PERFORMANCE OPTIMIZED ENGINE
-    ══════════════════════════════════════ */
+    /* ═══════════════════════════════════════════════
+       PERFORMANCE OPTIMIZED BG
+    ═══════════════════════════════════════════════ */
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
-    const isMobile = window.innerWidth < 768;
-    let shapes = [];
+    const isLowPower = window.innerWidth < 768;
+    let points = [];
 
     function resize() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        initShapes();
-    }
-
-    function initShapes() {
-        shapes = [];
-        // Fewer shapes on mobile to save battery/reduce lag
-        const count = isMobile ? 8 : 20; 
-        for (let i = 0; i < count; i++) {
-            shapes.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                s: 10 + Math.random() * 40,
-                vx: (Math.random() - 0.5) * 0.2,
-                vy: (Math.random() - 0.5) * 0.2,
-                r: Math.random() * Math.PI
+        points = [];
+        const count = isLowPower ? 15 : 40;
+        for(let i=0; i<count; i++) {
+            points.push({
+                x: Math.random()*canvas.width,
+                y: Math.random()*canvas.height,
+                r: 1 + Math.random()*2,
+                vx: (Math.random()-0.5)*0.3,
+                vy: (Math.random()-0.5)*0.3
             });
         }
     }
 
     function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-        ctx.strokeStyle = dark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.04)';
-        
-        shapes.forEach(s => {
-            s.x += s.vx; s.y += s.vy;
-            if (s.x < 0 || s.x > canvas.width) s.vx *= -1;
-            if (s.y < 0 || s.y > canvas.height) s.vy *= -1;
-            
-            ctx.strokeRect(s.x, s.y, s.s, s.s);
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+        points.forEach(p => {
+            p.x += p.vx; p.y += p.vy;
+            if(p.x<0||p.x>canvas.width) p.vx*=-1;
+            if(p.y<0||p.y>canvas.height) p.vy*=-1;
+            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
         });
         requestAnimationFrame(draw);
     }
@@ -267,8 +240,8 @@ h1 { font-family: var(--serif); font-size: clamp(2.5rem, 8vw, 4rem); font-weight
     });
 
     resize();
-    if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches) draw();
-    init();
+    draw();
+    loadPortfolio();
 
 })();
 </script>
