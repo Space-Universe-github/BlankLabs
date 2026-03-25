@@ -1,45 +1,6 @@
 [
   {
     "id": "blog001",
-    "title": "So This Is a Blog Now",
-    "subtitle": "building in public, kind of",
-    "description": "An introduction, some context, and why this site exists",
-    "author": "BlankLabs",
-    "date": "2026-02-05",
-    "blocks": [
-      { "type": "text", "format": "paragraph", "content": "I've been sitting on the idea of making a real website for a while now. Not just a landing page or something that says under construction, but an actual place where I can put thoughts, projects, and progress. This is me finally committing to that." },
-      { "type": "text", "format": "paragraph", "content": "This blog is part experiment, part journal, and part archive. I like learning how things work behind the scenes, especially with tech and cybersecurity, and I wanted a space where I can document that without worrying about making everything perfect." },
-      { "type": "text", "format": "paragraph", "content": "A lot of what I do starts with curiosity. I'll see something online and think how does that actually work, and then I'll dig into it until I either understand it or accidentally break something. Most of the time it's both." },
-      { "type": "text", "format": "paragraph", "content": "BlankLabs is basically the result of that mindset. It's a place for experiments, half formed ideas, small wins, mistakes, and things I find interesting. Some posts might be technical, some more reflective, and some just me rambling about whatever I'm working on." },
-      { "type": "image", "src": "logo.png", "caption": "Starting simple" },
-      { "type": "text", "format": "paragraph", "content": "I'm also using this site as motivation to actually finish things. When projects only live on my computer, it's easy to abandon them. Putting them here makes them feel more real." },
-      { "type": "text", "format": "paragraph", "content": "This isn't meant to be polished or corporate. I want it to feel honest. If something doesn't work, I'll probably write about that too. Learning in public is uncomfortable, but it works." },
-      { "type": "text", "format": "paragraph", "content": "For now, this first post is just a marker. Proof that I started. Everything after this is progress, even if it's messy." }
-    ]
-  },
-  {
-    "id": "blog002",
-    "title": "Thinking About the Internet",
-    "subtitle": "and why everything feels worse now",
-    "description": "Some thoughts about modern tech, privacy, and how things feel online",
-    "author": "BlankLabs",
-    "date": "2026-02-05",
-    "blocks": [
-      { "type": "text", "format": "paragraph", "content": "I think about the internet a lot. Not in a nerd essay way, just in a why does everything suck now way. Everything wants a login. Everything wants a subscription. Even stuff that should just work. Doorbells, cameras, weather alerts. Basic things feel locked behind vibes and terms of service." },
-      { "type": "text", "format": "paragraph", "content": "I mess with websites constantly. Half of it is fixing tiny stuff that probably only I notice." },
-      { "type": "text", "format": "paragraph", "content": "My room is cozy in a very specific way. Warm orange light, darker wood, random tech everywhere. It looks calm, but it's definitely the setup of someone with like six unfinished ideas open at once." },
-      { "type": "text", "format": "paragraph", "content": "There's always ambient game music playing. Nothing intense. Just enough sound so my brain doesn't start running in circles. Which does happen a lot, I've noticed." },
-      { "type": "text", "format": "paragraph", "content": "I don't trust a lot of tech companies. Especially anything that lives in your house and watches you. Cameras selling data, handing stuff to cops, pretending it's about safety. I'd rather something be a little worse if it respects me more. Convenience isn't worth feeling weird in my own space." },
-      { "type": "text", "format": "paragraph", "content": "Japan lives in my head rent free. Even though there's a lot of horrible stuff that happens there too, that's just how every place is. Infrastructure that feels thought out. Systems that actually warn people when stuff is about to go wrong." },
-      { "type": "text", "format": "paragraph", "content": "Maybe I'm romanticizing it, but compared to how duct taped everything feels here, it's hard not to." },
-      { "type": "text", "format": "paragraph", "content": "Learning Japanese is slow but grounding. Anki, Obsidian, repeating things until they just kinda click. There's no hype or grind mindset for me. Just slow progress." },
-      { "type": "text", "format": "paragraph", "content": "It's one of the few things that doesn't feel like it's trying to manipulate my attention." },
-      { "type": "text", "format": "paragraph", "content": "I don't really have a big plan. I just like understanding how things work, how they fail, and how they could be better. Privacy respecting tech. Systems that don't treat users like products. Small stuff done right." },
-      { "type": "text", "format": "paragraph", "content": "If you're reading this, I was probably avoiding something else. But this matters to me, so yeah." }
-    ]
-  },
-  {
-    "id": "blog003",
     "title": "MacBook Neo: An Outsider's Take",
     "subtitle": "not an Apple fanboy, just someone who uses tech",
     "description": "A long take on the MacBook Neo from someone who's never lived in the Apple ecosystem",
