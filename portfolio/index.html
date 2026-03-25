@@ -8,45 +8,60 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;400;500;600&family=DM+Serif+Display&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════════════
-   DESIGN TOKENS (Synced with index.html)
+   DESIGN TOKENS (Synced with main site)
 ═══════════════════════════════════════════════════════════ */
 :root {
-  --bg: #0c0c0f; --bg2: #101013; --bg3: #141418; --surface: #18181d; --surface2: #1e1e24;
-  --bdr: rgba(255,255,255,.07); --bdr2: rgba(255,255,255,.13); --bdr3: rgba(255,255,255,.2);
+  --bg: #0c0c0f; --bg2: #101013; --surface: #18181d;
+  --bdr: rgba(255,255,255,.07); --bdr2: rgba(255,255,255,.13);
   --txt: #eae6dd; --txt2: rgba(234,230,221,.48); --txt3: rgba(234,230,221,.22);
   --accent: #c8b48c;
   --sans: 'DM Sans', sans-serif; --serif: 'DM Serif Display', serif; --mono: 'JetBrains Mono', monospace;
   --ease: cubic-bezier(.4,0,.2,1); --spring: cubic-bezier(.34,1.56,.64,1);
 }
 [data-theme="light"] {
-  --bg: #f4f1ec; --bg2: #ece8e1; --bg3: #e3dfd7; --surface: #dbd6cc; --surface2: #d3cdc2;
-  --bdr: rgba(0,0,0,.07); --bdr2: rgba(0,0,0,.13); --bdr3: rgba(0,0,0,.22);
+  --bg: #f4f1ec; --bg2: #ece8e1; --surface: #dbd6cc;
+  --bdr: rgba(0,0,0,.07); --bdr2: rgba(0,0,0,.13);
   --txt: #1c1916; --txt2: rgba(28,25,22,.48); --txt3: rgba(28,25,22,.3);
 }
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body { 
     background: var(--bg); color: var(--txt); font-family: var(--sans); 
-    min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column;
-    transition: background .45s var(--ease); -webkit-font-smoothing: antialiased;
+    min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   UI & OPTIMIZATION
+   SYSTEM COMPONENTS (Restored)
 ═══════════════════════════════════════════════════════════ */
-#bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; }
-#glow { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(600px at var(--mx,50%) var(--my,50%), rgba(200,180,140,0.04) 0%, transparent 70%); }
+#loader{
+  position:fixed;inset:0;z-index:9999; background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center; gap:1.5rem;
+  transition:opacity .6s var(--ease);
+}
+#loader.done{opacity:0;pointer-events:none}
+.loader-face{ font-size:1.8rem; color:var(--txt2); animation:pulse 1.4s infinite; }
+@keyframes pulse{ 0%,100%{opacity:.4} 50%{opacity:1} }
 
-nav { position: relative; z-index: 100; display: flex; justify-content: space-between; padding: 1.5rem 2rem; align-items: center; }
-.back-home { font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--txt3); text-decoration: none; transition: .3s; }
-.back-home:hover { color: var(--txt); }
+#bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.5; }
+#cursor {
+  position:fixed; z-index:8000; pointer-events:none; width:32px; height:32px; border-radius:50%;
+  border:1px solid var(--bdr2); transform:translate(-50%,-50%); transition: width .2s, height .2s;
+  mix-blend-mode:difference; opacity:0;
+}
+#cursor.active { opacity:1; }
+#cursor.big { width:52px; height:52px; }
+
+/* ═══════════════════════════════════════════════════════════
+   NAV & HEADER
+═══════════════════════════════════════════════════════════ */
+nav { position: relative; z-index: 100; display: flex; justify-content: space-between; padding: 1.5rem 2.25rem; }
+.nav-tag { font-family: var(--mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--txt3); text-decoration: none; }
 
 header { position: relative; z-index: 10; padding: 4rem 1.5rem 2rem; text-align: center; }
-#kaomoji { font-size: 1.8rem; font-weight: 300; display: block; margin-bottom: 0.5rem; animation: float 6s ease-in-out infinite; }
-@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-h1 { font-family: var(--serif); font-size: clamp(2.5rem, 7vw, 4rem); font-weight: 400; margin-bottom: 1rem; }
+#kaomoji { font-size: 2rem; font-weight: 300; display: block; margin-bottom: 0.5rem; cursor: pointer; }
+h1 { font-family: var(--serif); font-size: clamp(2.5rem, 7vw, 4rem); font-weight: 400; }
 
-.filter-wrap { display: flex; justify-content: center; gap: 1.5rem; margin: 2rem 0 3rem; }
+.filter-wrap { display: flex; justify-content: center; gap: 1.5rem; margin: 2.5rem 0; }
 .f-btn { 
     background: none; border: none; color: var(--txt3); font-family: var(--mono); 
     font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer;
@@ -55,194 +70,166 @@ h1 { font-family: var(--serif); font-size: clamp(2.5rem, 7vw, 4rem); font-weight
 .f-btn.active { color: var(--txt); border-color: var(--accent); }
 
 /* ═══════════════════════════════════════════════════════════
-   MASONRY GALLERY (THE "COOL PARTED" LOOK)
+   PORTFOLIO GRID (Parted / Masonry)
 ═══════════════════════════════════════════════════════════ */
 .container { width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem 5rem; position: relative; z-index: 10; }
-#gallery { 
-    columns: 3 320px; column-gap: 1.5rem; width: 100%; 
-    transition: opacity 0.4s var(--ease);
-}
+#gallery { columns: 3 320px; column-gap: 1.5rem; }
 
 .item { 
     break-inside: avoid; margin-bottom: 1.5rem; position: relative; 
     background: var(--surface); border: 1px solid var(--bdr);
-    overflow: hidden; cursor: zoom-in; transition: transform 0.4s var(--spring);
-    animation: fadeIn 0.8s var(--ease) both;
+    overflow: hidden; cursor: none; transition: transform 0.4s var(--spring);
+    animation: fadeUp 0.8s var(--ease) both;
 }
-.item:hover { transform: translateY(-8px) scale(1.01); border-color: var(--bdr3); }
-.item img { width: 100%; height: auto; display: block; transition: 0.8s var(--ease); }
-.item:hover img { transform: scale(1.05); }
+.item:hover { transform: translateY(-8px); border-color: var(--bdr2); }
+.item img { width: 100%; height: auto; display: block; filter: grayscale(30%); transition: 0.8s var(--ease); }
+.item:hover img { filter: grayscale(0%); transform: scale(1.03); }
 
-.item-overlay { 
-    position: absolute; inset: 0; background: linear-gradient(to top, rgba(12,12,15,0.8) 0%, transparent 50%);
-    display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem;
-    opacity: 0; transition: opacity 0.3s;
+/* The Writing Section (Info Overlay) */
+.item-info { 
+    padding: 1.5rem; background: var(--surface);
+    border-top: 1px solid var(--bdr);
 }
-.item:hover .item-overlay { opacity: 1; }
-.item-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.3rem; }
-.item-meta { font-family: var(--mono); font-size: 0.55rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; }
+.item-title { font-size: 1rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--txt); }
+.item-desc { font-size: 0.75rem; color: var(--txt2); line-height: 1.6; margin-bottom: 1rem; font-weight: 300; }
+.item-meta { font-family: var(--mono); font-size: 0.55rem; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
 
 /* ═══════════════════════════════════════════════════════════
    LIGHTBOX
 ═══════════════════════════════════════════════════════════ */
 #lightbox { 
-    position: fixed; inset: 0; z-index: 2000; background: rgba(12,12,15,0.98); 
-    backdrop-filter: blur(15px); display: none; align-items: center; justify-content: center;
-    cursor: zoom-out; opacity: 0; transition: opacity 0.4s;
+    position: fixed; inset: 0; z-index: 9000; background: rgba(12,12,15,0.98); 
+    backdrop-filter: blur(20px); display: none; align-items: center; justify-content: center; opacity: 0; transition: .4s;
 }
 #lightbox.open { display: flex; opacity: 1; }
-#lightbox img { max-width: 90%; max-height: 85vh; object-fit: contain; box-shadow: 0 40px 100px rgba(0,0,0,0.6); }
+#lightbox img { max-width: 90%; max-height: 80vh; object-fit: contain; }
 
-/* ═══════════════════════════════════════════════════════════
-   MOBILE ADJUSTMENTS
-═══════════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
-    #gallery { columns: 2; column-gap: 1rem; }
-    .item { margin-bottom: 1rem; }
-    header { padding: 3rem 1rem 1rem; }
-    #kaomoji { font-size: 1.4rem; }
-}
-@keyframes fadeIn { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+@media (max-width: 768px) { #gallery { columns: 2; } }
 </style>
 </head>
 <body>
 
+<div id="loader">
+  <div class="loader-face">(◕‿◕)</div>
+</div>
+
 <canvas id="bg-canvas"></canvas>
-<div id="glow"></div>
+<div id="cursor"></div>
 
 <nav>
-    <a href="../index.html" class="back-home">← [back_home]</a>
+    <a href="../index.html" class="nav-tag">← back_home</a>
+    <span class="nav-tag">archive_v2.0</span>
 </nav>
 
 <header>
-    <span id="kaomoji">[o_o]</span>
-    <h1>Portfolio</h1>
+    <span id="kaomoji">(^.^)</span>
+    <h1>Creative Archive</h1>
     <div class="filter-wrap">
-        <button class="f-btn active" data-filter="sneak">Photography</button>
-        <button class="f-btn" data-filter="all">Full Archive</button>
-        <button class="f-btn" onclick="alert('Writing archive coming soon...')">Writing</button>
+        <button class="f-btn active" data-filter="sneak">Latest</button>
+        <button class="f-btn" data-filter="all">Full Portfolio</button>
     </div>
 </header>
 
 <div class="container">
-    <div id="gallery">
-        </div>
+    <div id="gallery"></div>
 </div>
 
-<div id="lightbox">
-    <img src="" alt="Zoomed view">
-</div>
+<div id="lightbox"><img src=""></div>
 
 <script>
-(function() {
+(function(){
     'use strict';
 
     let portfolioData = [];
     const gallery = document.getElementById('gallery');
-    const lightbox = document.getElementById('lightbox');
-    const lbImg = lightbox.querySelector('img');
+    const cursor = document.getElementById('cursor');
 
-    /* ═══════════════════════════════════════════════
-       DATA LOGIC
-    ═══════════════════════════════════════════════ */
-    async function loadPortfolio() {
-        try {
-            // Updated to uncap 'p' as requested
-            const response = await fetch('../portfolio.json');
-            if (!response.ok) throw new Error("JSON not found");
-            portfolioData = await response.json();
-            renderGallery('sneak');
-        } catch (e) {
-            gallery.innerHTML = `<div style="text-align:center; color:var(--txt3); font-family:var(--mono); font-size:0.7rem;">[error_loading_archive: ${e.message}]</div>`;
-        }
-    }
-
-    function renderGallery(mode) {
-        gallery.style.opacity = '0';
-        
-        setTimeout(() => {
-            const items = mode === 'sneak' ? portfolioData.slice(0, 6) : portfolioData;
-            gallery.innerHTML = items.map((item, idx) => `
-                <div class="item" style="animation-delay: ${idx * 0.05}s" onclick="zoom('../${item.images[0]}')">
-                    <img src="../${item.images[0]}" alt="${item.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/400x300?text=Image+Missing'">
-                    <div class="item-overlay">
-                        <div class="item-title">${item.title}</div>
-                        <div class="item-meta">${item.tags.join(' // ')}</div>
-                    </div>
-                </div>
-            `).join('');
-            gallery.style.opacity = '1';
-        }, 300);
-    }
-
-    /* ═══════════════════════════════════════════════
-       INTERACTIONS
-    ═══════════════════════════════════════════════ */
-    window.zoom = (url) => {
-        lbImg.src = url;
-        lightbox.classList.add('open');
-        document.body.style.overflow = 'hidden';
-    };
-
-    lightbox.addEventListener('click', () => {
-        lightbox.classList.remove('open');
-        document.body.style.overflow = 'auto';
-    });
-
-    document.querySelectorAll('.f-btn[data-filter]').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            renderGallery(e.target.dataset.filter);
-        });
-    });
-
-    /* ═══════════════════════════════════════════════
-       PERFORMANCE OPTIMIZED BG
-    ═══════════════════════════════════════════════ */
+    // 1. Restore the Canvas Shapes with Repulsion
     const canvas = document.getElementById('bg-canvas');
     const ctx = canvas.getContext('2d');
-    const isLowPower = window.innerWidth < 768;
-    let points = [];
+    let mouse = {x: -999, y: -999};
+    let shapes = [];
 
-    function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        points = [];
-        const count = isLowPower ? 15 : 40;
-        for(let i=0; i<count; i++) {
-            points.push({
-                x: Math.random()*canvas.width,
-                y: Math.random()*canvas.height,
-                r: 1 + Math.random()*2,
-                vx: (Math.random()-0.5)*0.3,
-                vy: (Math.random()-0.5)*0.3
+    function initShapes() {
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        shapes = [];
+        for(let i=0; i<20; i++) {
+            shapes.push({
+                x: Math.random()*canvas.width, y: Math.random()*canvas.height,
+                s: 20+Math.random()*60, rot: Math.random()*Math.PI,
+                vx: (Math.random()-.5)*.2, vy: (Math.random()-.5)*.2
             });
         }
     }
 
     function draw() {
         ctx.clearRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = document.documentElement.getAttribute('data-theme') === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
-        points.forEach(p => {
-            p.x += p.vx; p.y += p.vy;
-            if(p.x<0||p.x>canvas.width) p.vx*=-1;
-            if(p.y<0||p.y>canvas.height) p.vy*=-1;
-            ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+        ctx.strokeStyle = document.documentElement.getAttribute('data-theme')==='dark'?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.05)';
+        shapes.forEach(s => {
+            s.x += s.vx; s.y += s.vy;
+            ctx.save();
+            ctx.translate(s.x, s.y); ctx.rotate(s.rot);
+            ctx.strokeRect(-s.s/2, -s.s/2, s.s, s.s);
+            ctx.restore();
         });
         requestAnimationFrame(draw);
     }
 
-    window.addEventListener('resize', resize);
-    document.addEventListener('mousemove', e => {
-        document.getElementById('glow').style.setProperty('--mx', e.clientX + 'px');
-        document.getElementById('glow').style.setProperty('--my', e.clientY + 'px');
+    // 2. Fetch Data (uncap p)
+    async function load() {
+        try {
+            const r = await fetch('../portfolio.json');
+            portfolioData = await r.json();
+            render('sneak');
+        } catch(e) { console.error("Load failed"); }
+    }
+
+    function render(mode) {
+        const items = mode === 'sneak' ? portfolioData.slice(0, 6) : portfolioData;
+        gallery.innerHTML = items.map((item, idx) => `
+            <div class="item" style="animation-delay:${idx*0.05}s" onclick="zoom('../${item.images[0]}')">
+                <img src="../${item.images[0]}" loading="lazy">
+                <div class="item-info">
+                    <div class="item-title">${item.title}</div>
+                    <div class="item-desc">${item.description || 'Creative project exploration.'}</div>
+                    <div class="item-meta">${item.tags.join(' // ')}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 3. System Interactions
+    window.zoom = (u) => {
+        const lb = document.getElementById('lightbox');
+        lb.querySelector('img').src = u;
+        lb.classList.add('open');
+    };
+
+    document.getElementById('lightbox').onclick = function() { this.classList.remove('open'); };
+
+    document.querySelectorAll('.f-btn').forEach(b => {
+        b.onclick = (e) => {
+            document.querySelectorAll('.f-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            render(e.target.dataset.filter);
+        };
     });
 
-    resize();
-    draw();
-    loadPortfolio();
+    // Cursor Movement
+    document.addEventListener('mousemove', e => {
+        mouse.x = e.clientX; mouse.y = e.clientY;
+        cursor.style.left = e.clientX+'px';
+        cursor.style.top = e.clientY+'px';
+        cursor.classList.add('active');
+    });
 
+    // Loader Close
+    window.onload = () => {
+        setTimeout(() => document.getElementById('loader').classList.add('done'), 800);
+    };
+
+    initShapes(); draw(); load();
 })();
 </script>
 </body>
