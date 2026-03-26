@@ -448,7 +448,7 @@ body.focus-mode #layout{grid-template-columns:1fr min(var(--cw),calc(100vw - 2re
     <article id="article">
       <!-- States -->
       <div id="st-loading" style="display:none"><div class="st-f" id="st-f">(^.^)</div><div class="st-t">loading post<span id="st-anim">_</span></div></div>
-      <div id="st-error" style="display:none"><div class="st-f">(x_x)</div><div class="st-t">Could not load <code>posts.json</code></div></div>
+      <div id="st-error" style="display:none"><div class="st-f">(x_x)</div><div class="st-t">Could not load <code>blogs.json</code></div></div>
       <div id="st-404" style="display:none"><div class="st-f">(σ_σ)</div><div class="st-t">Post not found.<br><span style="cursor:pointer;text-decoration:underline" id="back-404">← back to blog</span></div></div>
 
       <!-- Content (injected) -->
@@ -876,7 +876,7 @@ async function load(){
   const lt=setInterval(()=>{$('st-anim').textContent=frames[fi++%frames.length];},200);
 
   try{
-    const r=await fetch('../posts.json');
+    const r=await fetch('../blogs.json');
     if(!r.ok)throw new Error('HTTP '+r.status);
     const posts=await r.json();
     posts.sort((a,b)=>new Date(b.date||0)-new Date(a.date||0));
@@ -903,7 +903,7 @@ async function load(){
     clearInterval(lt);
     $('st-loading').style.display='none';
     $('st-error').style.display='block';
-    console.error('Could not load posts.json:',err);
+    console.error('Could not load blogs.json:',err);
   }
 }
 
