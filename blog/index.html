@@ -277,7 +277,7 @@ h1.hdr-title em{font-style:italic;color:var(--t2)}
   <div id="error-state">
     <div class="err-f">(x_x)</div>
     <div class="err-t">
-      Could not load <code>posts.json</code><br>
+      Could not load <code>blogs.json</code><br>
       Make sure it exists at the site root and you're running from a web server.
     </div>
   </div>
@@ -515,7 +515,7 @@ async function load(){
   const frames=['_','▌','_','▐'];let fi=0;
   const lt=setInterval(()=>{ldAnim.textContent=frames[fi++%frames.length];},200);
   try{
-    const r=await fetch('../posts.json');
+    const r=await fetch('../blogs.json');
     if(!r.ok)throw new Error('HTTP '+r.status);
     POSTS=await r.json();
     // sort by date desc
@@ -530,7 +530,7 @@ async function load(){
     clearInterval(lt);
     document.getElementById('loading-state').style.display='none';
     document.getElementById('error-state').style.display='block';
-    console.error('Could not load posts.json:',err);
+    console.error('Could not load blogs.json:',err);
   }
 }
 
