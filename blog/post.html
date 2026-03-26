@@ -336,13 +336,13 @@ body.focus-mode #layout{grid-template-columns:1fr min(var(--cw),calc(100vw - 2re
 </head>
 <body>
 
-<div id="loader"><div class="lf" id="lf">(^.^)</div><div class="lbw"><div class="lb"></div></div></div>
+<div id="loader"><div class="lf" id="lf">(◕‿◕)</div><div class="lbw"><div class="lb"></div></div></div>
 <div id="rp"><div id="rp-bar"></div></div>
 <div class="ruler-shade" id="rs-t"></div>
 <div class="ruler-shade" id="rs-b"></div>
 <div id="ruler-line"></div>
 <div id="toast-w"><div id="toast" class="toast"></div></div>
-<div id="pt"><div id="pt-w"></div><div id="pt-c"><div id="pt-f">(^.^)</div><div id="pt-l">loading</div></div></div>
+<div id="pt"><div id="pt-w"></div><div id="pt-c"><div id="pt-f">(◕‿◕)</div><div id="pt-l">loading</div></div></div>
 
 <!-- IMAGE VIEWER -->
 <div id="viewer" role="dialog" aria-modal="true">
@@ -447,7 +447,7 @@ body.focus-mode #layout{grid-template-columns:1fr min(var(--cw),calc(100vw - 2re
   <div id="art-col">
     <article id="article">
       <!-- States -->
-      <div id="st-loading" style="display:none"><div class="st-f" id="st-f">(^.^)</div><div class="st-t">loading post<span id="st-anim">_</span></div></div>
+      <div id="st-loading" style="display:none"><div class="st-f" id="st-f">(◕‿◕)</div><div class="st-t">loading post<span id="st-anim">_</span></div></div>
       <div id="st-error" style="display:none"><div class="st-f">(x_x)</div><div class="st-t">Could not load <code>blogs.json</code></div></div>
       <div id="st-404" style="display:none"><div class="st-f">(σ_σ)</div><div class="st-t">Post not found.<br><span style="cursor:pointer;text-decoration:underline" id="back-404">← back to blog</span></div></div>
 
@@ -491,9 +491,7 @@ const pR=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
 const isTouch=window.matchMedia('(hover:none)').matches||('ontouchstart' in window);
 
 /* ── KAOMOJI ─────────────────────────────────────────── */
-const FACES=['(^.^)','(T_T)','(-_-;)','(x_x)','(o_o)','<(o_o<)','-3-',"'_'",'(◕‿◕)','(｡◕‿◕｡)',
-  '(≧◡≦)','(⌒‿⌒)','(* ^ ω ^)','(σ_σ)','(¬_¬)','(^▽^)','(*≧ω≦)','(¯ω¯)',
-  '(◠‿◠)','ヾ(・ω・*)','(￣▽￣)','(◡ ω ◡)','(o˘◡˘o)','(づ｡◕‿◕｡)づ','٩(◕‿◕)۶'];
+const FACES=['(◕‿◕)'];
 let ki=0;const lfEl=$('lf'),ptfEl=$('pt-f'),stfEl=$('st-f');
 function nextKao(){ki=(ki+1)%FACES.length;const f=FACES[ki];lfEl.textContent=f;ptfEl.textContent=f;if(stfEl)stfEl.textContent=f;}
 if(!pR)setInterval(nextKao,2700);
