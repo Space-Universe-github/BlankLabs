@@ -689,7 +689,7 @@ body.touch-device #cursor{display:none}
 <main id="hero">
 
   <div id="logo-block" tabindex="0" role="button" aria-label="blanklabs logo — click to see kaomoji">
-    <span id="kaomoji" class="on">(^.^)</span>
+    <span id="kaomoji" class="on">(◕‿◕)</span>
     <img id="logo-img" src="logo.png" alt="blanklabs" width="260">
     <div id="logo-rule"></div>
   </div>
@@ -1235,7 +1235,7 @@ document.getElementById('logo-block').addEventListener('keydown', e => {
 try {
   if (!localStorage.getItem('bl-visited')){
     localStorage.setItem('bl-visited','1');
-    setTimeout(() => showToast('(^.^) welcome — site is rebuilding', 3200), 1500);
+    setTimeout(() => showToast('(◕‿◕) welcome — site is rebuilding', 3200), 1500);
   }
 } catch(e){}
 
