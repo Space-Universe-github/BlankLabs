@@ -234,13 +234,13 @@ h1.hdr-title em{font-style:italic;color:var(--t2)}
 </head>
 <body>
 
-<div id="loader"><div class="lf" id="lf">(^.^)</div><div class="lbw"><div class="lb"></div></div></div>
+<div id="loader"><div class="lf" id="lf">(◕‿◕)</div><div class="lbw"><div class="lb"></div></div></div>
 <canvas id="bg-canvas"></canvas>
 <div id="glow"></div>
 <div id="cursor"></div>
 <div class="corn tl"></div><div class="corn tr"></div><div class="corn bl"></div><div class="corn br"></div>
 <div id="rp"><div id="rp-bar"></div></div>
-<div id="pt"><div id="pt-w"></div><div id="pt-c"><div id="pt-f">(^.^)</div><div id="pt-l">loading</div></div></div>
+<div id="pt"><div id="pt-w"></div><div id="pt-c"><div id="pt-f">(◕‿◕)</div><div id="pt-l">loading</div></div></div>
 
 <nav id="nav">
   <span class="nav-logo" id="nav-logo">blanklabs</span>
@@ -304,9 +304,7 @@ if(isTouch) document.body.classList.add('touch-device');
 const SC = lowEnd?10:22;
 
 /* ── KAOMOJI ─────────────────────────────────────────── */
-const FACES=['(^.^)','(T_T)','(-_-;)','(x_x)','(o_o)','<(o_o<)','-3-',"'_'",'(◕‿◕)','(｡◕‿◕｡)',
-  '(≧◡≦)','(⌒‿⌒)','(* ^ ω ^)','(σ_σ)','(¬_¬)','(^▽^)','(*≧ω≦)','(¯ω¯)',
-  '(◠‿◠)','ヾ(・ω・*)','(￣▽￣)','(◡ ω ◡)','(o˘◡˘o)','(づ｡◕‿◕｡)づ','٩(◕‿◕)۶'];
+const FACES=['(◕‿◕)'];
 const lfEl=document.getElementById('lf'),ptf=document.getElementById('pt-f');
 let ki=0;
 if(!pR) setInterval(()=>{ki=(ki+1)%FACES.length;const f=FACES[ki];lfEl.textContent=f;ptf.textContent=f;},2700);
